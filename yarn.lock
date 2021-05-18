@@ -512,6 +512,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"api@workspace:api":
+  version: 0.0.0-use.local
+  resolution: "api@workspace:api"
+  languageName: unknown
+  linkType: soft
+
 "aproba@npm:^1.0.3":
   version: 1.2.0
   resolution: "aproba@npm:1.2.0"
@@ -4694,6 +4700,12 @@ typescript@^4.2.4:
   checksum: 09939dd775ae565bb99a25a6c072fe3775a95fa71751b5533c94265fe986ba3e3ab071a027ab76cf26876bd9afd10ac3c2d06d7c4bcce148bf7d2d9514e3a0df
   languageName: node
   linkType: hard
+
+"wrapper@workspace:wrapper":
+  version: 0.0.0-use.local
+  resolution: "wrapper@workspace:wrapper"
+  languageName: unknown
+  linkType: soft
 
 "wrappy@npm:1":
   version: 1.0.2
