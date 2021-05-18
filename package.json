@@ -2,9 +2,9 @@
   "name": "duxcore",
   "private": true,
   "workspaces": [
-    "website",
-    "api",
-    "wrapper"
+    "@duxcore/website",
+    "@duxcore/api",
+    "@duxcore/wrapper"
   ],
   "scripts": {
     "commit": "cz",

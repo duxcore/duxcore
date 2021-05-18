@@ -1,5 +1,5 @@
 {
-  "name": "webstie",
+  "name": "@duxcore/webstie",
   "private": true,
   "version": "0.1.0",
   "scripts": {
