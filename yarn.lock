@@ -232,6 +232,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@duxcore/api@workspace:api":
+  version: 0.0.0-use.local
+  resolution: "@duxcore/api@workspace:api"
+  languageName: unknown
+  linkType: soft
+
 "@duxcore/webstie@workspace:website":
   version: 0.0.0-use.local
   resolution: "@duxcore/webstie@workspace:website"
@@ -242,6 +248,12 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     typescript: ^4.2.4
+  languageName: unknown
+  linkType: soft
+
+"@duxcore/wrapper@workspace:wrapper":
+  version: 0.0.0-use.local
+  resolution: "@duxcore/wrapper@workspace:wrapper"
   languageName: unknown
   linkType: soft
 
