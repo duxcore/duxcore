@@ -5,9 +5,10 @@ module.exports = {
       2,
       "always",
       [
-				"api",
-				"website",
-				"wrapper"
+	"global",
+	"api",
+	"website",
+	"wrapper"
       ],
     ],
   },
