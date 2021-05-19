@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "commit": "cz",
+    "commit:signed": "cz -S",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "husky install"
   },
@@ -15,11 +16,12 @@
     "type": "git",
     "url": "git+https://github.com/HoloPanio/duxcore.git"
   },
-  "license": "ISC",
+  "license": "GPL-3.0",
   "homepage": "https://github.com/HoloPanio/duxcore#readme",
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "commitizen": "^4.2.3",
     "commitlint": "~12.1.4",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^7.26.0",
