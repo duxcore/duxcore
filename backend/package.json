@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "dotenv": "^9.0.2",
-    "mongodb": "^3.6.7"
+    "mongodb": "^3.6.7",
+    "socket.io": "^4.1.2"
   },
   "devDependencies": {
     "@types/mongodb": "^3.6.14",

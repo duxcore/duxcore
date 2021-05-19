@@ -2,8 +2,12 @@
 
 ## Setup
 
-1. Clone the monorepo
-2. Install dependencies with `yarn`
-3. Create a `.env` file and set `MONGO_URI` to the uri of your mongo database (see `.env.example` for help)
-4. Run with `yarn start`
-5. (_optional_) Use `yarn dev` for hot restart
+This goes through basic setup for local development.
+
+1. Install [MongoDB](https://www.mongodb.com/)
+2. Clone the monorepo
+3. Install dependencies with `yarn`
+4. Create a `.env` file and copy the contents from `.env.example` into that new file
+5. Navigate to `backend`
+6. Run with `yarn start`
+7. (_optional_) Use `yarn dev` for hot restart
