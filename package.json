@@ -45,9 +45,5 @@
     ],
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
-  },
-  "nohoist": [
-    "**/typeorm/**",
-    "**/typeorm"
-  ]
+  }
 }
