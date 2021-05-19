@@ -1,0 +1,35 @@
+{
+  "name": "@duxcore/backend",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "scripts": {
+    "compile": "tsc",
+    "dev": "nodemon index.ts",
+    "start": "yarn compile && node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
+  },
+  "dependencies": {
+    "mongodb": "^3.6.7",
+    "typeorm": "^0.2.32"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
+    "eslint": "^7.26.0",
+    "nodemon": "latest",
+    "typescript": "^4.2.2"
+  }
+}
