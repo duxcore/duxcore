@@ -22,8 +22,7 @@
     "ext": "ts"
   },
   "dependencies": {
-    "mongodb": "^3.6.7",
-    "typeorm": "^0.2.32"
+    "mongodb": "^3.6.7"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.24.0",
