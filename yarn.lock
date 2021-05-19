@@ -242,8 +242,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@duxcore/backend@workspace:backend"
   dependencies:
+    "@types/mongodb": ^3.6.14
     "@typescript-eslint/eslint-plugin": ^4.24.0
     "@typescript-eslint/parser": ^4.24.0
+    dotenv: ^9.0.2
     eslint: ^7.26.0
     mongodb: ^3.6.7
     nodemon: latest
@@ -438,6 +440,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bson@npm:*":
+  version: 4.0.3
+  resolution: "@types/bson@npm:4.0.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: 73c0179851f02bd43f010db65c465b09f7c495b35b0e3820a79d36f4bb209c84a512121c1af4c1d2512e5f13cd27cc74fa8aa6f3df9b17b7cca9d37d59ece3ce
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.3":
   version: 7.0.7
   resolution: "@types/json-schema@npm:7.0.7"
@@ -458,6 +469,16 @@ __metadata:
   version: 1.2.1
   resolution: "@types/minimist@npm:1.2.1"
   checksum: 3a6f5fe35f1656b34a4ccd5a5db1c38509d8d5b59625865b8c2b997994fcb0cfde0d9af7c5507b95dc5a0a32a22886c189e505cd2e52a7ef36d3c9982f07ed5a
+  languageName: node
+  linkType: hard
+
+"@types/mongodb@npm:^3.6.14":
+  version: 3.6.14
+  resolution: "@types/mongodb@npm:3.6.14"
+  dependencies:
+    "@types/bson": "*"
+    "@types/node": "*"
+  checksum: 0ba67d569eb31d26ded3556419cfbbc776bc93c99bb6ab58ea48f8af305b9399188049f4f64ee39031819dfb394a48827a37961bf1b952e7381f0dddc702a163
   languageName: node
   linkType: hard
 
@@ -1985,6 +2006,13 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: 76e6693d8803eeff9cb920988446bf223cf1f6e5b1c0c2fe07a66906392134931a481b11e3c0bd852c5cfc97fad65258bcb4359169ad1d8d624cb3f56932be98
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "dotenv@npm:9.0.2"
+  checksum: 062a31a2fd024a8a7efee4f2d3972d488a1485e0545b97ab3c338f59f17689a2ae84b6e8ddb9ebca2902cc9b4926e7b672a476f5e326c6902648312fc3da54d9
   languageName: node
   linkType: hard
 
