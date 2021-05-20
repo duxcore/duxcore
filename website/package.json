@@ -14,5 +14,15 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
+    "autoprefixer": "latest",
+    "eslint": "^7.26.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "postcss": "latest",
+    "tailwindcss": "latest"
   }
 }
