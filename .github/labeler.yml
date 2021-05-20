@@ -1,0 +1,10 @@
+api:
+  - api/**/*
+backend:
+  - backend/**/*
+daemon:
+  - daemon/**/*
+website:
+  - website/**/*
+wrapper:
+  - wrapper/**/*
