@@ -1,14 +1,16 @@
 import { config as dtCfg } from 'dotenv'
 import { SessionServer } from './classes/SessionServer';
 import keypair from 'keypair';
+import { WebSocketServer } from './classes/WebSocketServer';
 
 export default class Duxcore {
 	
-	public sessions: SessionServer = new SessionServer(this);
 	public tmpKeypair = keypair();
+	public sessions: SessionServer = new SessionServer(this);
+	public socketServer: WebSocketServer = new WebSocketServer(this);
 
-	private sessionServerAddress = process.env.SESSION_REDIS_ADDRESS;
 	private wsPort = process.env.WS_PORT;
+	private sessionServerAddress = process.env.SESSION_REDIS_ADDRESS;
 
 	constructor() {
 		dtCfg();
@@ -29,6 +31,7 @@ export default class Duxcore {
 	start(): Promise<Duxcore> {
 		return new Promise(async (resolve, reject) => {
 			await this.sessions.start(this.sessionServerAddress ?? "");
+			await this.socketServer.start(this.wsPort ?? 7418);
 			resolve(this);
 		});
 	}

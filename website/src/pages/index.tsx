@@ -1,3 +1,4 @@
+import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
 
@@ -34,3 +35,12 @@ export default function Home() {
     </>
   );
 }
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const req = context.req;
+  const res = context.res;
+
+  return {
+    props: {}
+  }
+}   

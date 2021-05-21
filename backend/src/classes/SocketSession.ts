@@ -7,4 +7,8 @@ export class SocketSession {
 		this.client = client;
 	}
 
+	get permissions(): String[] {
+		return [];
+	}
+
 }
