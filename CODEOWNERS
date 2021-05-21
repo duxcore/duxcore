@@ -1,5 +1,5 @@
 /api/ @HoloPanio
-/backend/
-/daemon/ @HoloPanio
+/backend/ @HoloPanio
+/daemon/
 /website/
 /wrapper/
