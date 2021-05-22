@@ -242,6 +242,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@duxcore/webstie@workspace:website"
   dependencies:
+    "@duxcore/wrapper": "workspace:wrapper"
     "@types/node": ^15.3.0
     "@types/react": ^17.0.5
     "@typescript-eslint/eslint-plugin": ^4.24.0
@@ -262,6 +263,9 @@ __metadata:
 "@duxcore/wrapper@workspace:wrapper":
   version: 0.0.0-use.local
   resolution: "@duxcore/wrapper@workspace:wrapper"
+  dependencies:
+    cross-env: 5.0.5
+    typescript: ^4.2.4
   languageName: unknown
   linkType: soft
 
@@ -1754,6 +1758,30 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: babd307893abfb26d77ae11cb9d6b6cfa6d18c9cee435cf70b5a3fb44aa8d90c9ec26ea89cbb16e0a94b8d34f5fcaee164b90ed526cdd3158955673ab9652d01
+  languageName: node
+  linkType: hard
+
+"cross-env@npm:5.0.5":
+  version: 5.0.5
+  resolution: "cross-env@npm:5.0.5"
+  dependencies:
+    cross-spawn: ^5.1.0
+    is-windows: ^1.0.0
+  bin:
+    cross-env: dist/bin/cross-env.js
+    cross-env-shell: dist/bin/cross-env-shell.js
+  checksum: 908c1aa12424bc08a2041a880c2751d47c3cccc077117133b937770dcaff7f99930c2c130dec0af85ec4bb33f9b1c500941d5e8ab9d8ce7e428a85fc870ba7c9
+  languageName: node
+  linkType: hard
+
+"cross-spawn@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "cross-spawn@npm:5.1.0"
+  dependencies:
+    lru-cache: ^4.0.1
+    shebang-command: ^1.2.0
+    which: ^1.2.9
+  checksum: 96018c42a94a2f69e27c11688db638c343109e4eda5cc6586a83a1d2f102ef2ef4d184919593036748d386ddb67cc3e66658fefec85a4659958cde792f1a9ddc
   languageName: node
   linkType: hard
 
@@ -3628,7 +3656,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"is-windows@npm:^1.0.1":
+"is-windows@npm:^1.0.0, is-windows@npm:^1.0.1":
   version: 1.0.2
   resolution: "is-windows@npm:1.0.2"
   checksum: dd1ed8339a28c68fb52f05931c832488dafc90063e53b97a69ead219a5584d7f3e6e564731c2f983962ff5403afeb05365d88ce9af34c8dae76a14911020d73a
@@ -4038,6 +4066,16 @@ fsevents@~2.3.1:
   bin:
     loose-envify: cli.js
   checksum: 5c3b47bbe5f597a3889fb001a3a98aaea2a3fafa48089c19034de1e0121bf57dbee609d184478514d74d5c5a7e9cfa3d846343455e5123b060040d46c39e91dc
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^4.0.1":
+  version: 4.1.5
+  resolution: "lru-cache@npm:4.1.5"
+  dependencies:
+    pseudomap: ^1.0.2
+    yallist: ^2.1.2
+  checksum: 6a098d23629357451d4324e1e4fefccdd6df316df29e25571c6148220ced923258381ebeafdf919f90e28c780b650427390582618c1d5fe097873e656d062511
   languageName: node
   linkType: hard
 
@@ -5146,6 +5184,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"pseudomap@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "pseudomap@npm:1.0.2"
+  checksum: 1ad1802645e830d99f9c1db97efc6902d2316b660454633229f636dd59e751d00498dd325d3b18d49f2be990a2c9d28f8bfe6f9b544a8220a5faa2bfb4694bb7
+  languageName: node
+  linkType: hard
+
 "public-encrypt@npm:^4.0.0":
   version: 4.0.3
   resolution: "public-encrypt@npm:4.0.3"
@@ -5716,12 +5761,28 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"shebang-command@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "shebang-command@npm:1.2.0"
+  dependencies:
+    shebang-regex: ^1.0.0
+  checksum: 2a1e0092a6b80b14ec742ef4e982be8aa670edc7de3e8c68b26744fb535051f7d92518106387b52e9aabe0c1ceae33d23a7dfdb94c3d7f5035c3868b723a2854
+  languageName: node
+  linkType: hard
+
 "shebang-command@npm:^2.0.0":
   version: 2.0.0
   resolution: "shebang-command@npm:2.0.0"
   dependencies:
     shebang-regex: ^3.0.0
   checksum: 85aa394d8cedeedf2e03524d6defef67a2b07d3a17d7ee50d4281d62d3fca898f26ebe7aa7bf674d51b80f197aa1d346bc1a10e8efb04377b534f4322c621012
+  languageName: node
+  linkType: hard
+
+"shebang-regex@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "shebang-regex@npm:1.0.0"
+  checksum: cf1a41cb09023e7d39739d7145fcba57c3fabc6728b78ce706f7315cf52dfadf30f7eea664e069224fbcbbfb6ab853bc55ac45f494b47ee73fc209c98487fae5
   languageName: node
   linkType: hard
 
@@ -6796,7 +6857,7 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"which@npm:^1.2.14":
+"which@npm:^1.2.14, which@npm:^1.2.9":
   version: 1.3.1
   resolution: "which@npm:1.3.1"
   dependencies:
@@ -6881,6 +6942,13 @@ typescript@^4.2.4:
   version: 0.0.6
   resolution: "yaeti@npm:0.0.6"
   checksum: fa9beece5a26aac7a2fa71ced85f660184a936883cc16fdd4f7a6bf2f2ea3454af6ceff77128be76ddeb6578d955a5282670187d439a3ee77733d0c12a18de1c
+  languageName: node
+  linkType: hard
+
+"yallist@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "yallist@npm:2.1.2"
+  checksum: f83e3d18eeba68a0276be2ab09260be3f2a300307e84b1565c620ef71f03f106c3df9bec4c3a91e5fa621a038f8826c19b3786804d3795dd4f999e5b6be66ea3
   languageName: node
   linkType: hard
 

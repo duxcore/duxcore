@@ -1,3 +1,14 @@
 {
-  "name": "@duxcore/wrapper"
+  "name": "@duxcore/wrapper",
+  "version": "0.1.0",
+  "main": "lib/wrapper",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "cross-env": "5.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
 }

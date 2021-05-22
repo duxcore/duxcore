@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
 
+
 export default function Home() {
   return (
     <>
