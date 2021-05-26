@@ -4,14 +4,14 @@ import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
 import Wrapper from "@duxcore/wrapper";
 import { useEffect } from "react";
 
-const wsUrl = 'ws://localhost:7418';
+export default function Home(props) {
+  console.log(props);
 
-export default function Home() {
-  
+  /*
   useEffect(() => {
-    const wrap = new Wrapper(wsUrl);
+    const wrap = new Wrapper(props.wsUrl);
     console.log(wrap.socket.url);
-  })
+  }); */
   
   return (
     <>
@@ -50,7 +50,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const req = context.req;
   const res = context.res;
 
+  const wsUrl = process.env.SOCKET_SERVER_ADDRESS
+  const wrap = new Wrapper(wsUrl);
+
+  console.log(wrap.socket.url)
+
   return {
-    props: {}
+    props: {
+      wsUrl
+    }
   }
 }   
