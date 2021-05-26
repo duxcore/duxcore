@@ -257,6 +257,7 @@ __metadata:
     react-dom: 17.0.2
     tailwindcss: latest
     typescript: ^4.2.4
+    websocket: ^1.0.34
   languageName: unknown
   linkType: soft
 
@@ -264,7 +265,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@duxcore/wrapper@workspace:wrapper"
   dependencies:
+    "@types/websocket": ^1.0.2
     cross-env: 5.0.5
+    isomorphic-ws: ^4.0.1
+    reconnecting-websocket: ^4.4.0
     typescript: ^4.2.4
   languageName: unknown
   linkType: soft
@@ -630,6 +634,18 @@ __metadata:
     "@typescript-eslint/types": 4.24.0
     eslint-visitor-keys: ^2.0.0
   checksum: ec25df6705f3768b415abcfeae09ef6dc4ee7a7e77e9b7b795fc461668ed4a7c5a406a23af31e1471fa920adc705c515fe56e86a7cda6cddef8521f54afadffc
+  languageName: node
+  linkType: hard
+
+"JSONStream@npm:0.10.0":
+  version: 0.10.0
+  resolution: "JSONStream@npm:0.10.0"
+  dependencies:
+    jsonparse: 0.0.5
+    through: ">=2.2.7 <3"
+  bin:
+    JSONStream: ./index.js
+  checksum: c3fac864ddf651d3d064a9abac2367a35392e6bdac32a95a8d2c3c1ce89414e888229a44433df89c639127953ac89477c20892e1cf812cbf720827619dfeb65e
   languageName: node
   linkType: hard
 
@@ -1021,6 +1037,7 @@ __metadata:
     dotenv: ^9.0.2
     jsonwebtoken: ^8.5.1
     keypair: ^1.0.3
+    node-docker-api: ^1.1.22
     redis: ^3.1.2
     ts-node: ^9.1.1
     uuid: ^8.3.2
@@ -1927,7 +1944,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:2, debug@npm:^2.2.0":
+"debug@npm:2, debug@npm:^2.2.0, debug@npm:^2.6.0":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
   dependencies:
@@ -2091,6 +2108,18 @@ __metadata:
   version: 1.1.3
   resolution: "dlv@npm:1.1.3"
   checksum: 3ed2cd5054ed51e3778b5939ec58b16a970ee7447c3fc02b9b75ccd0788cf596b705d0f3060f2f1593432c10809d4289a17166a5723282ab2ead5c37d7c45cf0
+  languageName: node
+  linkType: hard
+
+"docker-modem@npm:^0.3.1":
+  version: 0.3.7
+  resolution: "docker-modem@npm:0.3.7"
+  dependencies:
+    JSONStream: 0.10.0
+    debug: ^2.6.0
+    readable-stream: ~1.0.26-4
+    split-ca: ^1.0.0
+  checksum: 0e760312775f91ed8d425522f800d0a377e068d5be51163956987131c399b88a0e84fdd63f03abc1b7f84951abae1399885c325b30d0f738556a364ee75a949f
   languageName: node
   linkType: hard
 
@@ -3663,6 +3692,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"isarray@npm:0.0.1":
+  version: 0.0.1
+  resolution: "isarray@npm:0.0.1"
+  checksum: daeda3c23646200b0b464b7a9030d10008d7701fc6b7a1b45cafe42b4f4d2dde20835b56f19a49e04bb218245b7f7a2bcc6d0f696cff3711e4eddaa2031c611f
+  languageName: node
+  linkType: hard
+
 "isarray@npm:^1.0.0, isarray@npm:~1.0.0":
   version: 1.0.0
   resolution: "isarray@npm:1.0.0"
@@ -3674,6 +3710,15 @@ fsevents@~2.3.1:
   version: 2.0.0
   resolution: "isexe@npm:2.0.0"
   checksum: 7b437980bb77881a146fba85cfbdf01edc2b148673e9c2722a1e49661fea73adf524430a80fdbfb8ce9f60d43224e682c657c45030482bd39e0c488fc29b4afe
+  languageName: node
+  linkType: hard
+
+"isomorphic-ws@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "isomorphic-ws@npm:4.0.1"
+  peerDependencies:
+    ws: "*"
+  checksum: 9012eec8ea4070a5e1cde4d937cc51e0d3136e53029b4d9c53d551b777ec3f99e9b8d31884c50dcefe0c6d50dd3562d9470c2249c6ff72ebb00b27092adec537
   languageName: node
   linkType: hard
 
@@ -3768,6 +3813,13 @@ fsevents@~2.3.1:
     graceful-fs:
       optional: true
   checksum: 9419c886abc6f8a5088cbb222b7bc17c76e8ee9f6c0e5c38781a4e09488166084f25247bc0b58e025b08c43064c82ae860ad89a992e35fc8cfae639323b7edbc
+  languageName: node
+  linkType: hard
+
+"jsonparse@npm:0.0.5":
+  version: 0.0.5
+  resolution: "jsonparse@npm:0.0.5"
+  checksum: f84c21d6b3c88f9e78a7e74f3f026bbd3d4204ca50dc471d6dbef58f39fbe560b060a6402577eddb37a76ffcedfaf844088e357f68e5517953517c25c6ac1f13
   languageName: node
   linkType: hard
 
@@ -4152,6 +4204,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"memorystream@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "memorystream@npm:0.3.1"
+  checksum: 825bcc7d3eb8bd021a1b0f8c81e4d7a8dc2eced1f8bb79d41ec978547cf118146d6863f5e6134f02bb55ee5d963a8689793e6e82ce8eb989bac339ae782728bb
+  languageName: node
+  linkType: hard
+
 "meow@npm:^8.0.0":
   version: 8.1.2
   resolution: "meow@npm:8.1.2"
@@ -4492,6 +4551,16 @@ fsevents@~2.3.1:
   bin:
     next: dist/bin/next
   checksum: 2c5c1da075664ff9646a66fb6495982f1258a81cb1264dcd909df13411a6c55ccbb1c777a67c27cff3d7ff901c627f14144ebaa647080e07cf8fee840c3eae45
+  languageName: node
+  linkType: hard
+
+"node-docker-api@npm:^1.1.22":
+  version: 1.1.22
+  resolution: "node-docker-api@npm:1.1.22"
+  dependencies:
+    docker-modem: ^0.3.1
+    memorystream: ^0.3.1
+  checksum: 0f9e657eea93ee80501c5e4d20f7d59de32f36035471e66497b82b262f883e281d4170467850d11fd9148255e2d5be6d03b1d0c3e067d7100c565dd4f2383c83
   languageName: node
   linkType: hard
 
@@ -5406,12 +5475,31 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"readable-stream@npm:~1.0.26-4":
+  version: 1.0.34
+  resolution: "readable-stream@npm:1.0.34"
+  dependencies:
+    core-util-is: ~1.0.0
+    inherits: ~2.0.1
+    isarray: 0.0.1
+    string_decoder: ~0.10.x
+  checksum: 90f868f0a37e97794ce963f92c3dd8997a66a2143f867075521ac6905ed49967f425842de0dc53a952a49c60aa81e1239af6e32348e9f3dadffd61101b1c4fdc
+  languageName: node
+  linkType: hard
+
 "readdirp@npm:~3.5.0":
   version: 3.5.0
   resolution: "readdirp@npm:3.5.0"
   dependencies:
     picomatch: ^2.2.1
   checksum: a64fe5606937d9655252230003362d95da05dbfd3baecedb4bb8c1bc0df497d051a192f9b75345c944e58a0b362c68349be602d6dbf05d03770e510b35a9f80f
+  languageName: node
+  linkType: hard
+
+"reconnecting-websocket@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "reconnecting-websocket@npm:4.4.0"
+  checksum: f87b201847456c7e2cdffd5f283ca1ec4c08cb696ca46580c4443e16132d0e383ae29ce3bed5a590a4904df20345ef0093caa4e08c7b343cd6e9848428f3c67a
   languageName: node
   linkType: hard
 
@@ -5958,6 +6046,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"split-ca@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "split-ca@npm:1.0.1"
+  checksum: 66f620e52429cb1ba265d1c6da62b84cee724eba9b38ad1614ff72336ea69862dbc49b9f2e7689f4d1d55fdcce8d45b0d74fc78ca91297b5822b13bf01ea6497
+  languageName: node
+  linkType: hard
+
 "split2@npm:^3.0.0":
   version: 3.2.2
   resolution: "split2@npm:3.2.2"
@@ -6140,6 +6235,13 @@ resolve@^2.0.0-next.3:
   dependencies:
     safe-buffer: ~5.2.0
   checksum: 0a09afb610cb538707fcf0a50a080f159040529eabdba82f23b04f1d1f90adf9ba18cc3800231c6ab2ee55dece047f4bed87c56da52b2afd85c3c7fb73eb7e48
+  languageName: node
+  linkType: hard
+
+"string_decoder@npm:~0.10.x":
+  version: 0.10.31
+  resolution: "string_decoder@npm:0.10.31"
+  checksum: ae53bca3796913fe686c6b519299a3631d04f0d388f35e7412914e3d351024f711d783d0415babfec276f5f533e84fae687e77220829d872fadb5bb9f7190890
   languageName: node
   linkType: hard
 

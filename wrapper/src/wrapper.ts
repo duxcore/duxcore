@@ -1,13 +1,14 @@
-import { client as WebSocketClient, connection } from "websocket"
+import { w3cwebsocket as WebSocketClient, connection } from "websocket"
 
 export default class Wrapper {
-  public socket: WebSocketClient = new WebSocketClient();
+  public socket: WebSocketClient;
   public connection?: connection;
 
   constructor(wsUrl: string) {
-    this.socket.on("connectFailed", (err) => { throw err });
-    this.socket.on("connect", conn => this.connection = conn); 
+    this.socket =  new WebSocketClient(wsUrl);
 
-    this.socket.connect(wsUrl);
+    this.socket.onerror = (err) => {
+      throw err;
+    }
   }
 }

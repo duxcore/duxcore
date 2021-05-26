@@ -1,9 +1,18 @@
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
+import Wrapper from "@duxcore/wrapper";
+import { useEffect } from "react";
 
+const wsUrl = 'ws://localhost:7418';
 
 export default function Home() {
+  
+  useEffect(() => {
+    const wrap = new Wrapper(wsUrl);
+    console.log(wrap.socket.url);
+  })
+  
   return (
     <>
       <Head>
@@ -23,7 +32,7 @@ export default function Home() {
               height="20"
               className="text-white opacity-30 hover:opacity-100 transition"
             />
-          </a>
+          </a>e\
           <a href="https://discord.gg/WDTGx7QK">
             <SolidDiscord
               width="20"
