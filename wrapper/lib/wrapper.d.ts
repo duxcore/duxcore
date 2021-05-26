@@ -1,6 +1,7 @@
-import { w3cwebsocket as WebSocketClient, connection } from "websocket";
+import SocketAPI from "./classes/SocketAPI";
 export default class Wrapper {
-    socket: WebSocketClient;
-    connection?: connection;
+    socket: SocketAPI;
     constructor(wsUrl: string);
+    close(): void;
+    authenticateSession(): void;
 }

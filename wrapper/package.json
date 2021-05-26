@@ -6,6 +6,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@discordjs/collection": "^0.1.6",
     "cross-env": "5.0.5",
     "isomorphic-ws": "^4.0.1",
     "reconnecting-websocket": "^4.4.0"

@@ -53,7 +53,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const wsUrl = process.env.SOCKET_SERVER_ADDRESS
   const wrap = new Wrapper(wsUrl);
 
-  console.log(wrap.socket.url)
+  console.log(wrap.socket.url);
+  
+  wrap.socket.fetch('system:uganda', { session_id: 'no' }).then((res) => {
+    console.log(res);
+    wrap.close();
+  }).catch(err => console.log(err));
 
   return {
     props: {

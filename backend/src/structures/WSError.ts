@@ -1,18 +1,13 @@
-import { WebsocketMessageObject } from './WSMessageObject';
-import { WebSocketServer } from '../classes/WebSocketServer';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 export class WSError {
-  constructor(message: string, reference?: string) {
+  constructor(message: string, op?: string | null, reference?: string) {
 
-    return new WebsocketMessageObject({
-      scope: "server",
-      operationCode: "error",
-      version: WebSocketServer.currentApiVersion,
-      isReply: false,
-      payload: {
+    return {
+      op: (!op ? "server:error" : op),
+      p: {
         error: message
       },
-      reference: reference ?? uuid.v4()
-    })
+      ref: reference ?? uuid.v4()
+    }
   }
 }
