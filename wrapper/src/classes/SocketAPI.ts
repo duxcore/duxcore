@@ -26,6 +26,7 @@ export default class SocketAPI {
 
   private _handleQueueRoutine() {
     this.base.onmessage = e => {
+      if (e.data.toString() == 'pong') return;
       const msg: SocketMessage<any> = JSON.parse(e.data.toString());
       this._onFetchDoneQueue.forEach((value, key) => {
         if (key = msg.ref) {

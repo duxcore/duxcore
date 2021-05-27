@@ -27,17 +27,23 @@ export class SessionController {
 		this._sessionData = raw.data;
 	}
 
-	get x_csrf(): string {
-		return this._x_csrf;		
-	}
+	get x_csrf(): string { return this._x_csrf; }
 
-	get sessionClient() {
-		return this._sessionClient
-	}
+	get sessionClient(): string { return this._sessionClient; }
 
-	get sessionIp() {
-		return this._sessionIp;
-	}
+	get sessionIp(): string { return this._sessionIp; }
+
+  toJson(asString?: boolean) {
+    const object = {
+      session_id: this.id,
+      x_csrf: this._x_csrf,
+      client: this._sessionClient,
+      ip: this._sessionIp
+    }
+
+    if (!asString) return object;
+    else return JSON.stringify(object);
+  }
 
 	generateJWT() {
 		const data = {

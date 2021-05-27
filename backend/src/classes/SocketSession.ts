@@ -41,6 +41,12 @@ export class SocketSession {
     op.execute(msg, this);
 	}
 
+  sendError(err: WSError) {
+    return new Promise((resolve, reject) => {
+      this.connection.send(JSON.stringify(err));
+    })
+  }
+
 	setAuthenticated(bool?: boolean): SocketSession {
 		if (bool == undefined) bool = true;
 		else bool = bool;

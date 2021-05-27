@@ -36,6 +36,8 @@ class SocketAPI {
     }
     _handleQueueRoutine() {
         this.base.onmessage = e => {
+            if (e.data.toString() == 'pong')
+                return;
             const msg = JSON.parse(e.data.toString());
             this._onFetchDoneQueue.forEach((value, key) => {
                 if (key = msg.ref) {

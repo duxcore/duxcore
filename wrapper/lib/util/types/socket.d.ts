@@ -1,20 +1,18 @@
-import { GetSessionAuthTokenPS } from "./payloadSchema";
-import { GetSessionAuthTokenRS } from "./reponseSchema";
+import { FetchSessionPS, NewSessionPS } from "./payloadSchema";
+import { FetchSessionRS } from "./reponseSchema";
 declare const OpCode: {
     readonly session: {
-        readonly getAuthToken: "socket:get_auth_code";
-    };
-    readonly system: {
-        readonly uganda: "system:uganda";
+        readonly fetch: "session:fetch";
+        readonly new: "session:new";
     };
 };
 export interface OpCodePayload {
-    [OpCode.session.getAuthToken]: GetSessionAuthTokenPS;
-    [OpCode.system.uganda]: any;
+    [OpCode.session.fetch]: FetchSessionPS;
+    [OpCode.session.new]: NewSessionPS;
 }
 export interface OpCodeResponse {
-    [OpCode.session.getAuthToken]: GetSessionAuthTokenRS;
-    [OpCode.system.uganda]: any;
+    [OpCode.session.fetch]: SocketMessage<FetchSessionRS>;
+    [OpCode.session.new]: SocketMessage<FetchSessionRS>;
 }
 export interface OpCodeEvent {
 }

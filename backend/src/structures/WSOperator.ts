@@ -21,6 +21,7 @@ export default class WSOperator {
 
   get opCode(): string { return this._opCode; }
   get enabled(): boolean { return this._enabled; }
+  get replyCall(): string { return `${this._opCode}:reply`; }
 
   setExecutor(executor: ExecutorMethod): this {
     this._executor = executor;

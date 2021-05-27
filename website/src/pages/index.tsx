@@ -3,15 +3,10 @@ import Head from "next/head";
 import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
 import Wrapper from "@duxcore/wrapper";
 import { useEffect } from "react";
+import { getSession } from "../modules/sessions";
 
 export default function Home(props) {
-  console.log(props);
-
-  /*
-  useEffect(() => {
-    const wrap = new Wrapper(props.wsUrl);
-    console.log(wrap.socket.url);
-  }); */
+  console.log(props)
   
   return (
     <>
@@ -52,17 +47,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const wsUrl = process.env.SOCKET_SERVER_ADDRESS
   const wrap = new Wrapper(wsUrl);
-
-  console.log(wrap.socket.url);
-  
-  wrap.socket.fetch('system:uganda', { session_id: 'no' }).then((res) => {
-    console.log(res);
-    wrap.close();
-  }).catch(err => console.log(err));
+  const session = await getSession(wrap, context);
+  wrap.close();
 
   return {
     props: {
-      wsUrl
+      wsUrl,
+      session
     }
   }
 }   

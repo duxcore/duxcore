@@ -2,6 +2,7 @@ import Duxcore from "../Duxcore";
 import * as redis from 'redis';
 import { SessionController } from "../controllers/SessionController";
 import { NewSessionOpts, SessionDataObject, SessionObject } from "../util/types/sessions";
+import * as uuid from 'uuid';
 
 export class SessionServer {
 
@@ -37,7 +38,7 @@ export class SessionServer {
 		return new Promise((resolve, reject) => {
 			if (!redis) return reject('Redis server not connected...');
 			let x_csrf = this.generateCsrf();
-			let sessionId = this.client.randStr(128);
+			let sessionId = uuid.v4();
 			let expiryTime = ((1000 * 86400) * 7);
 
 			let newSessionObject: SessionObject = {

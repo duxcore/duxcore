@@ -11,6 +11,7 @@
     "@duxcore/wrapper": "workspace:wrapper",
     "@types/node": "^15.3.0",
     "@types/react": "^17.0.5",
+    "cookies": "^0.8.0",
     "next": "10.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -18,6 +19,7 @@
     "websocket": "^1.0.34"
   },
   "devDependencies": {
+    "@types/cookies": "^0.7.6",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "autoprefixer": "latest",

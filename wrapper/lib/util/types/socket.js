@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const OpCode = {
     session: {
-        getAuthToken: 'socket:get_auth_code',
+        fetch: 'session:fetch',
+        new: 'session:new'
     },
-    system: {
-        uganda: 'system:uganda'
-    }
 };
