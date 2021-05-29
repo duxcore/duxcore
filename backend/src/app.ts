@@ -1,5 +1,4 @@
 import Duxcore from './Duxcore';
-import jwt from "jsonwebtoken";
 
 const app = new Duxcore();
 

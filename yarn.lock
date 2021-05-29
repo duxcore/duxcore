@@ -250,12 +250,14 @@ __metadata:
   resolution: "@duxcore/webstie@workspace:website"
   dependencies:
     "@duxcore/wrapper": "workspace:wrapper"
+    "@types/chalk": ^2.2.0
     "@types/cookies": ^0.7.6
     "@types/node": ^15.3.0
     "@types/react": ^17.0.5
     "@typescript-eslint/eslint-plugin": ^4.24.0
     "@typescript-eslint/parser": ^4.24.0
     autoprefixer: latest
+    chalk: ^4.1.1
     cookies: ^0.8.0
     eslint: ^7.26.0
     eslint-plugin-react: ^7.23.2
@@ -467,6 +469,15 @@ __metadata:
     "@types/connect": "*"
     "@types/node": "*"
   checksum: 4576f3fde5980c1219cadbc7c523bdb1cefc3713300e18bf47ff37bb9b8176342a1dc7519008311fd8fc11413cf188a83931b9b59051aa1c2f095c1e10459369
+  languageName: node
+  linkType: hard
+
+"@types/chalk@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@types/chalk@npm:2.2.0"
+  dependencies:
+    chalk: "*"
+  checksum: 9cded9031f180268be59010fc1e13c7b4384e51f0ca8b75bc7a40bdd46f5f3c4859953525fb53663287e5bb25ca5df59396c276ce5c09e1a83aa7a2aec6a9f59
   languageName: node
   linkType: hard
 
@@ -1560,6 +1571,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:*, chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "chalk@npm:4.1.1"
+  dependencies:
+    ansi-styles: ^4.1.0
+    supports-color: ^7.1.0
+  checksum: 445c12db7aeed0046500a1e4184d31209a77d165654c885a789c41c8598a6a95bd2392180987cac572c967b93a2a730dda778bb7f87fa06ca63fd8592f8cc59f
+  languageName: node
+  linkType: hard
+
 "chalk@npm:2.4.2, chalk@npm:^2.0.0, chalk@npm:^2.4.1, chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
@@ -1588,16 +1609,6 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 4018b0c812880da595d0d7b8159939527b72f58d3370e2fdc1a24d9abd460bab851695d7eca014082f110d5702d1221b05493fec430ccce375de907d50cc48c1
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "chalk@npm:4.1.1"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: 445c12db7aeed0046500a1e4184d31209a77d165654c885a789c41c8598a6a95bd2392180987cac572c967b93a2a730dda778bb7f87fa06ca63fd8592f8cc59f
   languageName: node
   linkType: hard
 

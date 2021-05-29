@@ -10,16 +10,24 @@ export async function getSession(wrapper: Wrapper, context: GetServerSidePropsCo
   const cookies = new Cookies(req, res);
 
   const sid = req.cookies.session_id;
-  const sessionData = wrapper.session.fetch(sid).then(res => res).catch(async err => {
+  const sessionData = await wrapper.session.fetch(sid).then(res => res).catch(async err => {
     const newSession = await wrapper.session.new({
       client: req.headers['user-agent'],
       ip: req.socket.remoteAddress
     });
 
-    cookies.set('session_id', newSession.session_id);
+    await cookies.set('session_id', newSession.session_id);
 
     return newSession;
   });
 
-  return sessionData;
+  return await sessionData;
+}
+
+export function getSessionAuthToken(wrapper: Wrapper, context: GetServerSidePropsContext, session_id: string): Promise<string> {
+  return new Promise(async (resolve, reject) => {
+    const authTokenData = await wrapper.session.requestAuthToken(session_id).catch(err => null);
+
+    return resolve(authTokenData.auth_token);
+  });
 }

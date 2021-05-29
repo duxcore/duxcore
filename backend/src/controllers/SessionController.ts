@@ -47,8 +47,8 @@ export class SessionController {
 
 	generateJWT() {
 		const data = {
-			user: this._sessionData.user,
-			flags: []
+      method: "session",
+			session_id: this.id
 		}
 		
 		const token = jwt.sign({ data }, this.client.tmpKeypair.private, { algorithm: "RS512", expiresIn: "10s" });

@@ -16,3 +16,8 @@ export interface NewSessionOpts {
 	client: string,
 	data?: SessionDataObject
 }
+
+export enum SessionAuthMethod {
+  SESSION,
+  API_KEY
+}

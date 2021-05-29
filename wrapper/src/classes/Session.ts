@@ -1,5 +1,5 @@
-import { FetchSessionRS } from "../util/types/reponseSchema";
-import { NewSessionData, NewSessionDataResponse } from "../util/types/session";
+import { NewSessionData, SessionAuthToken, SessionDataObject } from "../util/types/session";
+import { OpCode } from "../util/types/socket";
 import Wrapper from "../wrapper";
 
 export class Session {
@@ -9,15 +9,18 @@ export class Session {
     this.wrapper = base;
   }
 
-  async fetch(sessionID: string): Promise<FetchSessionRS> {
-    const fetched = await this.wrapper.socket.fetch('session:fetch', { session_id: sessionID });
+  async fetch(sessionID: string): Promise<SessionDataObject> {
+    const fetched = await this.wrapper.socket.fetch(OpCode.session.fetch, { session_id: sessionID });
     return fetched.p;
   }
 
-  async new(data: NewSessionData): Promise<NewSessionDataResponse> {
-    const newSessionData = await this.wrapper.socket.fetch('session:new', { client: data.client, ip: data.ip});
+  async new(data: NewSessionData): Promise<SessionDataObject> {
+    const newSessionData = await this.wrapper.socket.fetch(OpCode.session.new, { client: data.client, ip: data.ip});
     return newSessionData.p;
   }
 
-  requestAuthToken() {}
+  async requestAuthToken(sessionId): Promise<SessionAuthToken> {
+    const authTokenRequestData = await this.wrapper.socket.fetch(OpCode.session.getAuthToken, { session_id: sessionId});
+    return authTokenRequestData.p;
+  }
 }

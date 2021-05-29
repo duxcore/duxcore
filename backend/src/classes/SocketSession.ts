@@ -3,6 +3,13 @@ import Duxcore from "../Duxcore";
 import { WSError } from "../structures/WSError";
 import { SocketSessionOpts } from "../util/types/socket";
 import { SocketPayload } from '../util/types/socket';
+import jwt from "jsonwebtoken";
+import SocketPayloadController from "../controllers/SocketPayloadController";
+import { SessionController } from "../controllers/SessionController";
+
+enum AuthMethod {
+  SESSION
+}
 
 export class SocketSession {
 	public client: Duxcore;
@@ -11,7 +18,10 @@ export class SocketSession {
 	private _uuid: string;
 
 	private _user?: string;
+  private _session?: SessionController;
+
 	private _authenticated?: boolean = false;
+  private _authMethod?: AuthMethod;
 
   private _lastPing: Date = new Date();
 
@@ -35,10 +45,11 @@ export class SocketSession {
 
 
     const msg: SocketPayload = JSON.parse(data.utf8Data ?? "{}");
+    const payload: SocketPayloadController = new SocketPayloadController(this.client, this, msg)
 		const op = this.client.socketServer.operators.get(msg.op);
 
     if (!op) return this.connection.send(JSON.stringify(new WSError("This operator code does not exist.", null, msg.ref)));
-    op.execute(msg, this);
+    op.execute(payload, this);
 	}
 
   sendError(err: WSError) {
@@ -47,11 +58,34 @@ export class SocketSession {
     })
   }
 
-	setAuthenticated(bool?: boolean): SocketSession {
-		if (bool == undefined) bool = true;
-		else bool = bool;
+  authenticate(token: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, this.client.tmpKeypair.private, { algorithms: [ "RS512" ] }, async (err, decoded: any) => {
+        if (err) return reject(err.message);
 
-		return this;
-	}
+        const data = decoded['data'];
+        const method = data['method'];
 
+        switch (method) {
+
+          case "session":
+            const sid = data['session_id'];
+            const session = await this.client.sessions.get(sid);
+
+            if (!sid || !session) return reject('Missing or invalid session ID');
+            
+            this._session = session;
+            this._authMethod = AuthMethod.SESSION;
+
+            // ... Addational session logic here
+
+            resolve(true);
+          break;
+
+          default: return reject('Invalid session authentication method'); break;                                                                                                               
+        }
+
+      });
+    });
+  }
 }

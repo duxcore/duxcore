@@ -12,6 +12,8 @@ export default class Duxcore {
   private wsPort = process.env.WS_PORT;
   private sessionServerAddress = process.env.SESSION_REDIS_ADDRESS;
 
+  public algo = 'RS512';
+
   constructor() {
     dtCfg();
   }

@@ -1,8 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const OpCode = {
+exports.OpCode = void 0;
+exports.OpCode = {
     session: {
         fetch: 'session:fetch',
-        new: 'session:new'
+        new: 'session:new',
+        getAuthToken: 'session:get_auth_token'
     },
+    auth: {
+        request: "auth:request"
+    }
 };

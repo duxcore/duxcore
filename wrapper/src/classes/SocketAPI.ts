@@ -1,5 +1,5 @@
 import { w3cwebsocket as WebSocketClient } from "websocket"
-import { OpCodePayload, OpCodeResponse, SocketMessage } from "../util/types/socket";
+import { SocketMessage } from "../util/types/socket";
 import Wrapper from "../wrapper";
 import * as uuid from 'uuid';
 import Collection from '@discordjs/collection';
@@ -11,7 +11,7 @@ export default class SocketAPI {
 
   public url: string;
 
-  private _onFetchDoneQueue: Collection<string, (msg: SocketMessage<any>) => void> = new Collection();
+  private _onFetchDoneQueue: Collection<string, (msg: SocketMessage) => void> = new Collection();
   private _heartbeat: any;
 
   constructor(socket: WebSocketClient, wrapper: Wrapper) {
@@ -27,7 +27,7 @@ export default class SocketAPI {
   private _handleQueueRoutine() {
     this.base.onmessage = e => {
       if (e.data.toString() == 'pong') return;
-      const msg: SocketMessage<any> = JSON.parse(e.data.toString());
+      const msg: SocketMessage = JSON.parse(e.data.toString());
       this._onFetchDoneQueue.forEach((value, key) => {
         if (key = msg.ref) {
           value(msg);
@@ -48,7 +48,7 @@ export default class SocketAPI {
     });
   }
 
-  private extractError(msg: SocketMessage<any>): string | null {
+  private extractError(msg: SocketMessage): string | null {
     if (msg.p['error'] !== undefined) return msg.p['error'];
     return null;
   }
@@ -56,6 +56,8 @@ export default class SocketAPI {
   private async startHeartbeat() {
     await this.wscon();
     this._heartbeat = setInterval(() => { this.base.send('ping') }, heartbeatInterval)
+
+    this.base.onclose = e => clearInterval(this._heartbeat);
   }
 
   close(): void {
@@ -63,7 +65,7 @@ export default class SocketAPI {
     this.base.close();
   }
 
-  fetch<OP extends keyof OpCodePayload>(op: OP, payload?: OpCodePayload[OP]): Promise<OpCodeResponse[OP]> {
+  fetch(op: string, payload?: any): Promise<SocketMessage> {
     return new Promise(async (resolve, reject) => {
       await this.wscon();
 
@@ -72,12 +74,10 @@ export default class SocketAPI {
 
       const requestTimeout = setTimeout(() => reject('Timed out whilst attempting a socket API request...'), socketRequestTimeout);
       this._onFetchDoneQueue.set(ref, (msg) => {
-        const err = this.extractError(msg);
-        if (err) reject(err);
-        
         clearTimeout(requestTimeout);
-
-        // @ts-ignore
+        const err = this.extractError(msg);
+        if (err) return reject({message: err, payload: msg});
+        
         return resolve(msg);
       });
       this.base.send(JSON.stringify(obj));

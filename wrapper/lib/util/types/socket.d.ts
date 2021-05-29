@@ -1,24 +1,15 @@
-import { FetchSessionPS, NewSessionPS } from "./payloadSchema";
-import { FetchSessionRS } from "./reponseSchema";
-declare const OpCode: {
+export declare const OpCode: {
     readonly session: {
         readonly fetch: "session:fetch";
         readonly new: "session:new";
+        readonly getAuthToken: "session:get_auth_token";
+    };
+    readonly auth: {
+        readonly request: "auth:request";
     };
 };
-export interface OpCodePayload {
-    [OpCode.session.fetch]: FetchSessionPS;
-    [OpCode.session.new]: NewSessionPS;
-}
-export interface OpCodeResponse {
-    [OpCode.session.fetch]: SocketMessage<FetchSessionRS>;
-    [OpCode.session.new]: SocketMessage<FetchSessionRS>;
-}
-export interface OpCodeEvent {
-}
-export interface SocketMessage<Payload> {
+export interface SocketMessage {
     op: string;
-    p: Payload;
+    p: any;
     ref: string;
 }
-export {};

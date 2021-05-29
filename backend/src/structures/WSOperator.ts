@@ -1,7 +1,8 @@
 import { SocketSession } from "../classes/SocketSession";
+import SocketPayloadController from "../controllers/SocketPayloadController";
 import { SocketPayload } from "../util/types/socket";
 
-export type ExecutorMethod = (payload: SocketPayload, session: SocketSession) => void;
+export type ExecutorMethod = (payload: SocketPayloadController, session: SocketSession) => void;
 export interface WSOperatorOpts {
   opCode: string, // What is the code for this operator?
   enabled?: boolean // Is this WSOperator enabled?
@@ -28,7 +29,7 @@ export default class WSOperator {
     return this;
   }
 
-  execute(payload: SocketPayload, session: SocketSession): Promise<WSOperator> {
+  execute(payload: SocketPayloadController, session: SocketSession): Promise<WSOperator> {
     return new Promise((resolve, _r) => {
       this._executor(payload, session);
       resolve(this);

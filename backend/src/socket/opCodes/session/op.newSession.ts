@@ -14,11 +14,11 @@ operator.setExecutor(async (payload, socket) => {
   const ip = payload.p.ip;
   const data = payload.p.data ?? {};
 
-  if (!client) socket.sendError(new WSError('"client" is required to create a new session.', operator.replyCall, ref));
-  if (!ip) socket.sendError(new WSError('"ip" is required to create a new session', operator.replyCall, ref));
+  if (!client) payload.sendError('"client" is required to create a new session.');
+  if (!ip) payload.sendError('"ip" is required to create a new session');
 
   const newSession = await socket.client.sessions.new({ client, ip, data });
-  socket.connection.send(JSON.stringify(new WSPayload(operator.replyCall, newSession.toJson())))  
+  payload.reply(newSession.toJson());  
 });
 
 export default operator;

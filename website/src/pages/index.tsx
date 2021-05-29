@@ -48,6 +48,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const wsUrl = process.env.SOCKET_SERVER_ADDRESS
   const wrap = new Wrapper(wsUrl);
   const session = await getSession(wrap, context);
+
   wrap.close();
 
   return {

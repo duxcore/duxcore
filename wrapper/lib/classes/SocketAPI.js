@@ -66,6 +66,7 @@ class SocketAPI {
     async startHeartbeat() {
         await this.wscon();
         this._heartbeat = setInterval(() => { this.base.send('ping'); }, constraints_1.heartbeatInterval);
+        this.base.onclose = e => clearInterval(this._heartbeat);
     }
     close() {
         clearInterval(this._heartbeat);
@@ -78,11 +79,10 @@ class SocketAPI {
             let obj = { op, p: payload, ref };
             const requestTimeout = setTimeout(() => reject('Timed out whilst attempting a socket API request...'), constraints_1.socketRequestTimeout);
             this._onFetchDoneQueue.set(ref, (msg) => {
+                clearTimeout(requestTimeout);
                 const err = this.extractError(msg);
                 if (err)
-                    reject(err);
-                clearTimeout(requestTimeout);
-                // @ts-ignore
+                    return reject({ message: err, payload: msg });
                 return resolve(msg);
             });
             this.base.send(JSON.stringify(obj));
