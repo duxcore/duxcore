@@ -22,7 +22,7 @@ export default function Home() {
               className="text-white opacity-30 hover:opacity-100 transition"
             />
           </a>
-          <a href="https://discord.gg/WDTGx7QK">
+          <a href="https://discord.gg/vZTbxBNSVA">
             <SolidDiscord
               width="20"
               height="20"
