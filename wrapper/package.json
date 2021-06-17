@@ -1,5 +1,6 @@
 {
   "name": "@duxcore/wrapper",
+  "main": "lib/wrapper",
   "dependencies": {
     "trixi": "^1.0.7"
   }

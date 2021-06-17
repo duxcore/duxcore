@@ -300,6 +300,7 @@ __metadata:
     react-dom: 17.0.2
     tailwindcss: latest
     typescript: ^4.2.4
+    wrapper: ^0.1.0
   languageName: unknown
   linkType: soft
 
@@ -7274,6 +7275,13 @@ resolve@^2.0.0-next.3:
     string-width: ^4.1.0
     strip-ansi: ^6.0.0
   checksum: 09939dd775ae565bb99a25a6c072fe3775a95fa71751b5533c94265fe986ba3e3ab071a027ab76cf26876bd9afd10ac3c2d06d7c4bcce148bf7d2d9514e3a0df
+  languageName: node
+  linkType: hard
+
+"wrapper@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "wrapper@npm:0.1.0"
+  checksum: 94a9ed09d6446e477171ba6861778a2f89b931d1cc211c75be8223f736ac9b1e98d66463935b09d2b95a5a6609bf6f7d21de754a069f5d264519fbcf07eb6fdb
   languageName: node
   linkType: hard
 
