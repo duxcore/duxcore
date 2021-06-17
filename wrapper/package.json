@@ -1,3 +1,6 @@
 {
-  "name": "@duxcore/wrapper"
+  "name": "@duxcore/wrapper",
+  "dependencies": {
+    "trixi": "^1.0.7"
+  }
 }

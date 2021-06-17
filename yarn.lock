@@ -306,6 +306,8 @@ __metadata:
 "@duxcore/wrapper@workspace:wrapper":
   version: 0.0.0-use.local
   resolution: "@duxcore/wrapper@workspace:wrapper"
+  dependencies:
+    trixi: ^1.0.7
   languageName: unknown
   linkType: soft
 
@@ -6761,7 +6763,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"trixi@npm:^1.0.5":
+"trixi@npm:^1.0.5, trixi@npm:^1.0.7":
   version: 1.0.7
   resolution: "trixi@npm:1.0.7"
   dependencies:
