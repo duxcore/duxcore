@@ -1,5 +1,6 @@
 import { Field, FieldAttributes } from "formik";
 import React from "react";
+import { Spinner } from "../Spinner";
 
 const inputStatusClass = {
   error: "border-error",
@@ -10,12 +11,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   withIcon?: React.ReactElement;
   error?: string;
   touched?: boolean;
+  loading?: boolean;
 }
 
 export const Input: React.FC<FieldAttributes<InputProps>> = ({
   withIcon,
   error,
   touched,
+  loading = false,
   ...props
 }) => {
   let activeStatusClass = inputStatusClass.idle;
@@ -39,9 +42,14 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
             {React.cloneElement(withIcon, { size: 20 })}
           </div>
         ) : null}
-        {error && touched ? (
+        {error && touched && !loading ? (
           <div className="text-error pointer-events-none center-right mr-15 font-bold text-lg">
             !
+          </div>
+        ) : null}
+        {loading ? (
+          <div className="center-right mr-15">
+            <Spinner className="text-primary-300" />
           </div>
         ) : null}
       </div>

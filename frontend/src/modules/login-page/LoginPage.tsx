@@ -1,12 +1,17 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikValues } from "formik";
 import React from "react";
 import { Input } from "../../ui/forms/Input";
 import { IoLockOpenOutline, IoMailOutline } from "react-icons/io5";
 import { LoginSchema } from "./LoginSchema";
+import { Button } from "../../ui/Button";
 
 interface LoginPageProps {}
 
 export const LoginPage: React.FC<LoginPageProps> = () => {
+  const handleSubmit = (values: FormikValues) => {
+    console.log(values);
+  };
+
   return (
     <div className="w-full">
       <div className="center-xy">
@@ -18,7 +23,7 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={LoginSchema}
-            onSubmit={() => undefined}
+            onSubmit={handleSubmit}
           >
             {({ errors, touched }) => (
               <Form>
@@ -40,6 +45,7 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
                     type="password"
                     touched={touched.password}
                   />
+                  <Button type="submit">Log in</Button>
                 </div>
               </Form>
             )}

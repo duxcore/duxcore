@@ -65,10 +65,10 @@
     "eqeqeq": "error",
     "func-call-spacing": "off",
     "func-name-matching": "error",
-    "func-names": "error",
+    "func-names": "off",
     "func-style": [
       "error",
-      "declaration",
+      "expression",
       {
         "allowArrowFunctions": true
       }
@@ -230,7 +230,7 @@
     "prefer-numeric-literals": "error",
     "prefer-object-spread": "error",
     "prefer-promise-reject-errors": "error",
-    "prefer-reflect": "error",
+    "prefer-reflect": "off",
     "prefer-regex-literals": "error",
     "prefer-rest-params": "error",
     "prefer-spread": "error",
