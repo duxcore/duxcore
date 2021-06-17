@@ -46,5 +46,8 @@
     ],
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
+  },
+  "resolutions": {
+    "typescript": "4.1.5"
   }
 }
