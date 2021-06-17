@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "dotenv": "^10.0.0",
-    "trixi": "^1.0.4"
+    "trixi": "^1.0.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
