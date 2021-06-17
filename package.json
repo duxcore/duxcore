@@ -4,7 +4,8 @@
   "workspaces": [
     "website",
     "api",
-    "wrapper"
+    "wrapper",
+    "backend"
   ],
   "scripts": {
     "commit": "cz",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "@types/node": "^15.12.2",
     "commitizen": "^4.2.3",
     "commitlint": "~12.1.4",
     "cz-conventional-changelog": "3.3.0",
