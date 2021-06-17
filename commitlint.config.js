@@ -4,12 +4,7 @@ module.exports = {
     "scope-enum": [
       2,
       "always",
-      [
-	"global",
-	"api",
-	"website",
-	"wrapper"
-      ],
+      ["global", "api", "website", "wrapper", "backend"],
     ],
   },
 };
