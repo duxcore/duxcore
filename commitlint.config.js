@@ -8,7 +8,8 @@ module.exports = {
 	"global",
 	"api",
 	"website",
-	"wrapper"
+	"wrapper",
+	"frontend"
       ],
     ],
   },

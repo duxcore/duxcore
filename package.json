@@ -4,7 +4,8 @@
   "workspaces": [
     "website",
     "api",
-    "wrapper"
+    "wrapper",
+    "frontend"
   ],
   "scripts": {
     "commit": "cz",
