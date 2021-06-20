@@ -578,6 +578,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/client@npm:^2.25.0":
+  version: 2.25.0
+  resolution: "@prisma/client@npm:2.25.0"
+  dependencies:
+    "@prisma/engines-version": 2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: 8fff492ea8f4032ea854c438f59db53d854991c5329c880accc87282080b14dc4ed1a9432c113a1ca560e3454bf0dc4f45474250d51f42a4b5d07a7ce204dfc4
+  languageName: node
+  linkType: hard
+
+"@prisma/engines-version@npm:2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922":
+  version: 2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922
+  resolution: "@prisma/engines-version@npm:2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922"
+  checksum: 7f5e240eab4bbc7df3bca11a46325833fd87e951d3e779136469cc19f7e92e0aae232c730459e7a6f8a82c53d09de7acad59b83551b6ac65cf7a3f2008f40038
+  languageName: node
+  linkType: hard
+
 "@rushstack/eslint-patch@npm:^1.0.6":
   version: 1.0.6
   resolution: "@rushstack/eslint-patch@npm:1.0.6"
@@ -2601,6 +2622,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": ^12.1.4
     "@commitlint/config-conventional": ^12.1.4
+    "@prisma/client": ^2.25.0
     "@types/node": ^15.12.2
     commitizen: ^4.2.3
     commitlint: ~12.1.4
