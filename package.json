@@ -5,6 +5,7 @@
     "website",
     "api",
     "wrapper",
+    "backend",
     "frontend"
   ],
   "scripts": {
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "@types/node": "^15.12.2",
     "commitizen": "^4.2.3",
     "commitlint": "~12.1.4",
     "cz-conventional-changelog": "3.3.0",
@@ -45,5 +47,11 @@
     ],
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
+  },
+  "resolutions": {
+    "typescript": "4.1.5"
+  },
+  "dependencies": {
+    "trixi": "^1.0.8"
   }
 }
