@@ -9,6 +9,7 @@
     "schema": "src/util/prisma/duxcore.prisma"
   },
   "dependencies": {
+    "blakets": ">0.0.0-2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "trixi": "^1.0.5"

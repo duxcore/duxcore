@@ -1,44 +1,34 @@
+import { blake2sHex } from "blakets";
 import crypto from "crypto";
 
 export default class Password {
-  private static algo = "sha512";
-
   public static generateSalt(options?: GenerateSaltOptions): string {
-    const rounds = options?.rounds ?? 12;
-    const randomBytes = crypto.randomBytes(Math.ceil(rounds / 2));
-
-    return randomBytes.toString("hex").slice(0, rounds);
+    const length = options?.length ?? 12;
+    const randomBytes = crypto.randomBytes(Math.ceil(length / 2));
+    return randomBytes.toString("hex").slice(0, length);
   }
 
-  public static hash(password, options?: HashPasswordOptions): HashedPassword {
-    const salt = options?.overrideSalt ?? Password.generateSalt();
-    const hash = crypto.createHmac(Password.algo, salt);
-    hash.update(password);
-
-    return {
-      hash: hash.digest("hex"),
-      salt,
-    };
+  public static hash(password: string, options?: HashPasswordOptions): string {
+    const salt =
+      options?.overrideSalt ?? Password.generateSalt(options?.saltOpts);
+    const hash = blake2sHex(`$BLAKE2s$${password}$${salt}`);
+    return `BLAKE2s$${hash}$${salt}`;
   }
 
-  public static validate(newPass: string, object: HashedPassword): boolean {
-    const newHash = Password.hash(newPass, { overrideSalt: object.salt }).hash;
-    const originalHash = object.hash;
-
-    return newHash === originalHash;
+  public static validate(newPass: string, hashed: string): boolean {
+    const [algo, oldHash, salt] = hashed.split(/\$/g);
+    return crypto.timingSafeEqual(
+      Buffer.from(hashed),
+      Buffer.from(Password.hash(newPass, { overrideSalt: salt }))
+    );
   }
-}
-
-export interface HashedPassword {
-  hash: string;
-  salt: string;
 }
 
 export interface HashPasswordOptions {
-  pepper?: string;
   overrideSalt?: string;
+  saltOpts?: GenerateSaltOptions;
 }
 
 export interface GenerateSaltOptions {
-  rounds?: number; // default 12
+  length?: number; // default 12
 }
