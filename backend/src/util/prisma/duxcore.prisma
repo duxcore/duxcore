@@ -22,7 +22,7 @@ model User {
   name          String
   username      String              @unique
   email         String              @unique
-  password      Json?
+  password      String?
   loginAttempts UserLoginAttempts[]
 
   created   DateTime @default(now())
