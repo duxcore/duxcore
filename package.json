@@ -5,7 +5,8 @@
     "website",
     "api",
     "wrapper",
-    "backend"
+    "backend",
+    "frontend"
   ],
   "scripts": {
     "commit": "cz",
@@ -49,5 +50,8 @@
   },
   "resolutions": {
     "typescript": "4.1.5"
+  },
+  "dependencies": {
+    "trixi": "^1.0.8"
   }
 }
