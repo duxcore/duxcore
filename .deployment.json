@@ -1,0 +1,7 @@
+{
+  "env": {
+    "name": "discord-bots",
+    "branch": "dev"
+  },
+  "containers": []
+}

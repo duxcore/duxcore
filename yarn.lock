@@ -1335,6 +1335,7 @@ __metadata:
   resolution: "backend@workspace:backend"
   dependencies:
     "@types/express": ^4.17.12
+    blakets: ">0.0.0-2"
     dotenv: ^10.0.0
     express: ^4.17.1
     nodemon: ^2.0.7
@@ -1367,6 +1368,19 @@ __metadata:
   version: 2.2.0
   resolution: "binary-extensions@npm:2.2.0"
   checksum: 0f5f5685f344b035c4f98d06fa288962d262294a1441c1481ac99e895037bde971ebe6e09a4bd8aa18ab2525bfc00b1ad4af71dbf9e933a72e0df6919706a728
+  languageName: node
+  linkType: hard
+
+"blakets@npm:>0.0.0-2":
+  version: 0.0.0-3
+  resolution: "blakets@npm:0.0.0-3"
+  dependencies:
+    doge-json: ">=1.1.0-3"
+  bin:
+    blake: lib/cli.js
+    blakejs: lib/cli.js
+    blakets: lib/cli.js
+  checksum: a0a7ce034a1d7bd95f80310f3e216b6716d81f5f66da353c4c05e8c2b7ae807263ed8a91c055963c7d777cc6292ccd72ded3745db4ca4bdbb02944398816c196
   languageName: node
   linkType: hard
 
@@ -2576,6 +2590,13 @@ __metadata:
   dependencies:
     esutils: ^2.0.2
   checksum: 2eae469bd2889ceee9892083a67340b3622568fe5290edce620e5d5ddab23d644b2a780e9a7c68ad9c8a62716a70c5e484402ac93a398fa78b54b7505592aa7f
+  languageName: node
+  linkType: hard
+
+"doge-json@npm:>=1.1.0-3":
+  version: 1.1.0-3
+  resolution: "doge-json@npm:1.1.0-3"
+  checksum: 7349b50c2bb7877a769735211d7b6f6c5854f055533c3b85a4e19c2a62398dbd9f452e3d4928bce59a2bf58d40b0fca78f5f9e9c50699b3b6bb510a0390af8b9
   languageName: node
   linkType: hard
 
