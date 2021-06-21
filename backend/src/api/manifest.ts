@@ -6,6 +6,11 @@ export const apiManifest: ApiManifest = {
     {
       version: 1,
       middleware: [],
+      routes: [],
+    },
+    {
+      version: 69,
+      middleware: [],
       routes: [teapot],
     },
   ],
