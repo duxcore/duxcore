@@ -54,7 +54,7 @@ const validateUsername = createFormValidation({
   },
 });
 
-export const SignupSchema = yup.object().shape({
+export const RegisterSchema = yup.object().shape({
   name: yup.string().required(),
   username: yup
     .string()

@@ -7,12 +7,12 @@ import {
   IoMailOutline,
   IoPersonOutline,
 } from "react-icons/io5";
-import { SignupSchema } from "./SignupSchema";
+import { RegisterSchema } from "./RegistrationSchema";
 import { Button } from "../../ui/Button";
 
-interface SignupPageProps {}
+interface RegistrationPageProps {}
 
-export const SignupPage: React.FC<SignupPageProps> = () => {
+export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
   const handleSubmit = (values: FormikValues) => {
     console.log(values);
   };
@@ -23,7 +23,9 @@ export const SignupPage: React.FC<SignupPageProps> = () => {
         <div className="border border-primary-800 p-40 rounded-8">
           <div className="mb-30">
             <div className="text-3xl font-bold">Welcome</div>
-            <div className="text-primary-500">Your regular signup tagline</div>
+            <div className="text-primary-500">
+              Your regular registration tagline
+            </div>
           </div>
           <Formik
             initialValues={{
@@ -33,7 +35,7 @@ export const SignupPage: React.FC<SignupPageProps> = () => {
               password: "",
               passwordConfirmation: "",
             }}
-            validationSchema={SignupSchema}
+            validationSchema={RegisterSchema}
             onSubmit={handleSubmit}
           >
             {({ errors, touched, isValidating }) => (
@@ -80,7 +82,7 @@ export const SignupPage: React.FC<SignupPageProps> = () => {
                     type="password"
                     touched={touched.passwordConfirmation}
                   />
-                  <Button type="submit">Join</Button>
+                  <Button type="submit">Submit Registration</Button>
                 </div>
               </Form>
             )}
