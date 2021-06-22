@@ -1,6 +1,6 @@
 {
   "env": {
-    "name": "duxcore-backend",
+    "name": "duxcore",
     "branch": "dev"
   },
   "containers": [
