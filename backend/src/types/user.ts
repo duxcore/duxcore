@@ -11,5 +11,9 @@ export interface NewUserData {
   username: string;
   email: string;
   password: string;
-  role: UserRole;
+}
+
+export interface UserJWTObject {
+  uuid: string;
+  jid: string;
 }

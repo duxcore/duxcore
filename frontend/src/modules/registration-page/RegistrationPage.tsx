@@ -1,5 +1,5 @@
 import { Form, Formik, FormikHelpers, FormikValues } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../../ui/forms/Input";
 import {
   IoAtOutline,
@@ -7,14 +7,32 @@ import {
   IoMailOutline,
   IoPersonOutline,
 } from "react-icons/io5";
-import { SignupSchema } from "./SignupSchema";
+import { RegisterSchema } from "./RegistrationSchema";
 import { Button } from "../../ui/Button";
+import wrapper from '@duxcore/wrapper';
 
-interface SignupPageProps {}
+interface RegistrationPageProps {}
 
-export const SignupPage: React.FC<SignupPageProps> = () => {
+const ws = wrapper.ws()
+export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
+  
+  ws.user.register("1", "2", '3', '4');
+  ws.user.register("1", "2", '3', '4');
+
   const handleSubmit = (values: FormikValues) => {
-    console.log(values);
+    console.log(values)
+    ws.user.register("1", "2", '3', '4');
+    
+    /*
+    ws.user.register(values.name, values.email, values.username, values.password).then(res => {
+      if (res.data.successful !== true) {
+        // Unsuccessful error logic here
+        console.log("Registration failed!", res);
+      } else {
+        console.log("Successfully registered!");
+      }
+    })
+    */
   };
 
   return (
@@ -23,7 +41,9 @@ export const SignupPage: React.FC<SignupPageProps> = () => {
         <div className="border border-primary-800 p-40 rounded-8">
           <div className="mb-30">
             <div className="text-3xl font-bold">Welcome</div>
-            <div className="text-primary-500">Your regular signup tagline</div>
+            <div className="text-primary-500">
+              Your regular registration tagline
+            </div>
           </div>
           <Formik
             initialValues={{
@@ -33,8 +53,10 @@ export const SignupPage: React.FC<SignupPageProps> = () => {
               password: "",
               passwordConfirmation: "",
             }}
-            validationSchema={SignupSchema}
-            onSubmit={handleSubmit}
+            validationSchema={RegisterSchema}
+            onSubmit={(values => {
+              ws.user.register("1", "2", '3', '4');
+            })}
           >
             {({ errors, touched, isValidating }) => (
               <Form>
@@ -80,7 +102,7 @@ export const SignupPage: React.FC<SignupPageProps> = () => {
                     type="password"
                     touched={touched.passwordConfirmation}
                   />
-                  <Button type="submit">Join</Button>
+                  <Button type="submit">Submit Registration</Button>
                 </div>
               </Form>
             )}
