@@ -4,7 +4,7 @@ import { sendApiResponse } from "./sendApiResponse";
 
 export const apiLimiter = rateLimit({
   windowMs: 1000,
-  max: 5,
+  max: 3,
   handler: (req, res) => {
     const response = newApiResponse({
       status: 429,
