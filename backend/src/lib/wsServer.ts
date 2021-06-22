@@ -21,6 +21,7 @@ export default function startWs(port: number) {
 
       Object.keys(wsManifest).map((key) => {
         connection.onOp(key, (payload) => wsManifest[key](payload, instance));
+        console.log("registered op", key)
       });
     });
   });

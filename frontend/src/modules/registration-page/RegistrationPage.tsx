@@ -1,5 +1,5 @@
 import { Form, Formik, FormikHelpers, FormikValues } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../../ui/forms/Input";
 import {
   IoAtOutline,
@@ -9,12 +9,30 @@ import {
 } from "react-icons/io5";
 import { RegisterSchema } from "./RegistrationSchema";
 import { Button } from "../../ui/Button";
+import wrapper from '@duxcore/wrapper';
 
 interface RegistrationPageProps {}
 
+const ws = wrapper.ws()
 export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
+  
+  ws.user.register("1", "2", '3', '4');
+  ws.user.register("1", "2", '3', '4');
+
   const handleSubmit = (values: FormikValues) => {
-    console.log(values);
+    console.log(values)
+    ws.user.register("1", "2", '3', '4');
+    
+    /*
+    ws.user.register(values.name, values.email, values.username, values.password).then(res => {
+      if (res.data.successful !== true) {
+        // Unsuccessful error logic here
+        console.log("Registration failed!", res);
+      } else {
+        console.log("Successfully registered!");
+      }
+    })
+    */
   };
 
   return (
@@ -36,7 +54,9 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
               passwordConfirmation: "",
             }}
             validationSchema={RegisterSchema}
-            onSubmit={handleSubmit}
+            onSubmit={(values => {
+              ws.user.register("1", "2", '3', '4');
+            })}
           >
             {({ errors, touched, isValidating }) => (
               <Form>

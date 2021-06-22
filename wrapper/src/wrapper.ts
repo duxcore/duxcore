@@ -1,12 +1,21 @@
 import trixi from "trixi";
-import { Wrapper } from "./types/Wrapper";
+import { restUser } from "./lib/rest/restUser";
+import user from "./lib/ws/user";
+import { wsUrl } from "./util/constraints";
 
-export default function wrapper(url: string): Wrapper {
-  const app = trixi();
-  const ws = app.createClient({ url });
+const app = trixi();
 
-  return {
-    ws,
-    url,
-  };
+export default {
+  ws(url?: string) {
+    const ws = app.createClient({ url: url ?? wsUrl });
+  
+    return {
+      ws,
+      url,
+      user: user(ws)
+    };
+  },
+  rest: {
+    user: restUser
+  }
 }

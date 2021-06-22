@@ -1,6 +1,9 @@
 import * as yup from "yup";
 import yuppassword from "yup-password";
 import memoize from "memoizee";
+import wrapper from '@duxcore/wrapper';
+import { debounce, throttle } from 'throttle-debounce';
+import { UsernameAPIResponse } from "../../../../wrapper/lib/types/restUser";
 
 yuppassword(yup);
 
@@ -10,6 +13,12 @@ interface ICreateFormValidation {
   validationFn: (value?: string) => any;
   async: boolean;
 }
+
+const testUsername = throttle(1000, (value: string, callback: (res: UsernameAPIResponse) => void) => {
+  wrapper.rest.user.getUsername(value).then(res => {
+    return callback(res);
+  })
+});
 
 const createFormValidation = ({
   id,
@@ -43,13 +52,10 @@ const validateUsername = createFormValidation({
   validationFn: (value) => {
     // Just use your regular async/await and don't return a new promise
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (Math.random() > 0.5) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }, Math.random() * (1000 - 200) + 200);
+      testUsername(value as string, res => {
+        if (res.data?.isTaken === false) resolve(true);
+        else resolve(false);
+      })
     });
   },
 });
@@ -59,7 +65,7 @@ export const RegisterSchema = yup.object().shape({
   username: yup
     .string()
     .min(3, "minimum 3 characters")
-    .max(15, "maximum 15 characters")
+    .max(24, "maximum 15 characters")
     .required()
     .test(...validateUsername),
   email: yup.string().email().required(),

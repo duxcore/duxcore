@@ -53,6 +53,6 @@
   },
   "dependencies": {
     "@prisma/client": "^2.25.0",
-    "trixi": "^1.0.8"
+    "trixi": "^1.1.1"
   }
 }
