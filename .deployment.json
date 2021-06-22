@@ -1,6 +1,6 @@
 {
   "env": {
-    "name": "discord-bots",
+    "name": "duxcore-backend",
     "branch": "dev"
   },
   "containers": [
