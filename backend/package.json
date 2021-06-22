@@ -1,7 +1,8 @@
 {
   "name": "backend",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
+    "migrate": "prisma db push",
     "dev": "nodemon --exec ts-node duxcore.ts",
     "start": "node lib/duxcore"
   },
@@ -9,11 +10,13 @@
     "schema": "src/util/prisma/duxcore.prisma"
   },
   "dependencies": {
+    "@prisma/client": "^2.25.0",
     "blakets": ">0.0.0-2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "prisma": "^2.25.0",
     "trixi": "^1.0.9",
     "uuid": "^8.3.2"
   },

@@ -3,5 +3,27 @@
     "name": "discord-bots",
     "branch": "dev"
   },
-  "containers": []
+  "containers": [
+    {
+      "dir": "/backend",
+      "envVars": [
+        {
+          "name": "WS_PORT",
+          "secret": "WS_PORT"
+        },
+        {
+          "name": "API_PORT",
+          "secret": "API_PORT"
+        },
+        {
+          "name": "DATABASE_URL",
+          "secret": "DATABASE_URL"
+        },
+        {
+          "name": "JWT_KEY",
+          "secret": "JWT_KEY"
+        }
+      ]
+    }
+  ]
 }

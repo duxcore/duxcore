@@ -9,20 +9,16 @@ import {
 } from "react-icons/io5";
 import { RegisterSchema } from "./RegistrationSchema";
 import { Button } from "../../ui/Button";
-import wrapper from '@duxcore/wrapper';
+import wrapper from "@duxcore/wrapper";
 
 interface RegistrationPageProps {}
 
-const ws = wrapper.ws()
+const ws = wrapper.ws();
 export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
-  
-  ws.user.register("1", "2", '3', '4');
-  ws.user.register("1", "2", '3', '4');
-
   const handleSubmit = (values: FormikValues) => {
-    console.log(values)
-    ws.user.register("1", "2", '3', '4');
-    
+    console.log(values);
+    ws.user.register("1", "2", "3", "4");
+
     /*
     ws.user.register(values.name, values.email, values.username, values.password).then(res => {
       if (res.data.successful !== true) {
@@ -54,9 +50,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
               passwordConfirmation: "",
             }}
             validationSchema={RegisterSchema}
-            onSubmit={(values => {
-              ws.user.register("1", "2", '3', '4');
-            })}
+            onSubmit={handleSubmit}
           >
             {({ errors, touched, isValidating }) => (
               <Form>
