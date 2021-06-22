@@ -1,4 +1,5 @@
 import { newApiResponse } from "../../../helpers/newApiResponse";
+import { apiLimiter } from "../../../helpers/rateLimit";
 import { sendApiResponse } from "../../../helpers/sendApiResponse";
 import { ApiResponse, ApiRoute } from "../../../types/api";
 import { prisma } from "../../../util/prisma/instance";
@@ -6,11 +7,11 @@ import { prisma } from "../../../util/prisma/instance";
 export const getUsername: ApiRoute = {
   route: "/user/username/:username",
   method: "get",
-  middleware: [],
+  middleware: [apiLimiter],
   executor: (req, res) => {
-    const username = req.params.username
+    const username = req.params.username;
 
-    prisma.user.findFirst({ where: { username } }).then(user => {
+    prisma.user.findFirst({ where: { username } }).then((user) => {
       let response: ApiResponse;
 
       if (!user) {
@@ -20,9 +21,9 @@ export const getUsername: ApiRoute = {
           data: {
             isTaken: false,
             username,
-            timestamp: new Date().getTime()
+            timestamp: new Date().getTime(),
           },
-          successful: true
+          successful: true,
         });
       } else {
         response = newApiResponse({
@@ -31,9 +32,9 @@ export const getUsername: ApiRoute = {
           data: {
             isTaken: true,
             username,
-            timestamp: new Date().getTime()
+            timestamp: new Date().getTime(),
           },
-          successful: true
+          successful: true,
         });
       }
 
