@@ -659,6 +659,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express-rate-limit@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "@types/express-rate-limit@npm:5.1.2"
+  dependencies:
+    "@types/express": "*"
+  checksum: 517bf600cc3787fc0eca6cf8187db3abe71a298f9548ac393e078687a537917da69f11f05a8103268d3ca266d228e3084d62efd031624f8c255a543ebf14c250
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:^4.17.18":
   version: 4.17.21
   resolution: "@types/express-serve-static-core@npm:4.17.21"
@@ -670,7 +679,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4.17.12":
+"@types/express@npm:*, @types/express@npm:^4.17.12":
   version: 4.17.12
   resolution: "@types/express@npm:4.17.12"
   dependencies:
@@ -1379,12 +1388,14 @@ __metadata:
   dependencies:
     "@prisma/client": ^2.25.0
     "@types/express": ^4.17.12
+    "@types/express-rate-limit": ^5.1.2
     "@types/jsonwebtoken": ^8.5.2
     "@types/uuid": ^8.3.0
     blakets: ">0.0.0-2"
     cors: ^2.8.5
     dotenv: ^10.0.0
     express: ^4.17.1
+    express-rate-limit: ^5.2.6
     jsonwebtoken: ^8.5.1
     nodemon: ^2.0.7
     prisma: ^2.25.0
@@ -3298,6 +3309,13 @@ __metadata:
   dependencies:
     homedir-polyfill: ^1.0.1
   checksum: 502e8b04a22094575c68639e68e0a2c19ad23d78441e440e5164ad2f38bef05e4b2c2568acfcf4af37b90bbf49ea587c253753ba6d351229e5858b96cb136125
+  languageName: node
+  linkType: hard
+
+"express-rate-limit@npm:^5.2.6":
+  version: 5.2.6
+  resolution: "express-rate-limit@npm:5.2.6"
+  checksum: 03cfcd8b039b08be5ffa1edbdc9b0a2eb5199ba4687bfb6d52e7327827eb1e17f612f497ffd6182e1521438cc18ea0bce062500e21af2ce0b2a0b2b59946cd8f
   languageName: node
   linkType: hard
 
