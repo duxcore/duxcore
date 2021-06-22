@@ -7,7 +7,7 @@ import { prisma } from "../../../util/prisma/instance";
 export const getUsername: ApiRoute = {
   route: "/user/username/:username",
   method: "get",
-  middleware: [apiLimiter],
+  middleware: [],
   executor: (req, res) => {
     const username = req.params.username;
 
