@@ -1,3 +1,8 @@
 {
-  "name": "@duxcore/wrapper"
+  "name": "@duxcore/wrapper",
+  "main": "lib/wrapper",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "trixi": "^1.1.3"
+  }
 }
