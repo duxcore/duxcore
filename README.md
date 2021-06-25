@@ -25,7 +25,7 @@ As it stands right now, we will have to charge for hosting in the beginning as w
 
 # How will the decentralization work?
 
-For now, we will be redating this information until we have a full plan out. We will be discussing part of this in the discord where we are planning it out and getting it ready, so be sure to join it [here](https://discord.gg/dTGJ5Bchnq)
+For now, we will be redacting this information until we have a full plan out. We will be discussing part of this in the discord where we are planning it out and getting it ready, so be sure to join it [here](https://discord.gg/dTGJ5Bchnq)
 
 # Collaborators
 
