@@ -1396,6 +1396,7 @@ __metadata:
     dotenv: ^10.0.0
     express: ^4.17.1
     express-rate-limit: ^5.2.6
+    hcaptcha: ^0.0.2
     jsonwebtoken: ^8.5.1
     nodemon: ^2.0.7
     prisma: ^2.25.0
@@ -3996,6 +3997,13 @@ __metadata:
     inherits: ^2.0.3
     minimalistic-assert: ^1.0.1
   checksum: fceb7fb87e224f4b399212f902d3a34c3ed8512560868b56dde92f617fac9c66b501e583bab2996ed7493be5ab3385e05a69d2209fa6a9144391b22e1c2d245b
+  languageName: node
+  linkType: hard
+
+"hcaptcha@npm:^0.0.2":
+  version: 0.0.2
+  resolution: "hcaptcha@npm:0.0.2"
+  checksum: e95e2e93c4f6049e3afb60baf23abb7d0b2d49ee043010bb69299e6da9e5ae6af0c64886c28e226aed474fb286cad7baca6b15fc713631f93810752656a783b3
   languageName: node
   linkType: hard
 
