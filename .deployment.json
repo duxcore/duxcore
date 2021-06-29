@@ -16,10 +16,6 @@
           "secret": "API_PORT"
         },
         {
-          "name": "DATABASE_URL",
-          "secret": "DATABASE_URL"
-        },
-        {
           "name": "JWT_KEY",
           "secret": "JWT_KEY"
         }

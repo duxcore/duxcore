@@ -1,8 +1,6 @@
-import * as test from './operators/test';
-import { registerUserWS } from './operators/user/register';
+import * as test from "./operators/test";
+import { registerUserWS } from "./operators/user/register";
 
 export default {
-  'duxcore:test': test.default,
-
-  'user:register': registerUserWS
-}
+  "duxcore:test": test.default,
+};

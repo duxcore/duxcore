@@ -17,6 +17,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6",
+    "hcaptcha": "^0.0.2",
     "jsonwebtoken": "^8.5.1",
     "prisma": "^2.25.0",
     "trixi": "^1.0.9",
