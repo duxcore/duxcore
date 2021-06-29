@@ -1,8 +1,8 @@
 import * as yup from "yup";
 import yuppassword from "yup-password";
 import memoize from "memoizee";
-import wrapper from '@duxcore/wrapper';
-import { debounce, throttle } from 'throttle-debounce';
+import wrapper from "@duxcore/wrapper";
+import { debounce, throttle } from "throttle-debounce";
 import { UsernameAPIResponse } from "../../../../wrapper/lib/types/restUser";
 
 yuppassword(yup);
@@ -14,11 +14,14 @@ interface ICreateFormValidation {
   async: boolean;
 }
 
-const testUsername = throttle(1000, (value: string, callback: (res: UsernameAPIResponse) => void) => {
-  wrapper.rest.user.getUsername(value).then(res => {
-    return callback(res);
-  })
-});
+const testUsername = throttle(
+  1000,
+  (value: string, callback: (res: UsernameAPIResponse) => void) => {
+    wrapper.rest.user.getUsername(value).then((res) => {
+      return callback(res);
+    });
+  }
+);
 
 const createFormValidation = ({
   id,
@@ -52,10 +55,10 @@ const validateUsername = createFormValidation({
   validationFn: (value) => {
     // Just use your regular async/await and don't return a new promise
     return new Promise((resolve, reject) => {
-      testUsername(value as string, res => {
+      testUsername(value as string, (res) => {
         if (res.data?.isTaken === false) resolve(true);
         else resolve(false);
-      })
+      });
     });
   },
 });

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@duxcore/wrapper": "workspace:wrapper",
     "formik": "^2.2.9",
     "memoizee": "^0.4.15",
     "next": "11.0.0",

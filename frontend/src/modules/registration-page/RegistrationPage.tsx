@@ -10,14 +10,32 @@ import {
 import { RegisterSchema } from "./RegistrationSchema";
 import { Button } from "../../ui/Button";
 import wrapper from "@duxcore/wrapper";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 interface RegistrationPageProps {}
 
-const ws = wrapper.ws();
+// const ws = wrapper.ws();
 export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
+  const [captchaComplete, setCaptchaComplete] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+
   const handleSubmit = (values: FormikValues) => {
     console.log(values);
-    ws.user.register("1", "2", "3", "4");
+    // S3xMast3r69#
+
+    if (!captchaComplete) return;
+
+    wrapper.rest.user
+      .register(
+        values.username,
+        values.name,
+        values.emial,
+        values.password,
+        captchaToken
+      )
+      .then((r) => {
+        console.log(r);
+      });
 
     /*
     ws.user.register(values.name, values.email, values.username, values.password).then(res => {
@@ -29,6 +47,12 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
       }
     })
     */
+  };
+
+  const onVerifyCaptcha = (token: string) => {
+    console.log(token);
+    setCaptchaComplete(true);
+    setCaptchaToken(token);
   };
 
   return (
@@ -95,6 +119,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
                     name="passwordConfirmation"
                     type="password"
                     touched={touched.passwordConfirmation}
+                  />
+                  <HCaptcha
+                    sitekey="940d00e0-78a6-4f62-a0e0-38567e55292c"
+                    onVerify={onVerifyCaptcha}
                   />
                   <Button type="submit">Submit Registration</Button>
                 </div>
