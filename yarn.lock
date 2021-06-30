@@ -797,6 +797,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^15.12.5":
+  version: 15.12.5
+  resolution: "@types/node@npm:15.12.5"
+  checksum: 42485de7a0b7277ddaae25b36ab4174fc8f23e8a5de9ccaedd002ecec17135c48227a5e09088d181c2bc34fe6b2064feb4a468954372076fd8addac2f72dad7e
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.0
   resolution: "@types/normalize-package-data@npm:2.4.0"
@@ -1436,7 +1443,9 @@ __metadata:
     "@types/express": ^4.17.12
     "@types/express-rate-limit": ^5.1.2
     "@types/jsonwebtoken": ^8.5.2
+    "@types/node": ^15.12.5
     "@types/uuid": ^8.3.0
+    axios: ^0.21.1
     blakets: ">0.0.0-2"
     cors: ^2.8.5
     dotenv: ^10.0.0
@@ -1448,6 +1457,7 @@ __metadata:
     prisma: ^2.25.0
     trixi: ^1.0.9
     ts-node: ^10.0.0
+    typescript: ^4.3.4
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft
