@@ -12,7 +12,7 @@
     "commit": "cz",
     "commit:signed": "cz -S",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
