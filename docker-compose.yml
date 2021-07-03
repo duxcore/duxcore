@@ -1,0 +1,18 @@
+version: "3"
+
+volumes:
+  yarn:
+
+services:
+  duxcore:
+    image: frontend
+    ports:
+      - "3000:3000"
+    build:
+      context: ./
+      args:
+        NODE_ENV: production
+    volumes:
+      - yarn:/home/node/.cache/yarn
+      - ./package.json:/duxcore/package.json
+      - ./yarn.lock:/duxcore/yarn.lock

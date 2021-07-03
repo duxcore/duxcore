@@ -1,5 +1,7 @@
 {
   "name": "@duxcore/wrapper",
+  "private": true,
+  "version": "0.1.0",
   "main": "lib/wrapper",
   "scripts": {
     "build": "tsc"
@@ -7,5 +9,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "trixi": "^1.1.3"
+  },
+  "devDependencies": {
+    "typescript": "4.3.4"
   }
 }
