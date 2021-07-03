@@ -6,11 +6,12 @@ import { validateCaptcha } from "../../middleware/validateCaptcha";
 
 export const users: ApiRoute[] = [
   {
-    route: "/user",
+    route: "/users",
     method: "post",
     middleware: [validateCaptcha],
     executor: (req, res) => {
-      createUser(req.body.data)
+      console.log(req.body)
+      createUser(req.body)
         .then((user) => {
           sendApiResponse(
             res,

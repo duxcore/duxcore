@@ -29,24 +29,13 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
       .register(
         values.username,
         values.name,
-        values.emial,
+        values.email,
         values.password,
         captchaToken
       )
       .then((r) => {
         console.log(r);
       });
-
-    /*
-    ws.user.register(values.name, values.email, values.username, values.password).then(res => {
-      if (res.data.successful !== true) {
-        // Unsuccessful error logic here
-        console.log("Registration failed!", res);
-      } else {
-        console.log("Successfully registered!");
-      }
-    })
-    */
   };
 
   const onVerifyCaptcha = (token: string) => {
@@ -121,7 +110,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
                     touched={touched.passwordConfirmation}
                   />
                   <HCaptcha
-                    sitekey="940d00e0-78a6-4f62-a0e0-38567e55292c"
+                    sitekey="10000000-ffff-ffff-ffff-000000000001"
                     onVerify={onVerifyCaptcha}
                   />
                   <Button type="submit">Submit Registration</Button>

@@ -5,7 +5,7 @@ import { apiUrl } from "../../util/constraints";
 export const restUser = {
   async getUsername(username: string): Promise<UsernameAPIResponse> {
     return await axios
-      .get(`${apiUrl.v1}/user/username/${username}`)
+      .get(`${apiUrl.v1}/users/username/${username}`)
       .then((res) => res.data)
       .catch((err) => err.response?.data);
   },
@@ -18,7 +18,7 @@ export const restUser = {
   ) {
     return await axios
       .post(
-        `${apiUrl.v1}/user/`,
+        `${apiUrl.v1}/users/`,
         {
           username,
           name,

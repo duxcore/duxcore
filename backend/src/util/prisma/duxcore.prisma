@@ -60,3 +60,14 @@ model UserLoginAttempts {
   accepted     Boolean
   denialReason String?
 }
+
+model ReservedUsername {
+  id       Int    @id @default(autoincrement())
+  key      String @unique
+  username String @unique
+}
+
+model BannedUsername {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+}

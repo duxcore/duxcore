@@ -5,7 +5,7 @@ import { ApiResponse, ApiRoute } from "../../../types/api";
 import { prisma } from "../../../util/prisma/instance";
 
 export const getUsername: ApiRoute = {
-  route: "/user/username/:username",
+  route: "/users/username/:username",
   method: "get",
   middleware: [],
   executor: (req, res) => {
