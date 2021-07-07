@@ -13,19 +13,19 @@
 
 # What is Duxcore
 
-Duxcore is going to be a decentralized hosting provider that will be able to provide free services as time goes on. Now, we will not start with it being decentralized, but we will be implementing the infrastructure to add the decentralization leading up to the moment that we add the decentralization. The moment we add the decentralized hosting schema into Duxcore is the moment we will be able to begin providing free services.
+Duxcore is going to be a decentralized hosting provider, that will eventually be able to provide free services. It will not begin decentralized, but we will be implementing the infrastructure to add decentralization later. The moment we introduce the decentralized hosting scheme into Duxcore will be the moment we will be able to begin providing free services.
 
-# What can I host?
+# What will I be able to have hosted?
 
-You will be able to host anything!! We are going to set this up to allow you to host just about any app or service. We will start with a palette of the most commonly hosted services and we will swiftly increase the number of things we have the capacity to host on our platform. There will be no one single category or just a few different things you can host, we want to be able to host anything you need for as cheaply as possible (or even free).
+We want to be able to host anything! We plan to set everything up to allow you to have just about any app or service hosted on our platform. We will start with a palette of the most commonly hosted services, and will swiftly increase the number of things we have the capacity to host. There will be no single category, or just a few specific products; we want to be able to host anything you need, as cheaply as possible. (or even for free)
 
 # How much will it cost and how will I pay?
 
-As it stands right now, we will have to charge for hosting in the beginning as we will not be introducing the decentralized hosting schema until a later date. With that being said, we plan on charging you only what you actually use, you will not pay per hour nor per month, rather you will pay based on the actual usage of the service you get. The way you will pay the bill is by adding credit to your name, which can be done by paying by card or with CRYPTO!!! Yes, we fully intend to use crypto as a payment option for anything and everything that will be paid, so you will be able to deposit many different kinds of crypto.
+As it stands right now, we will have to charge for hosting in the beginning, as we will not be introducing the decentralized hosting scheme until a later date. That being said, we plan on charging you based on what you actually use, so you will not be paying per hour, nor per month, but rather for your actual usage of the service(s) you get. You will pay by pre-charging your account in fiat via credit or debit card, or in a cryptocurrency of your choice. We fully intend to offer cryptocurrencies as payment options for any and all paid plans, and we plan to accept many different cryptocurrencies.
 
 # How will the decentralization work?
 
-For now, we will be redacting this information until we have a full plan out. We will be discussing part of this in the discord where we are planning it out and getting it ready, so be sure to join it [here](https://discord.gg/dTGJ5Bchnq)
+We will not be sharing this information until our plan is finalized. We will be discussing details on our [Discord](https://discord.gg/dTGJ5Bchnq), so be sure to join.
 
 # Collaborators
 
