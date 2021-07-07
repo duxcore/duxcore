@@ -3,27 +3,41 @@ import { UsernameAPIResponse } from "../../types/restUser";
 import { apiUrl } from "../../util/constraints";
 
 export const restUser = {
-  async getUsername(username: string): Promise<UsernameAPIResponse> {
+  async getUsername(username: string, token?: string): Promise<UsernameAPIResponse> {
     return await axios
-      .get(`${apiUrl.v1}/user/username/${username}`)
-      .then((res) => res.data)
+      .get(`${apiUrl.v1}/users/username/${username}${token ? `?key=${token}` : ""}`)
+      .then((res) => {
+        const data = res.data;
+        return data;
+      })
       .catch((err) => err.response?.data);
+  },
+  async getReservedUsername(key: string): Promise<any> {
+    return await axios
+    .get(`${apiUrl.v1}/users/username/reserved/${key}`)
+    .then((res) => {
+      const data = res.data;
+      return data;
+    })
+    .catch((err) => err.response?.data);
   },
   async register(
     username: string,
     name: string,
     email: string,
     password: string,
-    captchaToken: string
+    captchaToken: string,
+    unKey?: string
   ) {
     return await axios
       .post(
-        `${apiUrl.v1}/user/`,
+        `${apiUrl.v1}/users/`,
         {
           username,
           name,
           email,
           password,
+          unKey
         },
         { headers: { CaptchaToken: captchaToken } }
       )

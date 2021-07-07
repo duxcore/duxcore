@@ -7,17 +7,30 @@ import {
   IoMailOutline,
   IoPersonOutline,
 } from "react-icons/io5";
-import { RegisterSchema } from "./RegistrationSchema";
+import createRegisterSchema from "./RegistrationSchema";
 import { Button } from "../../ui/Button";
 import wrapper from "@duxcore/wrapper";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next";
 
-interface RegistrationPageProps {}
+interface RegistrationPageProps {
+  reservedUsername: {
+    key: string,
+    username: string
+  } | null;
+  captchaKey: string;
+}
 
 // const ws = wrapper.ws();
-export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
+export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
   const [captchaComplete, setCaptchaComplete] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+
+  const siteKey = props.captchaKey;
+  const hasValidToken = !!props.reservedUsername;
+  const schema = createRegisterSchema(props.reservedUsername?.key ?? undefined);
+
 
   const handleSubmit = (values: FormikValues) => {
     console.log(values);
@@ -29,24 +42,14 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
       .register(
         values.username,
         values.name,
-        values.emial,
+        values.email,
         values.password,
-        captchaToken
+        captchaToken,
+        props.reservedUsername?.key ?? undefined
       )
       .then((r) => {
         console.log(r);
       });
-
-    /*
-    ws.user.register(values.name, values.email, values.username, values.password).then(res => {
-      if (res.data.successful !== true) {
-        // Unsuccessful error logic here
-        console.log("Registration failed!", res);
-      } else {
-        console.log("Successfully registered!");
-      }
-    })
-    */
   };
 
   const onVerifyCaptcha = (token: string) => {
@@ -68,66 +71,69 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = () => {
           <Formik
             initialValues={{
               name: "",
-              username: "",
+              username: hasValidToken ? props.reservedUsername?.username : "",
               email: "",
               password: "",
               passwordConfirmation: "",
             }}
-            validationSchema={RegisterSchema}
+            validationSchema={schema.RegisterSchema}
             onSubmit={handleSubmit}
           >
-            {({ errors, touched, isValidating }) => (
-              <Form>
-                <div className="flex flex-col space-y-15">
-                  <Input
-                    placeholder="Name"
-                    error={errors.name}
-                    withIcon={<IoPersonOutline />}
-                    name="name"
-                    type="text"
-                    touched={touched.name}
-                  />
-                  <Input
-                    placeholder="Username"
-                    error={errors.username}
-                    withIcon={<IoAtOutline />}
-                    name="username"
-                    type="text"
-                    loading={isValidating}
-                    touched={touched.username}
-                  />
-                  <Input
-                    placeholder="Email Address"
-                    error={errors.email}
-                    withIcon={<IoMailOutline />}
-                    name="email"
-                    type="text"
-                    touched={touched.email}
-                  />
-                  <Input
-                    placeholder="Password"
-                    error={errors.password}
-                    withIcon={<IoLockOpenOutline />}
-                    name="password"
-                    type="password"
-                    touched={touched.password}
-                  />
-                  <Input
-                    placeholder="Confirm"
-                    error={errors.passwordConfirmation}
-                    withIcon={<IoLockOpenOutline />}
-                    name="passwordConfirmation"
-                    type="password"
-                    touched={touched.passwordConfirmation}
-                  />
-                  <HCaptcha
-                    sitekey="940d00e0-78a6-4f62-a0e0-38567e55292c"
-                    onVerify={onVerifyCaptcha}
-                  />
-                  <Button type="submit">Submit Registration</Button>
-                </div>
-              </Form>
-            )}
+            {({ errors, touched, isValidating }) => {
+              return (
+                <Form>
+                  <div className="flex flex-col space-y-15">
+                    <Input
+                      placeholder="Name"
+                      error={errors.name}
+                      withIcon={<IoPersonOutline />}
+                      name="name"
+                      type="text"
+                      touched={touched.name}
+                    />
+                    <Input
+                      placeholder="Username"
+                      error={errors.username}
+                      withIcon={<IoAtOutline />}
+                      name="username"
+                      type="text"
+                      loading={isValidating}
+                      touched={touched.username}
+                      readOnly={!!hasValidToken}
+                    />
+                    <Input
+                      placeholder="Email Address"
+                      error={errors.email}
+                      withIcon={<IoMailOutline />}
+                      name="email"
+                      type="text"
+                      touched={touched.email}
+                    />
+                    <Input
+                      placeholder="Password"
+                      error={errors.password}
+                      withIcon={<IoLockOpenOutline />}
+                      name="password"
+                      type="password"
+                      touched={touched.password}
+                    />
+                    <Input
+                      placeholder="Confirm"
+                      error={errors.passwordConfirmation}
+                      withIcon={<IoLockOpenOutline />}
+                      name="passwordConfirmation"
+                      type="password"
+                      touched={touched.passwordConfirmation}
+                    />
+                    <HCaptcha
+                      sitekey={siteKey}
+                      onVerify={onVerifyCaptcha}
+                    />
+                    <Button type="submit">Submit Registration</Button>
+                  </div>
+                </Form>
+              );
+            }}
           </Formik>
         </div>
       </div>

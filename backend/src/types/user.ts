@@ -11,6 +11,7 @@ export interface NewUserData {
   username: string;
   email: string;
   password: string;
+  unKey?: string
 }
 
 export interface UserJWTObject {

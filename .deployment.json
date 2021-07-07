@@ -20,6 +20,10 @@
           "secret": "JWT_KEY"
         }
       ]
+    },
+    {
+      "dir": "/",
+      "envVars": []
     }
   ]
 }
