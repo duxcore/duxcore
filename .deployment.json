@@ -18,6 +18,10 @@
         {
           "name": "JWT_KEY",
           "secret": "JWT_KEY"
+        },
+        {
+          "name": "CAPTCHA_SECRET",
+          "secret": "CAPTCHA_SECRET"
         }
       ]
     },

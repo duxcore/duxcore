@@ -20,3 +20,5 @@ jobs:
           WS_PORT: ${{ secrets.WS_PORT }}
           JWT_KEY: ${{ secrets.JWT_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL}}
+          CAPTCHA_SECRET: ${{ secrets.CAPTCHA_SECRET}}
+
