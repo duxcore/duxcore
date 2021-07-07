@@ -4,7 +4,7 @@ import cors from "cors";
 import { apiLimiter } from "../helpers/rateLimit";
 import { users } from "./routes/user/users";
 import bodyParser from "body-parser";
-import { username } from "./routes/user/getUsername";
+import { username } from "./routes/user/username";
 
 export const apiManifest: ApiManifest = {
   versions: [

@@ -8,7 +8,7 @@ const app = trixi();
 export default {
   ws(url?: string) {
     const ws = app.createClient({ url: url ?? wsUrl });
-  
+
     return {
       ws,
       url,
@@ -18,4 +18,4 @@ export default {
   rest: {
     user: restUser
   }
-}
+};

@@ -17,10 +17,12 @@ export function testUsername(username: string, key?: string): Promise<UsernameSt
         }
       }).then(un /** username */ => {
         if (!un) return false;
-        else return true;
+        if (un.key == key) return false;
+        
+        return true;
       }).catch(reject);
     
-      const isBanned = await await prisma.reservedUsername.findFirst({
+      const isBanned = await await prisma.bannedUsername.findFirst({
         where: {
           username
         }
