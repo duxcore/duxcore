@@ -1,44 +1,92 @@
 import { newApiResponse } from "../../../helpers/newApiResponse";
-import { apiLimiter } from "../../../helpers/rateLimit";
 import { sendApiResponse } from "../../../helpers/sendApiResponse";
-import { ApiResponse, ApiRoute } from "../../../types/api";
-import { prisma } from "../../../util/prisma/instance";
+import reserveUsername from "../../../lib/reserveUsername";
+import { testUsername, UsernameStatus } from "../../../lib/testUsername";
+import { ApiRoute } from "../../../types/api";
 
-export const getUsername: ApiRoute = {
+export const username: ApiRoute[] = [
+  {
   route: "/users/username/:username",
   method: "get",
   middleware: [],
   executor: (req, res) => {
     const username = req.params.username;
+    const key = req.params.key;
 
-    prisma.user.findFirst({ where: { username } }).then((user) => {
-      let response: ApiResponse;
+    testUsername(username, key).then((unStatus) => {
+      const getMessage = (() => {
+        if (unStatus == UsernameStatus.AVAILABLE) return "This username is currently available.";
+        if (unStatus == UsernameStatus.TAKEN) return "This username has been taken.";
+        if (unStatus == UsernameStatus.RESERVED) return "This username has been reserved.";
+        if (unStatus == UsernameStatus.BANNED) return "This username has been banned.";
+      })()
 
-      if (!user) {
-        response = newApiResponse({
-          status: 404,
-          message: "No user by this username exists...",
-          data: {
-            isTaken: false,
-            username,
-            timestamp: new Date().getTime(),
-          },
-          successful: true,
-        });
-      } else {
-        response = newApiResponse({
-          status: 200,
-          message: "User exists.",
-          data: {
-            isTaken: true,
-            username,
-            timestamp: new Date().getTime(),
-          },
-          successful: true,
-        });
-      }
+      const getStatus = (() => {
+        if (unStatus == UsernameStatus.AVAILABLE) return "available";
+        if (unStatus == UsernameStatus.TAKEN) return "taken";
+        if (unStatus == UsernameStatus.RESERVED) return "reserved"
+        if (unStatus == UsernameStatus.BANNED) return "banned"
+        return "unknown"
+      })()
 
-      return sendApiResponse(res, response);
+      return sendApiResponse(res, newApiResponse({
+        status: 200,
+        message: getMessage,
+        data: {
+          status: getStatus,
+          username,
+          timestamp: new Date().getTime(),
+        },
+        successful: true,
+      }));
     });
   },
-};
+},
+{
+  route: "/users/username/:username",
+  method: "put",
+  middleware: [],
+  executor: (req, res) => {
+    const username = req.params.username;
+
+    testUsername(username).then((unStatus) => {
+      const reservable = (unStatus == UsernameStatus.AVAILABLE)
+
+      if (reservable) {
+        reserveUsername(username).then((data) => {
+          return sendApiResponse(res, newApiResponse({
+            status: 200,
+            message: "Successfully reserved Username",
+            data: {
+              username,
+              key: data.key,
+              timestamp: new Date().getTime(),
+            },
+            successful: true,
+          }));          
+        }).catch(err => {
+          return sendApiResponse(res, newApiResponse({
+            status: 500,
+            message: "An error occured whilst trying to reserve a username",
+            data: {
+              error: err.message,
+              username,
+              timestamp: new Date().getTime(),
+            },
+            successful: true,
+          }));
+        })
+      } else {
+        return sendApiResponse(res, newApiResponse({
+          status: 401,
+          message: "This username cannot be reserved.",
+          data: {
+            username,
+            timestamp: new Date().getTime(),
+          },
+          successful: true,
+        }));        
+      }
+    });
+  },
+}];

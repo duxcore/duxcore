@@ -1,7 +1,5 @@
 import { prisma } from "../util/prisma/instance";
 
-
-
 export enum UsernameStatus {
   AVAILABLE,
   TAKEN,
@@ -10,33 +8,42 @@ export enum UsernameStatus {
 }
 
 export function testUsername(username: string, key?: string): Promise<UsernameStatus> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
 
-    const isReserved = await prisma.reservedUsername.findFirst({
-      where: {
-        username
+    (async () => {
+      const isReserved = await prisma.reservedUsername.findFirst({
+        where: {
+          username
+        }
+      }).then(un /** username */ => {
+        if (!un) return false;
+        else return true;
+      }).catch(reject);
+    
+      const isBanned = await await prisma.reservedUsername.findFirst({
+        where: {
+          username
+        }
+      }).then(un /** username */ => {
+        if (!un) return false;
+        else return true;
+      }).catch(reject);
+   
+      if (isReserved) {
+        if (!key) return resolve(UsernameStatus.RESERVED)
       }
-    }).then(un /** username */ => {
-      if (!un) return true;
-      else return false;
-    }).catch(reject);
 
-    const isBanned = await await prisma.reservedUsername.findFirst({
-      where: {
-        username
-      }
-    }).then(un /** username */ => {
-      if (!un) return true;
-      else return false;
-    }).catch(reject);
+      prisma.user.findFirst({ where: { username } }).then((user) => {
+        if (!user) {
+          if (isReserved) return resolve(UsernameStatus.RESERVED);
+          if (isBanned) return resolve(UsernameStatus.BANNED);
 
-    if (isReserved) {
-      if (!key) return resolve(UsernameStatus.RESERVED)
-    }
+          return resolve(UsernameStatus.AVAILABLE);
+        }
 
+        return resolve(UsernameStatus.TAKEN);
+      });
+    })();
 
-    prisma.user.findFirst({ where: { username } }).then((user) => {
-      
-    });
   });
 }
