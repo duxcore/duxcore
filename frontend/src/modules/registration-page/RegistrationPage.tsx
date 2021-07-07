@@ -18,7 +18,8 @@ interface RegistrationPageProps {
   reservedUsername: {
     key: string,
     username: string
-  } | null
+  } | null;
+  captchaKey: string;
 }
 
 // const ws = wrapper.ws();
@@ -26,7 +27,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
   const [captchaComplete, setCaptchaComplete] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
 
-  const siteKey = "10000000-ffff-ffff-ffff-000000000001";
+  const siteKey = props.captchaKey;
   const hasValidToken = !!props.reservedUsername;
   const schema = createRegisterSchema(props.reservedUsername?.key ?? undefined);
 

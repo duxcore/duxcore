@@ -8,6 +8,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req, res, query } = context;
 
   const unKey = query.unKey;
+  const captchaKey = !process.env.NODE_ENV || process.env.NODE_ENV === 'production' ? "417cace0-0163-4200-bc3f-b8f4c3887b45" : "10000000-ffff-ffff-ffff-000000000001";
 
   const reservedUsername = await wrapper.rest.user.getReservedUsername(unKey as string).then((re) => {
     if (!re.successful) return null;
@@ -16,7 +17,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      reservedUsername
+      reservedUsername,
+      captchaKey
     },
   };
 }
