@@ -14,8 +14,6 @@
   <hr>
 </p>
 
-<!-- [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/organization/repository) -->
-
 # What is Duxcore
 
 Duxcore is going to be a decentralized hosting provider, that will eventually be able to provide free services. It will not begin decentralized, but we will be implementing the infrastructure to add decentralization later. The moment we introduce the decentralized hosting scheme into Duxcore will be the moment we will be able to begin providing free services.
