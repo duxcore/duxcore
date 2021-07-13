@@ -1,5 +1,5 @@
 import { Form, Formik, FormikHelpers, FormikValues } from "formik";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input } from "../../ui/forms/Input";
 import {
   IoAtOutline,
@@ -14,10 +14,19 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 
+interface FormValues {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  captchaToken: string;
+}
+
 interface RegistrationPageProps {
   reservedUsername: {
-    key: string,
-    username: string
+    key: string;
+    username: string;
   } | null;
   captchaKey: string;
 }
@@ -26,17 +35,30 @@ interface RegistrationPageProps {
 export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
   const [captchaComplete, setCaptchaComplete] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaError, setCaptchaError] = useState(false);
+  const captchaRef = useRef<HCaptcha>(null);
 
   const siteKey = props.captchaKey;
   const hasValidToken = !!props.reservedUsername;
   const schema = createRegisterSchema(props.reservedUsername?.key ?? undefined);
 
+  const initialValues: FormValues = {
+    name: "",
+    username:
+      hasValidToken && props.reservedUsername
+        ? props.reservedUsername.username
+        : "",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+    captchaToken,
+  };
 
-  const handleSubmit = (values: FormikValues) => {
-    console.log(values);
-    // S3xMast3r69#
+  const [formValues, setFormValues] = useState<FormValues>(initialValues);
 
-    if (!captchaComplete) return;
+  const handleSubmit = (token: string) => {
+    const values = formValues;
+    console.log({ values, token });
 
     wrapper.rest.user
       .register(
@@ -44,7 +66,7 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
         values.name,
         values.email,
         values.password,
-        captchaToken,
+        token,
         props.reservedUsername?.key ?? undefined
       )
       .then((r) => {
@@ -52,10 +74,10 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
       });
   };
 
-  const onVerifyCaptcha = (token: string) => {
-    console.log(token);
-    setCaptchaComplete(true);
-    setCaptchaToken(token);
+  const validateCaptcha = (values: FormValues) => {
+    console.log("here");
+    if (captchaRef.current) captchaRef.current.execute();
+    setFormValues(values);
   };
 
   return (
@@ -69,15 +91,9 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
             </div>
           </div>
           <Formik
-            initialValues={{
-              name: "",
-              username: hasValidToken ? props.reservedUsername?.username : "",
-              email: "",
-              password: "",
-              passwordConfirmation: "",
-            }}
+            initialValues={initialValues}
             validationSchema={schema.RegisterSchema}
-            onSubmit={handleSubmit}
+            onSubmit={validateCaptcha}
           >
             {({ errors, touched, isValidating }) => {
               return (
@@ -125,11 +141,16 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = (props) => {
                       type="password"
                       touched={touched.passwordConfirmation}
                     />
-                    <HCaptcha
-                      sitekey={siteKey}
-                      onVerify={onVerifyCaptcha}
-                    />
-                    <Button type="submit">Submit Registration</Button>
+                    <div className={`${captchaError ? "" : "hidden"}`}>
+                      <HCaptcha
+                        sitekey={siteKey}
+                        onVerify={handleSubmit}
+                        theme="dark"
+                        ref={captchaRef}
+                        onError={() => setCaptchaError(true)}
+                      />
+                    </div>
+                    <Button type="submit">Sign Up</Button>
                   </div>
                 </Form>
               );
