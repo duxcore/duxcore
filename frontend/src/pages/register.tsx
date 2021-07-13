@@ -11,7 +11,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const captchaKey =
     !process.env.NODE_ENV || process.env.NODE_ENV === "production"
       ? "417cace0-0163-4200-bc3f-b8f4c3887b45"
-      : "30000000-ffff-ffff-ffff-000000000003";
+      : "10000000-ffff-ffff-ffff-000000000001";
+  // Bot: 30000000-ffff-ffff-ffff-000000000003
+  // Normal: 10000000-ffff-ffff-ffff-000000000001
 
   const reservedUsername = await wrapper.rest.user
     .getReservedUsername(unKey as string)
