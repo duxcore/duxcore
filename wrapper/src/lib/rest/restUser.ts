@@ -1,25 +1,33 @@
 import axios from "axios";
-import { UsernameAPIResponse } from "../../types/restUser";
+import {
+  ReservedUsernameAPIResponse,
+  UsernameAPIResponse,
+} from "../../types/restUser";
 import { apiUrl } from "../../util/constraints";
 
 export const restUser = {
-  async getUsername(username: string, token?: string): Promise<UsernameAPIResponse> {
+  async getUsername(
+    username: string,
+    token?: string
+  ): Promise<UsernameAPIResponse> {
     return await axios
-      .get(`${apiUrl.v1}/users/username/${username}${token ? `?key=${token}` : ""}`)
+      .get(
+        `${apiUrl.v1}/users/username/${username}${token ? `?key=${token}` : ""}`
+      )
       .then((res) => {
         const data = res.data;
         return data;
       })
       .catch((err) => err.response?.data);
   },
-  async getReservedUsername(key: string): Promise<any> {
+  async getReservedUsername(key: string): Promise<ReservedUsernameAPIResponse> {
     return await axios
-    .get(`${apiUrl.v1}/users/username/reserved/${key}`)
-    .then((res) => {
-      const data = res.data;
-      return data;
-    })
-    .catch((err) => err.response?.data);
+      .get(`${apiUrl.v1}/users/username/reserved/${key}`)
+      .then((res) => {
+        const data = res.data;
+        return data;
+      })
+      .catch((err) => err.response?.data);
   },
   async register(
     username: string,
@@ -37,7 +45,7 @@ export const restUser = {
           name,
           email,
           password,
-          unKey
+          unKey,
         },
         { headers: { CaptchaToken: captchaToken } }
       )
