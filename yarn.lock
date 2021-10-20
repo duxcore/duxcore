@@ -330,12 +330,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@duxcore/manifestation@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@duxcore/manifestation@npm:1.0.7"
+"@duxcore/manifestation@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@duxcore/manifestation@npm:1.0.9"
   dependencies:
     express: ^4.17.1
-  checksum: 6aca6e872be22dbbd67e99d9239dcac77a15a9528eefd2241e2e78df98b21fd34e36c0bf034b39d0fabe3977893203fc7795492ca9ee0dd5c37a8790b6e7db47
+  checksum: f90483ff10f69be7e465f5148f7979a2ddd65ce499fa7f230b2b7dc4b3ef4a4f82c1171f8127d75d8cf1d93682d1195f2e20bd8dfadacbf0331b0e90f2fd43cf
   languageName: node
   linkType: hard
 
@@ -682,6 +682,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cors@npm:^2.8.12":
+  version: 2.8.12
+  resolution: "@types/cors@npm:2.8.12"
+  checksum: f3b62196df42c286282b9dbda26e24d2264211d932e7d9c2240f361e27ef693a5cb03790daeb3610fd958a0690f4d31d45ef7848b0df7a0dd2afc698a4f9df76
+  languageName: node
+  linkType: hard
+
+"@types/express-rate-limit@npm:^5.1.3":
+  version: 5.1.3
+  resolution: "@types/express-rate-limit@npm:5.1.3"
+  dependencies:
+    "@types/express": "*"
+  checksum: 4b9d7d7bbb226fa4fd2bb5b586dd834effebe64ee89c82b92c509977ba2fc52f0d3155c0b8009ebd7830fc916752e13344107a82e832ac0d7a65cff17630c615
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:^4.17.18":
   version: 4.17.24
   resolution: "@types/express-serve-static-core@npm:4.17.24"
@@ -693,7 +709,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4.17.13":
+"@types/express@npm:*, @types/express@npm:^4.17.13":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -2133,12 +2149,26 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "core@workspace:core"
   dependencies:
-    "@duxcore/manifestation": ^1.0.7
+    "@duxcore/manifestation": ^1.0.9
+    "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
+    "@types/express-rate-limit": ^5.1.3
+    cors: ^2.8.5
     dotenv: ^10.0.0
     express: ^4.17.1
+    express-rate-limit: ^5.5.0
   languageName: unknown
   linkType: soft
+
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: ^4
+    vary: ^1
+  checksum: c83e88c15428b87ff55853ec5ce961b650c7aa3de536aadebbeb2334872d86a8be57165a77996f3b746366c950c2d51624a9b76b88fb7f18d178eca051ca1ae2
+  languageName: node
+  linkType: hard
 
 "cosmiconfig@npm:^7.0.0":
   version: 7.0.0
@@ -3346,6 +3376,13 @@ __metadata:
   dependencies:
     homedir-polyfill: ^1.0.1
   checksum: 502e8b04a22094575c68639e68e0a2c19ad23d78441e440e5164ad2f38bef05e4b2c2568acfcf4af37b90bbf49ea587c253753ba6d351229e5858b96cb136125
+  languageName: node
+  linkType: hard
+
+"express-rate-limit@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "express-rate-limit@npm:5.5.0"
+  checksum: 6081c310d59bd7ffccd9ab933cdd9e7fe7d0d75952941e885fb3fb219667100449e1a09ecd1bbf40e22dd2c1231519b94cb3d906dc995215377d9093f49a21c0
   languageName: node
   linkType: hard
 
@@ -5792,7 +5829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: 66cf021898fc1b13ea573ea8635fbd5a76533f50cecbc2fcd5eee1e8029af41bcebe7023788b6d0e06cbe4401ecea075d972f78ec74467cdc571a0f1a4d1a081
@@ -8529,7 +8566,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"vary@npm:~1.1.2":
+"vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 591f059f727ac1ba0d97cb7767f8583a03fcbb07db7be2b7dce838ede520ec0e958a41cb19077054769077fdc49a9b9a2dc391c83426bfee89c054b8cc7404bf

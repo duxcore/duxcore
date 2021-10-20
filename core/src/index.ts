@@ -5,8 +5,6 @@ import { env } from "./util/env";
 function main() {  
   const api = manifestation.createServer(apiManifest, {});
 
-  console.log(env)
-
   api.listen(env.apiServerPort, () => {
     console.log("API Server started.");
   })
