@@ -1,10 +1,13 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiManifest } from "./api/manifest";
+import { env } from "./util/env";
 
-function main() {
+function main() {  
   const api = manifestation.createServer(apiManifest, {});
 
-  api.listen(40765, () => {
+  console.log(env)
+
+  api.listen(env.apiServerPort, () => {
     console.log("API Server started.");
   })
 }
