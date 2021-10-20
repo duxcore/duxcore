@@ -4,7 +4,7 @@
     "build": "prisma generate && tsc",
     "migrate": "prisma db push",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "start": "node lib/index"
+    "start": "node lib/src/index"
   },
   "prisma": {
     "schema": "prisma/duxcore.prisma"
