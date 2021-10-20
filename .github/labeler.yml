@@ -1,7 +1,5 @@
-api:
-  - api/**/*
-backend:
-  - backend/**/*
+core:
+  - core/**/*
 daemon:
   - daemon/**/*
 website:

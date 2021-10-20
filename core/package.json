@@ -1,0 +1,19 @@
+{
+  "name": "core",
+  "scripts": {
+    "build": "prisma generate && tsc",
+    "migrate": "prisma db push",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "node lib/duxcore"
+  },
+  "prisma": {
+    "schema": "prisma/duxcore.prisma"
+  },
+  "dependencies": {
+    "@duxcore/manifestation": "^1.0.7",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13"
+  }
+}
