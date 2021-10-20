@@ -865,7 +865,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/body-parser@npm:*":
+"@types/body-parser@npm:*, @types/body-parser@npm:^1.19.1":
   version: 1.19.1
   resolution: "@types/body-parser@npm:1.19.1"
   dependencies:
@@ -1622,6 +1622,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"blakets@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "blakets@npm:0.1.4"
+  dependencies:
+    doge-json: ^1.2.3
+  bin:
+    blake: lib/cli.js
+    blakejs: lib/cli.js
+    blakets: lib/cli.js
+  checksum: 4ba9179178cf50a1cfe2b6f5fc409a8db889402bf4726e44d0372dc13db1e713532c3f007e2554dab549a40fa148456b6123094150391fda536cf7d0447e0a51
+  languageName: node
+  linkType: hard
+
 "bn.js@npm:^4.0.0, bn.js@npm:^4.1.0, bn.js@npm:^4.11.9":
   version: 4.12.0
   resolution: "bn.js@npm:4.12.0"
@@ -1636,7 +1649,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"body-parser@npm:1.19.0":
+"body-parser@npm:1.19.0, body-parser@npm:^1.19.0":
   version: 1.19.0
   resolution: "body-parser@npm:1.19.0"
   dependencies:
@@ -2369,9 +2382,12 @@ __metadata:
   dependencies:
     "@duxcore/manifestation": ^1.0.9
     "@prisma/client": ^3.3.0
+    "@types/body-parser": ^1.19.1
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/express-rate-limit": ^5.1.3
+    blakets: ^0.1.4
+    body-parser: ^1.19.0
     cors: ^2.8.5
     dotenv: ^10.0.0
     express: ^4.17.1
@@ -2943,6 +2959,13 @@ __metadata:
   dependencies:
     esutils: ^2.0.2
   checksum: 2eae469bd2889ceee9892083a67340b3622568fe5290edce620e5d5ddab23d644b2a780e9a7c68ad9c8a62716a70c5e484402ac93a398fa78b54b7505592aa7f
+  languageName: node
+  linkType: hard
+
+"doge-json@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "doge-json@npm:1.2.3"
+  checksum: bdc52af839f4be77dbacc886fbd1fe792aeda2742de5be8b607fdfe433b895cd241d3ac985df57c573c9cc2eacb55b2e26f734e68cbca487ffa40ab45a52fb54
   languageName: node
   linkType: hard
 
