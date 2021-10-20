@@ -4,18 +4,21 @@
     "build": "prisma generate && tsc",
     "migrate": "prisma db push",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "start": "node lib/duxcore"
+    "start": "node lib/index"
   },
   "prisma": {
     "schema": "prisma/duxcore.prisma"
   },
   "dependencies": {
     "@duxcore/manifestation": "^1.0.9",
+    "@prisma/client": "^3.3.0",
     "@types/express-rate-limit": "^5.1.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-rate-limit": "^5.5.0"
+    "express-rate-limit": "^5.5.0",
+    "prisma": "^3.3.0",
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

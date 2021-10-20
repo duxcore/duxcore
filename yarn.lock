@@ -809,10 +809,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/client@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@prisma/client@npm:3.3.0"
+  dependencies:
+    "@prisma/engines-version": 3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: 04c08bb913fb53b297756eb31279129747aec696d1c0f74289d995f13f53ed52cc0008dbf3f72d611bbbc678568798840fe7b88f1912ce70bea2e578b4817f35
+  languageName: node
+  linkType: hard
+
 "@prisma/engines-version@npm:2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922":
   version: 2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922
   resolution: "@prisma/engines-version@npm:2.25.0-36.c838e79f39885bc8e1611849b1eb28b5bb5bc922"
   checksum: 7f5e240eab4bbc7df3bca11a46325833fd87e951d3e779136469cc19f7e92e0aae232c730459e7a6f8a82c53d09de7acad59b83551b6ac65cf7a3f2008f40038
+  languageName: node
+  linkType: hard
+
+"@prisma/engines-version@npm:3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c":
+  version: 3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c
+  resolution: "@prisma/engines-version@npm:3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c"
+  checksum: 3782c8c7eb34851982950a5a6f8e05ac5109503400803abd83314040eb50e574b38adde349ad690d0a9f9c6c931abde36dcb91ad9219a1beb0e758501e8c1958
+  languageName: node
+  linkType: hard
+
+"@prisma/engines@npm:3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c":
+  version: 3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c
+  resolution: "@prisma/engines@npm:3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c"
+  checksum: 3908e1540391547e842492337b7c3253eab1d465f6f063b739b8f2868e73c3f775e3ef57289da6b52d972d9dc54332c9af3c82b616a2ace8f90cda623fda8fcd
   languageName: node
   linkType: hard
 
@@ -2340,6 +2368,7 @@ __metadata:
   resolution: "core@workspace:core"
   dependencies:
     "@duxcore/manifestation": ^1.0.9
+    "@prisma/client": ^3.3.0
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/express-rate-limit": ^5.1.3
@@ -2347,6 +2376,8 @@ __metadata:
     dotenv: ^10.0.0
     express: ^4.17.1
     express-rate-limit: ^5.5.0
+    prisma: ^3.3.0
+    typescript: ^4.4.4
   languageName: unknown
   linkType: soft
 
@@ -7172,6 +7203,18 @@ __metadata:
   version: 1.0.3
   resolution: "pretty-hrtime@npm:1.0.3"
   checksum: efb9d4987ec2ba55a6b59c8eab4933ba5cd3c9311b9360f7ec491f1aad643ec8b533c8209170433de93bbc71e66b46f2a7035b991a1826141b128b73949b5577
+  languageName: node
+  linkType: hard
+
+"prisma@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "prisma@npm:3.3.0"
+  dependencies:
+    "@prisma/engines": 3.3.0-30.33838b0f78f1fe9052cf9a00e9761c9dc097a63c
+  bin:
+    prisma: build/index.js
+    prisma2: build/index.js
+  checksum: 08d63f5eb15b09ece68ebcd82feb8930e783886199d12e9cbe290df754f81ba003c57d5b651ee499d0c0750c33a6ced4d8688569c9c4948fdd4ad104fba4c8a8
   languageName: node
   linkType: hard
 
