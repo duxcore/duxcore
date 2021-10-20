@@ -2,6 +2,7 @@ import { Prisma, User, UserRole } from ".prisma/client";
 import { create } from "domain";
 import { exists } from "fs";
 import { prismaInstance } from "../../prisma/instance";
+import Password from "../classes/Password";
 import UserManager from "../classes/UserManager";
 
 interface NewUserData {
@@ -30,6 +31,7 @@ export const users = {
     const user = (await prismaInstance.user.create({
       data: {
         email: data.email,
+        password: data.password,
 
         firstName: data.firstName,
         lastName: data.lastName,
@@ -46,6 +48,31 @@ export const users = {
     }));
 
     return new UserManager(user);
+  },
+
+  async login(email: string, password: string) {
+    let passwordValid = false;
+    const emailExists = (await prismaInstance.user.count({
+      where: {
+        email
+      }
+    })) == 1;
+
+    if (emailExists) passwordValid = await Password.validate(password, (await prismaInstance.user.findFirst({
+      where: {
+        email
+      }
+    }))?.password as string);
+
+    return {
+      emailExists,
+      passwordValid,
+      userId: (await prismaInstance.user.findFirst({
+        where: {
+          email
+        }
+      }))?.id ?? null
+    }
   },
 
   async emailExists(email: string) {
