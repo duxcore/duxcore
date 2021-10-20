@@ -6,8 +6,9 @@
     "website",
     "api",
     "wrapper",
+    "frontend",
     "core",
-    "frontend"
+    "dashboard"
   ],
   "scripts": {
     "commit": "cz",
