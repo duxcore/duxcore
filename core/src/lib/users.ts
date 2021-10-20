@@ -1,9 +1,9 @@
-import { Prisma, User, UserRole } from ".prisma/client";
-import { create } from "domain";
-import { exists } from "fs";
+import { UserRole } from ".prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import Password from "../classes/Password";
 import UserManager from "../classes/UserManager";
+import jwt from "jsonwebtoken"
+import fs from 'fs';
 
 interface NewUserData {
   firstName: string;
@@ -50,8 +50,19 @@ export const users = {
     return new UserManager(user);
   },
 
-  async generateJWT(id: string) {
+  async generateJWT(id: string): Promise<string | null> {
+    const user = await prismaInstance.user.findFirst({
+      where: {
+        id
+      }
+    });
 
+    if (!user) return null;
+
+    return jwt.sign({
+      id,
+      timestamp: new Date().getTime()
+    }, fs.readFileSync(`${__dirname}/${__filename.endsWith('.js') ? "../" : ""}../../jwt.key`))
   },
 
   async login(email: string, password: string) {
@@ -69,6 +80,7 @@ export const users = {
     }))?.password as string);
 
     return {
+      jwt: passwordValid ? await this.generateJWT((await prismaInstance.user.findFirst({ where: { email } }))?.id as string) : null,
       emailExists,
       passwordValid,
       userId: (await prismaInstance.user.findFirst({
