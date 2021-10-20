@@ -17,7 +17,8 @@ enum UserRole {
 model User {
   id            String              @id @default(uuid())
   index         Int                 @default(autoincrement())
-  name          String
+  firstName     String
+  lastName      String
   email         String              @unique
   password      String?
   loginAttempts UserLoginAttempts[]
@@ -32,7 +33,7 @@ model User {
 model Token {
   id        Int       @id @default(autoincrement())
   user      User      @relation(fields: [userId], references: [id])
-  userId    String
+  userId    String    @unique
   jid       String    @unique
   revoked   Boolean   @default(false)
   revokedAt DateTime?
@@ -42,7 +43,7 @@ model Token {
 model UserMetaTags {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [userId], references: [id])
-  userId        String
+  userId        String   @unique
   updatedAt     DateTime @updatedAt
   emailVerified Boolean  @default(false)
   isStaff       Boolean  @default(false)
