@@ -27,17 +27,6 @@ model User {
   role          UserRole            @default(USER)
   meta_tags     UserMetaTags?
   meta          Json                @default("{}")
-  Token         Token?
-}
-
-model Token {
-  id        Int       @id @default(autoincrement())
-  user      User      @relation(fields: [userId], references: [id])
-  userId    String    @unique
-  jid       String    @unique
-  revoked   Boolean   @default(false)
-  revokedAt DateTime?
-  issuedAt  DateTime  @default(now())
 }
 
 model UserMetaTags {

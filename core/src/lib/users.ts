@@ -50,6 +50,10 @@ export const users = {
     return new UserManager(user);
   },
 
+  async generateJWT(id: string) {
+
+  },
+
   async login(email: string, password: string) {
     let passwordValid = false;
     const emailExists = (await prismaInstance.user.count({
