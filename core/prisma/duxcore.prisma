@@ -42,7 +42,6 @@ model UserLoginAttempts {
   id           Int      @id @default(autoincrement())
   date         DateTime @default(now())
   ip           String
-  agent        String
   user         User     @relation(references: [id], fields: [userId])
   userId       String
   accepted     Boolean

@@ -65,11 +65,12 @@ export const apiUsers: ApiRoute[] = [
     executor: async (req, res) => {
       const email = req.body.email;
       const password = req.body.password;
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
       if (!req.body.email) manifestation.sendApiResponse(res, missingValue("email"));
       if (!req.body.email) manifestation.sendApiResponse(res, missingValue("password"));
 
-      users.login(email, password).then((after) => {
+      users.login(email, password, ip as string).then((after) => {
         const response = manifestation.newApiResponse({
           status: after.passwordValid == true ? 200 : 400,
           message: after.passwordValid ? "Authentication Successful." : "Authentication Failed.",

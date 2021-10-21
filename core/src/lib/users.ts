@@ -65,7 +65,7 @@ export const users = {
     }, fs.readFileSync(`${__dirname}/${__filename.endsWith('.js') ? "../" : ""}../../jwt.key`))
   },
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string, ip: string) {
     let passwordValid = false;
     const emailExists = (await prismaInstance.user.count({
       where: {
@@ -78,6 +78,19 @@ export const users = {
         email
       }
     }))?.password as string);
+
+    if (emailExists) await prismaInstance.userLoginAttempts.create({
+      data: {
+        userId: (await prismaInstance.user.findFirst({ where: { email } }))?.id as string,
+        ip,
+        accepted: passwordValid,
+        denialReason: (() => {
+          if (!emailExists) return "Unknown User";
+          if (!passwordValid) return "Invalid Password";
+          return undefined;
+        })()
+      }
+    }).catch(e => { throw e; })
 
     return {
       jwt: passwordValid ? await this.generateJWT((await prismaInstance.user.findFirst({ where: { email } }))?.id as string) : null,
