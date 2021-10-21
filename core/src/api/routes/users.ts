@@ -2,6 +2,7 @@ import { ApiRoute, manifestation } from "@duxcore/manifestation";
 import Password from "../../classes/Password";
 import { users } from "../../lib/users";
 import jwt from 'jsonwebtoken';
+import { authenticationToken } from "../../lib/authenticationToken";
 
 const missingValue = (valueName) => {
   return manifestation.newApiResponse({
@@ -97,7 +98,7 @@ export const apiUsers: ApiRoute[] = [
         successful: false
       });
 
-      users.validateJWT(authorizationToken).then(async (value: any) => {
+      authenticationToken.validateToken(authorizationToken).then(async (value: any) => {
         return manifestation.sendApiResponse(res, {
           status: 200,
           message: "Successfully fetched user profile.",
