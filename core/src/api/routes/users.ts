@@ -1,14 +1,14 @@
 import { ApiRoute, manifestation } from "@duxcore/manifestation";
-import { runInNewContext } from "vm";
 import Password from "../../classes/Password";
 import { users } from "../../lib/users";
+import jwt from 'jsonwebtoken';
 
 const missingValue = (valueName) => {
   return manifestation.newApiResponse({
     status: 400,
-    message: `An error has occured`,
+    message: `Missing value '${valueName}'`,
     data: {
-      error: `Missing value '${valueName}'`
+      error: `MISSING_FORM_VALUE`
     },
     successful: false
   });
@@ -79,6 +79,45 @@ export const apiUsers: ApiRoute[] = [
         });
 
         manifestation.sendApiResponse(res, response)
+      })
+    }
+  }),
+  manifestation.newRoute({
+    route: "/users/@me",
+    method: "get",
+    executor: async (req, res) => {
+      const authorizationToken = req.headers['authorization'];
+
+      if (!authorizationToken) return manifestation.sendApiResponse(res, {
+        status: 400,
+        message: "Missing authorization token...",
+        data: {
+          error: "MISSING_AUTH_TOKEN"
+        },
+        successful: false
+      });
+
+      users.validateJWT(authorizationToken).then(async (value: any) => {
+        return manifestation.sendApiResponse(res, {
+          status: 200,
+          message: "Successfully fetched user profile.",
+          data: await (async () => {
+            value.iat = undefined;
+            const user = await users.fetch(value.id);
+
+            return {
+              raw: value,
+              user: user?.toJson()
+            }
+          })(),
+          successful: true
+        })
+      }).catch((err: jwt.JsonWebTokenError) => {
+        return manifestation.sendApiResponse(res, {
+          status: 401,
+          message: err.message,
+          successful: false
+        });
       })
     }
   })

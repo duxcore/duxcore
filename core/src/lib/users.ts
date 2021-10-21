@@ -17,6 +17,8 @@ interface NewUserData {
   emailVerified?: boolean;
 }
 
+const jwtPrivateKey = fs.readFileSync(`${__dirname}/${__filename.endsWith('.js') ? "../" : ""}../../jwt.key`)
+
 export const users = {
   async fetch(id: string): Promise<UserManager | null> {
     let rawUser = await prismaInstance.user.findFirst({
@@ -50,6 +52,15 @@ export const users = {
     return new UserManager(user);
   },
 
+  async validateJWT(token: string) {
+    return new Promise((res, rej) => {
+      const validation = jwt.verify(token, jwtPrivateKey, (err, decoded) => {
+        if (err) return rej(err);
+        return res(decoded);
+      });
+    })
+  },
+
   async generateJWT(id: string): Promise<string | null> {
     const user = await prismaInstance.user.findFirst({
       where: {
@@ -62,7 +73,7 @@ export const users = {
     return jwt.sign({
       id,
       timestamp: new Date().getTime()
-    }, fs.readFileSync(`${__dirname}/${__filename.endsWith('.js') ? "../" : ""}../../jwt.key`))
+    }, jwtPrivateKey)
   },
 
   async login(email: string, password: string, ip: string) {

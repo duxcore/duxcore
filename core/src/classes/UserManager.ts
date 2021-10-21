@@ -16,4 +16,14 @@ export default class UserManager {
 
   get firstName(): string { return this._raw.firstName; }
   get lastName(): string { return this._raw.lastName; }
+
+  toJson() {
+    return {
+      id: this.id,
+      email: this.email,
+      created: this.created,
+      firstName: this.firstName,
+      lastName: this.lastName
+    }
+  }
 }

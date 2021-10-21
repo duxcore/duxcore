@@ -26,6 +26,7 @@ model User {
   updatedAt     DateTime            @updatedAt
   role          UserRole            @default(USER)
   meta_tags     UserMetaTags?
+  authTokens    UserAuthToken[]
   meta          Json                @default("{}")
 }
 
@@ -46,4 +47,12 @@ model UserLoginAttempts {
   userId       String
   accepted     Boolean
   denialReason String?
+}
+
+model UserAuthToken {
+  id      Int     @id @default(autoincrement())
+  token   String  @default(uuid())
+  user    User    @relation(references: [id], fields: [userId])
+  userId  String
+  revoked Boolean @default(false)
 }
