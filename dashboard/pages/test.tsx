@@ -1,9 +1,22 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
+import { Loading } from '../components/Loading';
+import { AuthContext } from '../modules/AuthProvider';
 
 export const Test: FC = () => {
+  const authContext = useContext(AuthContext);
+  if (!authContext.isAuthed) {
+    return (
+      <div>
+        <Loading />
+      </div>);
+  }
+
   return (
-    <div></div>
+    <div>
+      authed: {JSON.stringify(authContext.isAuthed)} <br />
+      metadata: {JSON.stringify(authContext.authMetaData)}
+    </div>
   )
 }
 
-// why is this so laggy
+export default Test;
