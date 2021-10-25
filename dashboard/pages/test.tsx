@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react'
-import { Loading } from '../components/Loading';
+import { Loading } from '../modules/Loading/Loading';
 import { AuthContext } from '../modules/AuthProvider';
 
 export const Test: FC = () => {
