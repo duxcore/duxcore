@@ -89,17 +89,17 @@ export const apiUsers: ApiRoute[] = [
     executor: async (req, res) => {
       const authorizationToken = req.headers['authorization'];
 
-      if (!authorizationToken) return manifestation.sendApiResponse(res, {
+      if (!authorizationToken) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
         status: 400,
         message: "Missing authorization token...",
         data: {
           error: "MISSING_AUTH_TOKEN"
         },
         successful: false
-      });
+      }));
 
       authenticationToken.validateToken(authorizationToken).then(async (value: any) => {
-        return manifestation.sendApiResponse(res, {
+        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
           status: 200,
           message: "Successfully fetched user profile.",
           data: await (async () => {
@@ -112,13 +112,13 @@ export const apiUsers: ApiRoute[] = [
             }
           })(),
           successful: true
-        })
+        }))
       }).catch((err: jwt.JsonWebTokenError) => {
-        return manifestation.sendApiResponse(res, {
+        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
           status: 401,
           message: err.message,
           successful: false
-        });
+        }));
       })
     }
   })
