@@ -2028,7 +2028,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.5.1":
+"chokidar@npm:>=3.0.0 <4.0.0, chokidar@npm:^3.5.1":
   version: 3.5.2
   resolution: "chokidar@npm:3.5.2"
   dependencies:
@@ -2776,6 +2776,8 @@ __metadata:
     next: 11.1.2
     react: 17.0.2
     react-dom: 17.0.2
+    sass: ^1.43.3
+    scss: ^0.2.4
   languageName: unknown
   linkType: soft
 
@@ -6554,6 +6556,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ometa@npm:0.2.2":
+  version: 0.2.2
+  resolution: "ometa@npm:0.2.2"
+  checksum: f6f2a0c5f0f01110ae5a96efd86d41b199f90ea7b2f644ced8b7e213b3a9085b0f5bbf6af32c6e736182a72ef3cf052203a600b2e732bdf87b7b31752825f2ff
+  languageName: node
+  linkType: hard
+
 "on-finished@npm:~2.3.0":
   version: 2.3.0
   resolution: "on-finished@npm:2.3.0"
@@ -7980,6 +7989,17 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"sass@npm:^1.43.3":
+  version: 1.43.3
+  resolution: "sass@npm:1.43.3"
+  dependencies:
+    chokidar: ">=3.0.0 <4.0.0"
+  bin:
+    sass: sass.js
+  checksum: 42a27655824a7022c68d90eb066df8fec934d20cc91fcdbe4c8675ed502e5db50d392434b7f34b47eb423a95d646627e256bb60a16f465463771206de5837310
+  languageName: node
+  linkType: hard
+
 "scheduler@npm:^0.20.2":
   version: 0.20.2
   resolution: "scheduler@npm:0.20.2"
@@ -7987,6 +8007,15 @@ resolve@^2.0.0-next.3:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 2ba121e53e8a438394598612ec9a8f465b39157042f912d2dd5956af643e0d45ec6937ae4eeb0a807d1945b209515263aed12fc3bca95c7a027ec2a54e76b399
+  languageName: node
+  linkType: hard
+
+"scss@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "scss@npm:0.2.4"
+  dependencies:
+    ometa: 0.2.2
+  checksum: 10e7d6de139cd3aeb92d147ff6d991d99d4686786f92439cf00b4e824c36bf7ad513271f46be14465445267de48b01044ab130fb5bb1278f84811cf04403d749
   languageName: node
   linkType: hard
 

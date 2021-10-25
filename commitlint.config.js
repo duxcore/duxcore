@@ -5,12 +5,11 @@ module.exports = {
       2,
       "always",
       [
-        "global", 
-        "api", 
-        "website", 
-        "wrapper", 
+        "global",
+        "website",
+        "wrapper",
         "frontend",
-        "core", 
+        "core",
         "dashboard"
       ],
     ],
