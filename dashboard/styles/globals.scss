@@ -30,10 +30,10 @@ a {
   }
   .wave {
     width: 5px;
-    height: 100px;
+    height: 0px;
     background: linear-gradient(45deg, cyan, #fff);
     margin: 10px;
-    animation: wave 1s linear infinite;
+    animation: wave 1.2s linear infinite;
     border-radius: 20px;
   }
   .wave:nth-child(2) {
@@ -66,14 +66,13 @@ a {
   
   @keyframes wave {
     0% {
-      transform: scale(0);
+      height: 0px;
     }
     50% {
-      transform: scale(1);
+      height: 100px;
     }
     100% {
-      transform: scale(0);
+      height: 0px;
     }
-  }
-  
+  }  
 }
