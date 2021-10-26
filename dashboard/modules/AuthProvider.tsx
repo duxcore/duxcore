@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useMemo, useState, createContext, useEffect, } from "react";
+import React, { useMemo, useState, createContext, useEffect, PropsWithChildren, } from "react";
 import { apiUrl } from "./apiUrl";
 
 // creating the context 
@@ -15,14 +15,15 @@ export const AuthContext = createContext<{
 	authMetaData: {}
 });
 
-export const AuthProvider: React.FC = ({ children }) => {
+export const AuthProvider = ({ children, requiresAuth }: PropsWithChildren<{ requiresAuth: boolean }>) => {
 	const router = useRouter();
 	const [isAuthed, setIsAuthed] = useState(null);
 	const [authMetaData, setAuthMetaData] = useState({});
 
 	useEffect(() => {
+		if (!requiresAuth) return;
 		const authToken = window.localStorage.getItem("authToken");
-		if (!authToken) return;
+		if (!authToken) router.push("/login");
 
 		axios.get(`${apiUrl.v1}/users/@me`, {
 			headers: {
@@ -33,12 +34,10 @@ export const AuthProvider: React.FC = ({ children }) => {
 				setIsAuthed(true)
 				setAuthMetaData(data);
 			}).catch(err => {
+				if ((err.data && err.data.meta) !== undefined) router.push("/login");
 				setIsAuthed(false);
 			})
-
-
 	}, [])
-
 
 	return (
 		<AuthContext.Provider
