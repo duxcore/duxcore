@@ -10,14 +10,22 @@
   },
   "dependencies": {
     "axios": "^0.23.0",
+    "craco": "^0.0.3",
+    "cssnano": "^5.0.8",
+    "formik": "^2.2.9",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
     "sass": "^1.43.3",
-    "scss": "^0.2.4"
+    "scss": "^0.2.4",
+    "tailwind": "^4.0.0",
+    "yup": "^0.32.11",
+    "yup-password": "^0.2.2"
   },
   "devDependencies": {
     "eslint": "8.0.1",
-    "eslint-config-next": "11.1.2"
+    "eslint-config-next": "11.1.2",
+    "tailwindcss": "^2.2.19"
   }
 }

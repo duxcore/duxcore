@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "craco build",
+    "start": "craco start",
     "lint": "next lint"
   },
   "dependencies": {

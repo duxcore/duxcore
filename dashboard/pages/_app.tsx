@@ -1,10 +1,13 @@
+import { AppProps } from 'next/dist/shared/lib/router/router'
 import { AuthProvider } from '../modules/AuthProvider'
-import '../styles/globals.scss'
+import '../styles/global.css'
 
-function MyApp({ Component, pageProps }) {
-  console.log(Component.requiresAuth)
+function MyApp({ Component, pageProps }: AppProps) {
+  const Comp: any = Component;
+
+  console.log(Comp.requiresAuth)
   return (
-    <AuthProvider requiresAuth={!!Component.requiresAuth}>
+    <AuthProvider requiresAuth={!!Comp.requiresAuth}>
       <Component {...pageProps} />
     </AuthProvider>
   )

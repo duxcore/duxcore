@@ -1,9 +1,4 @@
 import { AuthProvider } from "../modules/AuthProvider"
+import { LoginPage } from "../modules/LoginPage/LoginPage";
 
-export default function LoginPage() {
-  return (
-    <>Hello world login</>
-  )
-}
-
-LoginPage.requiresAuth = false;
+export default LoginPage;
