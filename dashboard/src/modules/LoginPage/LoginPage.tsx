@@ -15,8 +15,8 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
   return (
     <div className="w-full">
       <div className="center-xy">
-        <div className="p-40 border border-primary-800 rounded-8">
-          <div className="mb-30">
+        <div className="p-12 border border-primary-800 rounded-8">
+          <div className="mb-10">
             <div className="text-3xl font-bold text-white">Welcome</div>
             <div className="text-primary-500">Your regular login tagline</div>
           </div>
@@ -27,7 +27,7 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
           >
             {({ errors, touched }) => (
               <Form>
-                <div className="flex flex-col space-y-16">
+                <div className="flex flex-col space-y-5">
                   <Input
                     placeholder="Email Address"
                     error={errors.email}

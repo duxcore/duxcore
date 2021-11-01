@@ -33,12 +33,12 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
         className={`relative border rounded-5 transition overflow-hidden bg-primary-900 ${activeStatusClass}`}
       >
         <Field
-          className="w-full h-full pl-40 text-white bg-transparent outline-none placeholder-primary-700 py-14"
+          className="w-full h-full pl-12 text-white bg-transparent outline-none placeholder-primary-700 py-4"
           {...props}
         />
 
         {withIcon ? (
-          <div className="ml-10 pointer-events-none text-primary-500 center-left">
+          <div className="ml-4 pointer-events-none text-primary-500 center-left">
             {React.cloneElement(withIcon, { size: 20 })}
           </div>
         ) : null}

@@ -28,7 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
     <div>
       <button
         disabled={disabled || loading}
-        className={`rounded-5 py-5 font-bold flex items-center justify-center ${buttonSizes[size]} ${buttonColors[color]}`}
+        className={`rounded-5 py-4 font-bold flex items-center justify-center ${buttonSizes[size]} ${buttonColors[color]}`}
         {...props}
       >
         {loading ? <Spinner /> : children}
