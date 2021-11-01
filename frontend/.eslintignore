@@ -1,5 +1,0 @@
-node_modules/
-
-*.spec.tsx
-*.spec.tsx.snap
-src/generated/

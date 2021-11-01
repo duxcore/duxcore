@@ -1,11 +1,9 @@
 import * as yup from "yup";
 import yuppassword from "yup-password";
 import memoize from "memoizee";
-import wrapper from "@duxcore/wrapper";
 import { debounce, throttle } from "throttle-debounce";
-import { UsernameAPIResponse } from "../../../../wrapper/lib/types/restUser";
 
-export default function createRegisterSchema(key?: string) {
+export default function createRegisterSchema() {
   yuppassword(yup);
 
   interface ICreateFormValidation {
@@ -15,28 +13,20 @@ export default function createRegisterSchema(key?: string) {
     async: boolean;
   }
 
-  const testUsername = throttle(
-    1000,
-    (value: string, callback: (res: UsernameAPIResponse) => void) => {
-      wrapper.rest.user.getUsername(value, key).then((res) => {
-        return callback(res);
-      });
-    }
-  );
-
+  /**
   const createFormValidation = ({
     id,
     message,
     validationFn,
     async = false,
   }: ICreateFormValidation): [
-    typeof id,
-    typeof message,
-    typeof validationFnWrapper
-  ] => {
+      typeof id,
+      typeof message,
+      typeof validationFnWrapper
+    ] => {
     const memoized = memoize(validationFn, { length: 1 });
     // prettier-ignore
-    const validationFnWrapper = async function(this: any, value?: string) {
+    const validationFnWrapper = async function (this: any, value?: string) {
       if (!async) {
         // eslint-disable-next-line no-invalid-this
         return await validationFn.call(this, value);
@@ -62,16 +52,11 @@ export default function createRegisterSchema(key?: string) {
       });
     },
   });
+  */
 
   return {
     RegisterSchema: yup.object().shape({
       name: yup.string().required(),
-      username: yup
-        .string()
-        .min(3, "minimum 3 characters")
-        .max(24, "maximum 15 characters")
-        .required()
-        .test(...checkUsername),
       email: yup.string().email().required(),
       password: yup.string().password().required(),
       passwordConfirmation: yup
