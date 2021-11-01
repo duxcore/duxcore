@@ -27,7 +27,7 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
           >
             {({ errors, touched }) => (
               <Form>
-                <div className="flex flex-col space-y-15">
+                <div className="flex flex-col space-y-16">
                   <Input
                     placeholder="Email Address"
                     error={errors.email}
