@@ -1,5 +1,6 @@
 {
   "name": "core",
+  "private": true,
   "scripts": {
     "build": "prisma generate && tsc",
     "migrate": "prisma db push",
