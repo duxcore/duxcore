@@ -33,17 +33,17 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
         className={`relative border rounded-5 transition overflow-hidden bg-primary-900 ${activeStatusClass}`}
       >
         <Field
-          className="w-full h-full placeholder-primary-700 outline-none py-15 pl-40 bg-transparent"
+          className="w-full h-full pl-40 text-white bg-transparent outline-none placeholder-primary-700 py-15"
           {...props}
         />
 
         {withIcon ? (
-          <div className="text-primary-500 pointer-events-none center-left ml-10">
+          <div className="ml-10 pointer-events-none text-primary-500 center-left">
             {React.cloneElement(withIcon, { size: 20 })}
           </div>
         ) : null}
         {error && touched && !loading ? (
-          <div className="text-error pointer-events-none center-right mr-15 font-bold text-lg">
+          <div className="text-lg font-bold pointer-events-none text-error center-right mr-15">
             !
           </div>
         ) : null}
@@ -53,7 +53,7 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
           </div>
         ) : null}
       </div>
-      {error && touched ? <div className="text-error mt-5">{error}</div> : null}
+      {error && touched ? <div className="mt-5 text-error">{error}</div> : null}
     </div>
   );
 };
