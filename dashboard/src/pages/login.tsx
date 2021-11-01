@@ -1,4 +1,3 @@
-import { AuthProvider } from "../modules/AuthProvider"
-import { LoginPage } from "../modules/LoginPage/LoginPage";
+import { LoginPage } from "../modules/auth/login/LoginPage";
 
 export default LoginPage;

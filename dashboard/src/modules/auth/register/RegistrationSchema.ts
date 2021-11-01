@@ -1,7 +1,5 @@
 import * as yup from "yup";
 import yuppassword from "yup-password";
-import memoize from "memoizee";
-import { debounce, throttle } from "throttle-debounce";
 
 export default function createRegisterSchema() {
   yuppassword(yup);

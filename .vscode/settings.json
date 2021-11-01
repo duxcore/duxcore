@@ -1,9 +1,0 @@
-{
-  "css.customData": [".vscode/css_custom_data.json"],
-  "files.associations": {
-    "*.css": "postcss",
-    "string": "cpp",
-    "filesystem": "cpp",
-    "iosfwd": "cpp"
-  }
-}

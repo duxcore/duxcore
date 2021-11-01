@@ -1,5 +1,5 @@
 import React from "react";
-import { Spinner } from "./Spinner";
+import { Spinner } from "../Spinner";
 
 const buttonSizes = {
   full: "w-full",
@@ -7,7 +7,7 @@ const buttonSizes = {
 
 const buttonColors = {
   primary:
-    "text-white bg-accent transition hover:bg-accent-hover disabled:bg-accent-disabled disabled:cursor-not-allowed",
+    "text-white bg-accent transition hover:bg-accent-light disabled:bg-accent-lighter disabled:cursor-not-allowed",
 };
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -28,7 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
     <div>
       <button
         disabled={disabled || loading}
-        className={`rounded-5 py-4 font-bold flex items-center justify-center ${buttonSizes[size]} ${buttonColors[color]}`}
+        className={`rounded-5 py-2 font-bold flex items-center justify-center ${buttonSizes[size]} ${buttonColors[color]}`}
         {...props}
       >
         {loading ? <Spinner /> : children}
