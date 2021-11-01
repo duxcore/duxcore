@@ -33,7 +33,7 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
         className={`relative border rounded-5 transition overflow-hidden bg-primary-900 ${activeStatusClass}`}
       >
         <Field
-          className="w-full h-full pl-40 text-white bg-transparent outline-none placeholder-primary-700 py-15"
+          className="w-full h-full pl-40 text-white bg-transparent outline-none placeholder-primary-700 py-14"
           {...props}
         />
 
@@ -43,12 +43,12 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
           </div>
         ) : null}
         {error && touched && !loading ? (
-          <div className="text-lg font-bold pointer-events-none text-error center-right mr-15">
+          <div className="text-lg font-bold pointer-events-none text-error center-right mr-14">
             !
           </div>
         ) : null}
         {loading ? (
-          <div className="center-right mr-15">
+          <div className="center-right mr-14">
             <Spinner className="text-primary-300" />
           </div>
         ) : null}
