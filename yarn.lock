@@ -736,7 +736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hcaptcha/react-hcaptcha@npm:^0.3.6":
+"@hcaptcha/react-hcaptcha@npm:^0.3.6, @hcaptcha/react-hcaptcha@npm:^0.3.8":
   version: 0.3.8
   resolution: "@hcaptcha/react-hcaptcha@npm:0.3.8"
   peerDependencies:
@@ -3857,6 +3857,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dashboard@workspace:dashboard"
   dependencies:
+    "@hcaptcha/react-hcaptcha": ^0.3.8
     axios: ^0.23.0
     craco: ^0.0.3
     cssnano: ^5.0.8

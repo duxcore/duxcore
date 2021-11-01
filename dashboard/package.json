@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^0.3.8",
     "axios": "^0.23.0",
     "craco": "^0.0.3",
     "cssnano": "^5.0.8",
