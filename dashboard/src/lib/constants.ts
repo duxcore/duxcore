@@ -1,5 +1,5 @@
 export const API_BASEURL =
-  process.env.NEXT_PUBLIC_API_BASEURL || "http://localhost:3609/v1";
+  process.env.NEXT_PUBLIC_API_BASEURL || "http://localhost/v1";
 
 export const isProd = process.env.NODE_ENV === "production";
 
