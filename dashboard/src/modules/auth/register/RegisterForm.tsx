@@ -51,7 +51,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
     >
       <Formik
         initialValues={{
-          name: "",
+          firstName: "",
+          lastName: "",
           email: "",
           password: "",
           passwordConfirmation: "",
@@ -82,8 +83,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
               method: "POST",
               data: {
                 name: {
-                  firstName: formData.name,
-                  lastName: formData.name, // this is wrong, but api requires both
+                  firstName: formData.firstName,
+                  lastName: formData.lastName,
                 },
                 email: formData.email,
                 password: formData.password,
@@ -119,13 +120,22 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
             <Form>
               <div className="flex flex-col space-y-1.5">
                 <Input
-                  placeholder="Name"
-                  error={errors.name}
+                  placeholder="First Name"
+                  error={errors.firstName}
                   withIcon={<IoPersonOutline />}
-                  name="name"
+                  name="firstName"
                   type="text"
-                  touched={touched.name}
+                  touched={touched.firstName}
                 />
+                <Input
+                  placeholder="Last Name"
+                  error={errors.lastName}
+                  withIcon={<IoPersonOutline />}
+                  name="lastName"
+                  type="text"
+                  touched={touched.lastName}
+                />
+
                 <Input
                   placeholder="Email Address"
                   error={errors.email}
@@ -134,6 +144,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
                   type="text"
                   touched={touched.email}
                 />
+
                 <Input
                   placeholder="Password"
                   error={errors.password}

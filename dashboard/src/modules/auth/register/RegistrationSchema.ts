@@ -54,7 +54,8 @@ export default function createRegisterSchema() {
 
   return {
     RegisterSchema: yup.object().shape({
-      name: yup.string().required(),
+      firstName: yup.string().required(),
+      lastName: yup.string().required(),
       email: yup.string().email().required(),
       password: yup.string().password().required(),
       passwordConfirmation: yup
