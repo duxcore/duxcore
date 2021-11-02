@@ -8,13 +8,16 @@
     "wrapper",
     "frontend",
     "core",
-    "dashboard"
+    "dashboard",
+    "dashboard2"
   ],
   "scripts": {
     "commit": "cz",
     "commit:signed": "cz -S",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dash": "yarn workspace dashboard",
+    "core": "yarn workspace core"
   },
   "repository": {
     "type": "git",

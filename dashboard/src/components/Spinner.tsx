@@ -1,8 +1,8 @@
 import React from "react";
 
 const spinnerSizes = {
-  "5": "h-20 w-20",
-  "10": "h-10 w-10",
+  "5": "h-2 w-2",
+  "10": "h-1 w-1",
 };
 
 interface SpinnerProps {

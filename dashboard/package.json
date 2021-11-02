@@ -1,6 +1,5 @@
 {
   "name": "dashboard",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,23 +9,26 @@
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^0.3.8",
-    "axios": "^0.23.0",
-    "craco": "^0.0.3",
-    "cssnano": "^5.0.8",
+    "axios": "^0.24.0",
     "formik": "^2.2.9",
-    "next": "^12.0.2",
+    "next": "12.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
-    "sass": "^1.43.3",
-    "scss": "^0.2.4",
-    "tailwind": "^4.0.0",
     "yup": "^0.32.11",
-    "yup-password": "^0.2.2"
+    "yup-password": "^0.2.2",
+    "zustand": "^3.6.2"
   },
   "devDependencies": {
-    "eslint": "^8.1.0",
-    "eslint-config-next": "11.1.2",
-    "tailwindcss": "^2.2.19"
+    "@types/node": "16.11.6",
+    "@types/react": "17.0.33",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "autoprefixer": "latest",
+    "eslint": "7",
+    "eslint-config-next": "12.0.2",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "4.4.4"
   }
 }

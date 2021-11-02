@@ -4,7 +4,7 @@ import { Spinner } from "../Spinner";
 
 const inputStatusClass = {
   error: "border-error",
-  idle: "border-primary-700 focus-within:border-primary-600",
+  idle: "border-gray-700 focus-within:border-gray-600",
 };
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -28,32 +28,34 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
   }
 
   return (
-    <div className="flex flex-col" style={{ width: 300 }}>
+    <div className="flex flex-col">
       <div
-        className={`relative border rounded-5 transition overflow-hidden bg-primary-900 ${activeStatusClass}`}
+        className={`relative border rounded-5 transition overflow-hidden bg-gray-900 ${activeStatusClass}`}
       >
         <Field
-          className="w-full h-full pl-12 text-white bg-transparent outline-none placeholder-primary-700 py-4"
+          className="w-full h-full pl-5 text-white bg-transparent outline-none placeholder-gray-700 py-1.5 text-base"
           {...props}
         />
 
         {withIcon ? (
-          <div className="ml-4 pointer-events-none text-primary-500 center-left">
+          <div className="ml-1.5 pointer-events-none text-gray-500 center-left">
             {React.cloneElement(withIcon, { size: 20 })}
           </div>
         ) : null}
         {error && touched && !loading ? (
-          <div className="text-lg font-bold pointer-events-none text-error center-right mr-4">
+          <div className="text-lg font-bold pointer-events-none text-error center-right mr-1.5">
             !
           </div>
         ) : null}
         {loading ? (
           <div className="center-right mr-4">
-            <Spinner className="text-primary-300" />
+            <Spinner className="text-gray-300" />
           </div>
         ) : null}
       </div>
-      {error && touched ? <div className="mt-2 text-error">{error}</div> : null}
+      {error && touched ? (
+        <div className="my-1 text-error text-sm">{error}</div>
+      ) : null}
     </div>
   );
 };

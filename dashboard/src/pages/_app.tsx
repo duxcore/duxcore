@@ -1,16 +1,20 @@
-import { AppProps } from 'next/dist/shared/lib/router/router'
-import { AuthProvider } from '../modules/AuthProvider'
-import '../styles/global.css'
+import type { AppProps } from "next/app";
+import { AxiosProvider } from "../context/AxiosProvider";
+import { AuthProvider } from "../modules/auth/AuthProvider";
+import { PageComponent } from "../types/PageComponent";
+import "../styles/globals.css";
+import "../styles/utils.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const Comp: any = Component;
-
-  console.log(Comp.requiresAuth)
   return (
-    <AuthProvider requiresAuth={!!Comp.requiresAuth}>
-      <Component {...pageProps} />
-    </AuthProvider>
-  )
+    <AxiosProvider>
+      <AuthProvider
+        requiresAuth={!!(Component as PageComponent<unknown>).requiresAuth}
+      >
+        <Component {...pageProps} />
+      </AuthProvider>
+    </AxiosProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;

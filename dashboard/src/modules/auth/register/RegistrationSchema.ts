@@ -1,7 +1,5 @@
 import * as yup from "yup";
 import yuppassword from "yup-password";
-import memoize from "memoizee";
-import { debounce, throttle } from "throttle-debounce";
 
 export default function createRegisterSchema() {
   yuppassword(yup);
@@ -56,7 +54,8 @@ export default function createRegisterSchema() {
 
   return {
     RegisterSchema: yup.object().shape({
-      name: yup.string().required(),
+      firstName: yup.string().required(),
+      lastName: yup.string().required(),
       email: yup.string().email().required(),
       password: yup.string().password().required(),
       passwordConfirmation: yup
