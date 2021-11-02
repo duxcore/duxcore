@@ -43,17 +43,17 @@ export const Input: React.FC<FieldAttributes<InputProps>> = ({
           </div>
         ) : null}
         {error && touched && !loading ? (
-          <div className="text-lg font-bold pointer-events-none text-error center-right mr-14">
+          <div className="text-lg font-bold pointer-events-none text-error center-right mr-4">
             !
           </div>
         ) : null}
         {loading ? (
-          <div className="center-right mr-14">
+          <div className="center-right mr-4">
             <Spinner className="text-primary-300" />
           </div>
         ) : null}
       </div>
-      {error && touched ? <div className="mt-5 text-error">{error}</div> : null}
+      {error && touched ? <div className="mt-2 text-error">{error}</div> : null}
     </div>
   );
 };
