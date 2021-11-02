@@ -112,3 +112,7 @@ dist
 .pnp.*
 
 backend/src/util/prisma/migrations/
+
+# misc
+.DS_Store
+*.pem

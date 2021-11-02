@@ -1,2 +1,6 @@
 .docker
 jwt.key
+
+# misc
+.DS_Store
+*.pem
