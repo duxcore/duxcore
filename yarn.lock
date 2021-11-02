@@ -2436,6 +2436,7 @@ __metadata:
     body-parser: ^1.19.0
     cors: ^2.8.5
     dotenv: ^10.0.0
+    email-validator: ^2.0.4
     express: ^4.17.1
     express-rate-limit: ^5.5.0
     jsonwebtoken: ^8.5.1
@@ -3012,6 +3013,13 @@ __metadata:
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
   checksum: e0fb360fb6800666e0f69c837ae1f19656583322f81e106e458242055b8e241e80a48c92da8f1324684d1ff348751ff38abeadcfc1f28c54157c29d229d039a1
+  languageName: node
+  linkType: hard
+
+"email-validator@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "email-validator@npm:2.0.4"
+  checksum: 1c09deb77a45959e561465b56e84bee8fda97a81427ca0492aaa0d4205650634a66283f3dd00194cc65f54005b8fe2c88185d8d57e6f2f9d88372d6787e469fd
   languageName: node
   linkType: hard
 
