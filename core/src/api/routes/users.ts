@@ -1,40 +1,42 @@
+import { authenticationToken } from "../../lib/authenticationToken";
 import { ApiRoute, manifestation } from "@duxcore/manifestation";
+import { apiError, errorConstructor } from "../../helpers/apiError";
 import Password from "../../classes/Password";
+import validator from "email-validator";
 import { users } from "../../lib/users";
 import jwt from 'jsonwebtoken';
-import { authenticationToken } from "../../lib/authenticationToken";
-
-const missingValue = (valueName) => {
-  return manifestation.newApiResponse({
-    status: 400,
-    message: `Missing value '${valueName}'`,
-    data: {
-      error: `MISSING_FORM_VALUE`
-    },
-    successful: false
-  });
-}
 
 export const apiUsers: ApiRoute[] = [
   manifestation.newRoute({
     route: "/users",
     method: "post",
     executor: async (req, res) => {
+      let errors = apiError.createErrorStack();
 
-      if (!req.body.password) return manifestation.sendApiResponse(res, missingValue("password"));
-      if (!req.body.email) return manifestation.sendApiResponse(res, missingValue("email"));
+      if (!req.body.password) errors.append(errorConstructor.missingValue("password"))
+      if (!req.body.email) errors.append(errorConstructor.missingValue("email"));
+      if (!validator.validate(req.body.email)) errors.append(errorConstructor.invalidEmail(req.body.email))
 
-      if (!req.body.name || !req.body.name.firstName) return manifestation.sendApiResponse(res, missingValue("name.firstName"));
-      if (!req.body.name || !req.body.name.lastName) return manifestation.sendApiResponse(res, missingValue("name.lastName"));
+      if (!req.body.name || !req.body.name.firstName) errors.append(errorConstructor.missingValue("name.firstName"));
+      if (!req.body.name || !req.body.name.lastName) errors.append(errorConstructor.missingValue("name.lastName"));
 
-      if (await users.emailExists(req.body.email)) return manifestation.sendApiResponse(res, {
+      if (!!req.body.email && await users.emailExists(req.body.email)) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
         status: 400,
         message: "An error has occured",
         successful: false,
         data: {
-          error: "User Already Exists!"
+          stack: apiError.createErrorStack("userEmailExists").stack
         }
-      });
+      }));
+
+      if (errors.stack.length > 0) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 400,
+        message: "Error(s) have occured...",
+        successful: false,
+        data: {
+          errors: errors.stack
+        }
+      }))
 
       users.create({
         email: req.body.email,
@@ -64,12 +66,31 @@ export const apiUsers: ApiRoute[] = [
     route: "/users/auth",
     method: "post",
     executor: async (req, res) => {
+      let errors = apiError.createErrorStack();
+
       const email = req.body.email;
       const password = req.body.password;
       const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-      if (!req.body.email) manifestation.sendApiResponse(res, missingValue("email"));
-      if (!req.body.email) manifestation.sendApiResponse(res, missingValue("password"));
+      if (!req.body.email) errors.append(errorConstructor.missingValue("email"));
+      if (!req.body.email) errors.append(errorConstructor.missingValue("password"));
+
+      if (!(await users.emailExists(email))) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 404,
+        message: "An error has occured",
+        data: {
+          errors: apiError.createErrorStack("unknwonUser")
+        },
+        successful: false
+      }));
+
+      if (errors.stack.length > 0) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 400,
+        message: "Error(s) have occured",
+        data: {
+          errors: errors.stack
+        }
+      }));
 
       users.login(email, password, ip as string).then((after) => {
         const response = manifestation.newApiResponse({
@@ -91,9 +112,9 @@ export const apiUsers: ApiRoute[] = [
 
       if (!authorizationToken) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
         status: 400,
-        message: "Missing authorization token...",
+        message: "An error has occured",
         data: {
-          error: "MISSING_AUTH_TOKEN"
+          errors: apiError.createErrorStack("missingAuthToken")
         },
         successful: false
       }));
@@ -116,7 +137,10 @@ export const apiUsers: ApiRoute[] = [
       }).catch((err: jwt.JsonWebTokenError) => {
         return manifestation.sendApiResponse(res, manifestation.newApiResponse({
           status: 401,
-          message: err.message,
+          message: "An Error has occured",
+          data: {
+            errors: apiError.createErrorStack(errorConstructor.failedAuthorization(err.message))
+          },
           successful: false
         }));
       })
