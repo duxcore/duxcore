@@ -117,7 +117,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
         {({ errors, touched }) => {
           return (
             <Form>
-              <div className="flex flex-col space-y-1">
+              <div className="flex flex-col space-y-1.5">
                 <Input
                   placeholder="Name"
                   error={errors.name}
@@ -151,7 +151,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
                   touched={touched.passwordConfirmation}
                 />
               </div>
-              <div className="my-2">
+              <div className="mt-2">
                 <HCaptcha
                   ref={hCaptchaRef}
                   theme="dark"
@@ -160,13 +160,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
                   size="invisible"
                 />
               </div>
-              <Button type="submit">
-                {registerSuccess ? (
-                  <IoCheckmarkCircle size="20" />
-                ) : (
-                  "Submit Registration"
-                )}
-              </Button>
+              <div className="mt-2">
+                <Button type="submit">
+                  {registerSuccess ? (
+                    <IoCheckmarkCircle size="20" />
+                  ) : (
+                    "Submit Registration"
+                  )}
+                </Button>
+              </div>
             </Form>
           );
         }}

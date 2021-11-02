@@ -66,7 +66,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       >
         {({ errors, touched }) => (
           <Form>
-            <div className="flex flex-col space-y-1">
+            <div className="flex flex-col space-y-1.5">
               <Input
                 placeholder="Email Address"
                 error={errors.email}
