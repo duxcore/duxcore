@@ -1,10 +1,10 @@
-import { authenticationToken } from "../../lib/authenticationToken";
 import { ApiRoute, manifestation } from "@duxcore/manifestation";
 import { apiError, errorConstructor } from "../../helpers/apiError";
 import Password from "../../classes/Password";
 import validator from "email-validator";
 import { users } from "../../lib/users";
 import jwt from 'jsonwebtoken';
+import { authorizationToken } from "../../lib/authorizationTokens";
 
 export const apiUsers: ApiRoute[] = [
   manifestation.newRoute({
@@ -79,7 +79,7 @@ export const apiUsers: ApiRoute[] = [
         status: 404,
         message: "An error has occured",
         data: {
-          errors: apiError.createErrorStack("unknwonUser")
+          errors: apiError.createErrorStack("unknwonUser").stack
         },
         successful: false
       }));
@@ -96,7 +96,10 @@ export const apiUsers: ApiRoute[] = [
         const response = manifestation.newApiResponse({
           status: after.passwordValid == true ? 200 : 400,
           message: after.passwordValid ? "Authentication Successful." : "Authentication Failed.",
-          data: after,
+          data: {
+            errors: !after.passwordValid ? apiError.createErrorStack("invalidPassword").stack : undefined,
+            ...after
+          },
           successful: after.passwordValid
         });
 
@@ -104,13 +107,14 @@ export const apiUsers: ApiRoute[] = [
       })
     }
   }),
+
   manifestation.newRoute({
     route: "/users/@me",
     method: "get",
     executor: async (req, res) => {
-      const authorizationToken = req.headers['authorization'];
+      const authToken = req.headers['authorization'];
 
-      if (!authorizationToken) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+      if (!authToken) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
         status: 400,
         message: "An error has occured",
         data: {
@@ -119,31 +123,31 @@ export const apiUsers: ApiRoute[] = [
         successful: false
       }));
 
-      authenticationToken.validateToken(authorizationToken).then(async (value: any) => {
-        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 200,
-          message: "Successfully fetched user profile.",
-          data: await (async () => {
-            value.iat = undefined;
-            const user = await users.fetch(value.id);
+      let tokenMeta = authorizationToken.validateToken(authToken);
 
-            return {
-              raw: value,
-              user: user?.toJson()
-            }
-          })(),
-          successful: true
-        }))
-      }).catch((err: jwt.JsonWebTokenError) => {
-        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 401,
-          message: "An Error has occured",
-          data: {
-            errors: apiError.createErrorStack(errorConstructor.failedAuthorization(err.message))
-          },
-          successful: false
-        }));
-      })
+      if (!tokenMeta) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 401,
+        message: "Authorization failure.",
+        data: {
+          errors: apiError.createErrorStack("authFailure").stack
+        },
+        successful: false
+      }))
+
+      return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 200,
+        message: "Successfully fetched user profile.",
+        data: await (async () => {
+          (tokenMeta as any).iat = undefined;
+          const user = await users.fetch(tokenMeta.userId);
+
+          return {
+            raw: tokenMeta,
+            user: user?.toJson()
+          }
+        })(),
+        successful: true
+      }))
     }
   })
 ]

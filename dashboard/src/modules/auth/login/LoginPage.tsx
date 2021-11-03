@@ -9,7 +9,7 @@ import { useHasToken } from "../useHasToken";
 import { useTokenStore } from "../useTokenStore";
 import { LoginForm, LoginResponse } from "./LoginForm";
 
-interface LoginPageProps {}
+interface LoginPageProps { }
 
 export const LoginPage: PageComponent<LoginPageProps> = () => {
   useGetIntendedPath();
@@ -18,10 +18,10 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
   const { replace } = useRouter();
 
   const onLogin = (data: LoginResponse["data"]) => {
-    // Set new access token as axios Authorization header
-    if (data.jwt) {
-      setAxiosHeader(data.jwt);
-      useTokenStore.getState().setToken({ accessToken: data.jwt });
+    // Set new auth token as axios Authorization header
+    if (data.authorization) {
+      setAxiosHeader(data.authorization.authToken);
+      useTokenStore.getState().setTokens({ authToken: data.authorization.authToken, refreshToken: data.authorization.refreshToken });
     }
 
     let redirectPath = "/";
@@ -33,7 +33,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
         redirectPath = possibleIntendedPath;
         localStorage.setItem(INTENDED_PATH_KEY, "");
       }
-    } catch {}
+    } catch { }
 
     replace(redirectPath);
   };
@@ -41,7 +41,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
   useEffect(() => {
     if (hasToken) {
       // AuthContext and WaitForAuth will take care
-      // of verifying the access token validity
+      // of verifying the auth token validity
       replace("/");
     }
   }, [hasToken, replace]);

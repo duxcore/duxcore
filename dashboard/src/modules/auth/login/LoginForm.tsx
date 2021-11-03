@@ -11,7 +11,10 @@ import { LoginSchema } from "./LoginSchema";
 
 export type LoginResponse = {
   data: {
-    jwt: string | null;
+    authorization: {
+      authToken: string,
+      refreshToken: string
+    } | null;
     emailExists: boolean;
     passwordValid: boolean;
     userId: any;
@@ -48,6 +51,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
               },
             });
           } catch (error) {
+
+            if ((error as any).response.data.data.errors.length > 0) {
+              return setFormError((error as any).response.data.data.errors[0].message)
+            }
+
             if (
               _axios.isAxiosError(error) &&
               error.response &&
@@ -56,6 +64,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
               setFormError(error.response.data.message);
               return;
             }
+
+            console.log((error as any).response.data.data)
 
             setFormError("An error occurred");
             return;

@@ -7,13 +7,15 @@ import "../styles/utils.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <AxiosProvider>
-      <AuthProvider
-        requiresAuth={!!(Component as PageComponent<unknown>).requiresAuth}
-      >
-        <Component {...pageProps} />
-      </AuthProvider>
-    </AxiosProvider>
+    <div suppressHydrationWarning={true}>
+      <AxiosProvider>
+        <AuthProvider
+          requiresAuth={!!(Component as PageComponent<unknown>).requiresAuth}
+        >
+          <Component {...pageProps} />
+        </AuthProvider>
+      </AxiosProvider>
+    </div>
   );
 }
 

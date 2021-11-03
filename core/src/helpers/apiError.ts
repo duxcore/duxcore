@@ -65,12 +65,6 @@ export const errorConstructor = {
       message: `Invalid Email Address...`
     }
   },
-  failedAuthorization: (message: string): ApiError => {
-    return {
-      code: "AUTHORIZATION_FAILURE",
-      message
-    }
-  }
 }
 
 export const errorManifest = {
@@ -89,5 +83,18 @@ export const errorManifest = {
   missingAuthToken: {
     code: "MISSING_AUTH_TOKEN",
     message: "The authorization token is required for this query."
+  },
+  missingRefreshToken: {
+    code: "MISSING_REFRESH_TOKEN",
+    message: "The refresh token is missing from the authorization header."
+  },
+  authFailure: {
+    code: "AUTH_FAILURE",
+    message: "Failed to authorize using auth token..."
+  },
+  invalidPassword: {
+    code: "INVALID_PASSWORD",
+    message: "Invalid Password."
   }
+
 }

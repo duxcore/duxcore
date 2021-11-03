@@ -2,6 +2,7 @@ import { useRouter } from "next/dist/client/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAxios } from "../../context/AxiosProvider";
 import { API_BASEURL } from "../../lib/constants";
+import { extractErrors } from "../extractErrors";
 import { useHasToken } from "./useHasToken";
 import { useTokenStore } from "./useTokenStore";
 import { WaitForAuth } from "./WaitForAuth";
@@ -26,8 +27,8 @@ export const AuthContext = React.createContext<{
   setUser: (u: User["data"]["user"]) => void;
 }>({
   user: null,
-  logOut: () => {},
-  setUser: () => {},
+  logOut: () => { },
+  setUser: () => { },
 });
 
 interface AuthProviderProps {
@@ -56,9 +57,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           setUser(x.data.data.user);
         })
         .catch((err) => {
-          if (err.status === 401 && requiresAuth) {
-            useTokenStore.getState().setToken({ accessToken: "" });
-            replace(`/login?next=${window.location.pathname}`);
+          console.log(err.response)
+          if (err.response.status === 401 && requiresAuth) {
+            let errs = extractErrors(err.response.data.data.errors)
+
+            if (errs.has("AUTH_FAILURE")) {
+              useTokenStore.getState().setTokens({ authToken: "", refreshToken: "" });
+              replace(`/login?next=${window.location.pathname}`);
+            }
           }
         })
         .finally(() => {
@@ -73,8 +79,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         () => ({
           user,
           logOut: () => {
-            const { setToken } = useTokenStore.getState();
-            setToken({ accessToken: "" });
+            const { setTokens: setToken } = useTokenStore.getState();
+            setToken({ authToken: "", refreshToken: "" });
             setUser(null);
 
             // Here you would call /logout and invalidate the refresh token family

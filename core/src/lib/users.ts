@@ -2,7 +2,7 @@ import { UserRole } from ".prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import Password from "../classes/Password";
 import UserManager from "../classes/UserManager";
-import { authenticationToken } from "./authenticationToken";
+import { authorizationToken } from "./authorizationTokens";
 
 interface NewUserData {
   firstName: string;
@@ -78,7 +78,9 @@ export const users = {
     }).catch(e => { throw e; })
 
     return {
-      jwt: passwordValid ? await authenticationToken.generateToken((await prismaInstance.user.findFirst({ where: { email } }))?.id as string) : null,
+      authorization: passwordValid ? await authorizationToken.generateTokenPair({
+        userId: (await prismaInstance.user.findFirst({ where: { email } }))?.id as string
+      }) : null,
       emailExists,
       passwordValid,
       userId: (await prismaInstance.user.findFirst({
