@@ -465,6 +465,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@headlessui/react@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@headlessui/react@npm:1.4.1"
+  peerDependencies:
+    react: ^16 || ^17 || ^18
+    react-dom: ^16 || ^17 || ^18
+  checksum: f883749ff2dc40d00b3823301c330f18a0864aa5b8847d07c65d1a8fddd3b993ba90dbb81bd8b0743fe6b050ba0be4e56f7d1d9ab43a324de56766139826ebe2
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.5.0":
   version: 0.5.0
   resolution: "@humanwhocodes/config-array@npm:0.5.0"
@@ -2691,6 +2701,7 @@ __metadata:
   resolution: "dashboard@workspace:dashboard"
   dependencies:
     "@hcaptcha/react-hcaptcha": ^0.3.8
+    "@headlessui/react": ^1.4.1
     "@types/node": 16.11.6
     "@types/react": 17.0.33
     "@typescript-eslint/eslint-plugin": latest
