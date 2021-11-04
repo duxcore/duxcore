@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div suppressHydrationWarning={true}>
       <AxiosProvider>
         <AuthProvider
-          requiresAuth={!!(Component as PageComponent<unknown>).requiresAuth}
+          requiresAuth={(Component as PageComponent<unknown>).requiresAuth ?? true}
         >
           <Component {...pageProps} />
         </AuthProvider>

@@ -16,7 +16,7 @@ export const HomePage: PageComponent<HomePageProps> = () => {
         className="py-0.5 px-2 bg-gray-800 hover:bg-gray-700 rounded-5"
       >Revoke All Refresh Tokens</button>
     </Layout>
-  )
+  );
 };
 
 HomePage.requiresAuth = true;

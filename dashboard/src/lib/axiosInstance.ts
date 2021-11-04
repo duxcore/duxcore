@@ -11,6 +11,9 @@ const axiosInstance: AxiosInstance = axios.create({
   // withCredentials: true,
 });
 
+export const setAxiosHeader = (authToken: string) => {
+  axiosInstance.defaults.headers.common.Authorization = authToken;
+};
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -57,7 +60,7 @@ axiosInstance.interceptors.response.use(
               Authorization: refreshToken
             }
           }).then(res => {
-            let data = res.data;
+            const data = res.data;
 
             useTokenStore.getState().setTokens({
               authToken: data.data.authToken,
@@ -68,7 +71,6 @@ axiosInstance.interceptors.response.use(
             setAxiosHeader(data.data.authToken);
             return axiosInstance(originalRequest);
           });
-
         } catch (_error: any) {
           // Refresh was retried, but failed — we clear tokens and move on
           useTokenStore.getState().setTokens({
@@ -92,7 +94,3 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
-
-export const setAxiosHeader = (authToken: string) => {
-  axiosInstance.defaults.headers.common.Authorization = authToken;
-};

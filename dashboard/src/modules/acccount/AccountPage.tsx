@@ -1,12 +1,15 @@
 import { Layout } from "../../components/Layout";
-import { useAuth } from "../auth/useAuth"
+import { PageComponent } from "../../types/PageComponent";
+import { useAuth } from "../auth/useAuth";
 
-export const AccountPage = () => {
+interface AccountPageProps { }
+
+export const AccountPage: PageComponent<AccountPageProps> = () => {
   const { user } = useAuth();
 
   return (
     <Layout>
       <div className="">hello world</div>
     </Layout>
-  )
-}
+  );
+};

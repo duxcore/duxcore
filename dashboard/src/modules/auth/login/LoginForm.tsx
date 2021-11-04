@@ -51,9 +51,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
               },
             });
           } catch (error) {
-
             if ((error as any).response.data.data.errors.length > 0) {
-              return setFormError((error as any).response.data.data.errors[0].message)
+              return setFormError((error as any).response.data.data.errors[0].message);
             }
 
             if (
@@ -65,7 +64,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
               return;
             }
 
-            console.log((error as any).response.data.data)
+            console.log((error as any).response.data.data);
 
             setFormError("An error occurred");
             return;

@@ -10,5 +10,5 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
     <div className="w-full h-10 bg-black border-b border-gray-800 border-solid">
       {children}
     </div>
-  )
-}
+  );
+};
