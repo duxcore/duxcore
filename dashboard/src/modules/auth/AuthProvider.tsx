@@ -1,6 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAxios } from "../../context/AxiosProvider";
+import axiosInstance from "../../lib/axiosInstance";
 import { API_BASEURL } from "../../lib/constants";
 import { extractErrors } from "../extractErrors";
 import { useHasToken } from "./useHasToken";
@@ -9,7 +10,7 @@ import { WaitForAuth } from "./WaitForAuth";
 
 // Need shared types, this is messy
 
-type User = {
+export type User = {
   data: {
     user: {
       id: string;
@@ -25,10 +26,12 @@ export const AuthContext = React.createContext<{
   user: User["data"]["user"] | null;
   logOut: () => void;
   setUser: (u: User["data"]["user"]) => void;
+  revokeAllRefreshTokens: () => void;
 }>({
   user: null,
   logOut: () => { },
   setUser: () => { },
+  revokeAllRefreshTokens: () => { }
 });
 
 interface AuthProviderProps {
@@ -90,6 +93,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           setUser: (u) => {
             setUser(u);
           },
+          revokeAllRefreshTokens: () => {
+            axiosInstance.delete(`${API_BASEURL}/users/@me/revokeAllRefreshTokens`)
+              .then(res => {
+                const { setTokens: setToken } = useTokenStore.getState();
+                setToken({ authToken: "", refreshToken: "" });
+                setUser(null);
+              })
+          }
         }),
         [user]
       )}
