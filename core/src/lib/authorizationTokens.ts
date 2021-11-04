@@ -3,7 +3,7 @@ import fs from 'fs';
 import jwt from "jsonwebtoken"
 
 const jwtPrivateKey = fs.readFileSync(`${__dirname}/${__filename.endsWith('.js') ? "../" : ""}../../jwt.key`)
-const tokenDuration = (60 * 5)
+const tokenDuration = (45)//(60 * 5)
 
 export interface AuthTokenPayload {
   userId: string;

@@ -5,6 +5,8 @@ import validator from "email-validator";
 import { users } from "../../lib/users";
 import jwt from 'jsonwebtoken';
 import { authorizationToken } from "../../lib/authorizationTokens";
+import { authorizeRequest } from "../middleware/authorizeRequest";
+import { fetchTokenData } from "../../helpers/fetchTokenData";
 
 export const apiUsers: ApiRoute[] = [
   manifestation.newRoute({
@@ -107,45 +109,55 @@ export const apiUsers: ApiRoute[] = [
       })
     }
   }),
-
   manifestation.newRoute({
     route: "/users/@me",
     method: "get",
+    middleware: [authorizeRequest],
     executor: async (req, res) => {
-      const authToken = req.headers['authorization'];
-
-      if (!authToken) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-        status: 400,
-        message: "An error has occured",
-        data: {
-          errors: apiError.createErrorStack("missingAuthToken")
-        },
-        successful: false
-      }));
-
-      let tokenMeta = authorizationToken.validateToken(authToken);
-
-      if (!tokenMeta) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-        status: 401,
-        message: "Authorization failure.",
-        data: {
-          errors: apiError.createErrorStack("authFailure").stack
-        },
-        successful: false
-      }))
+      let tokenData = fetchTokenData(res.locals)
 
       return manifestation.sendApiResponse(res, manifestation.newApiResponse({
         status: 200,
         message: "Successfully fetched user profile.",
         data: await (async () => {
-          (tokenMeta as any).iat = undefined;
-          const user = await users.fetch(tokenMeta.userId);
+          (tokenData as any).iat = undefined;
+          const user = await users.fetch(tokenData.userId);
 
           return {
-            raw: tokenMeta,
+            raw: tokenData,
             user: user?.toJson()
           }
         })(),
+        successful: true
+      }))
+    }
+  }),
+  manifestation.newRoute({
+    route: "/users/@me/revokeAllRefreshTokens",
+    method: 'delete',
+    middleware: [authorizeRequest],
+    executor: async (req, res) => {
+      let tokenData = fetchTokenData(res.locals);
+
+      const user = await users.fetch(tokenData.userId);
+
+      if (!user) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 404,
+        message: "Unknown user...",
+        data: {
+          errors: apiError.createErrorStack("unknwonUser")
+        },
+        successful: false
+      }));
+
+      await user.revokeAllRefreshTokens();
+
+      return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 200,
+        message: `Successfully deleted all refresh tokens associated with user ID '${user.id}'`,
+        data: {
+          userId: user.id
+        },
         successful: true
       }))
     }

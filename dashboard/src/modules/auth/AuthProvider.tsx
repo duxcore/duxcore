@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           setUser(x.data.data.user);
         })
         .catch((err) => {
-          console.log(err.response)
+          console.log(Object.keys(err))
           if (err.response.status === 401 && requiresAuth) {
             let errs = extractErrors(err.response.data.data.errors)
 

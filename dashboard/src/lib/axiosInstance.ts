@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
+import { useRouter } from "next/router";
 import { useTokenStore } from "../modules/auth/useTokenStore";
 import { API_BASEURL, REFRESH_EXCLUDE_LIST } from "./constants";
 
@@ -38,7 +39,7 @@ axiosInstance.interceptors.response.use(
     // Exclude login page from triggering refresh token flow
     if (originalRequest.url && REFRESH_EXCLUDE_LIST.includes(originalRequest.url)) {
       if (error.response && error.response.data.message) {
-        return Promise.reject(error.response.data);
+        return Promise.reject(error);
       }
       return Promise.reject(error);
     }
@@ -66,10 +67,7 @@ axiosInstance.interceptors.response.use(
             console.log("Successfully refrested tokens.");
             setAxiosHeader(data.data.authToken);
             return axiosInstance(originalRequest);
-          }).catch((err) => {
-            // Failure to refresh tokens...
           });
-
 
         } catch (_error: any) {
           // Refresh was retried, but failed — we clear tokens and move on
@@ -77,9 +75,7 @@ axiosInstance.interceptors.response.use(
             authToken: "",
             refreshToken: "",
           });
-
-          if (_error.response && _error.response.data.message) return Promise.reject(_error.response.data);
-          return Promise.reject(_error);
+          return Promise.reject(error);
         }
       }
 
@@ -89,8 +85,6 @@ axiosInstance.interceptors.response.use(
           authToken: "",
           refreshToken: "",
         });
-
-        if (error.response.data.message) return Promise.reject(error.response.data);
       }
       return Promise.reject(error);
     }

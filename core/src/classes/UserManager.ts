@@ -1,4 +1,5 @@
 import { User } from ".prisma/client";
+import { prismaInstance } from "../../prisma/instance";
 
 export default class UserManager {
 
@@ -16,6 +17,15 @@ export default class UserManager {
 
   get firstName(): string { return this._raw.firstName; }
   get lastName(): string { return this._raw.lastName; }
+
+  async revokeAllRefreshTokens() {
+    await prismaInstance.userRefreshToken.deleteMany({
+      where: {
+        userId: this.id
+      }
+    });
+    return;
+  }
 
   toJson() {
     return {
