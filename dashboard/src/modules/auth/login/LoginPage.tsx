@@ -48,3 +48,5 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
 
   return <LoginForm onLogin={onLogin} />;
 };
+
+LoginPage.requiresAuth = false;

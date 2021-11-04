@@ -2004,10 +2004,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001173, caniuse-lite@npm:^1.0.30001179, caniuse-lite@npm:^1.0.30001202, caniuse-lite@npm:^1.0.30001219, caniuse-lite@npm:^1.0.30001228, caniuse-lite@npm:^1.0.30001271, caniuse-lite@npm:^1.0.30001272":
+"caniuse-lite@npm:^1.0.30001173, caniuse-lite@npm:^1.0.30001179, caniuse-lite@npm:^1.0.30001202, caniuse-lite@npm:^1.0.30001271, caniuse-lite@npm:^1.0.30001272":
   version: 1.0.30001274
   resolution: "caniuse-lite@npm:1.0.30001274"
   checksum: 3744101a8487beedf116eb563b0e9b634c75d8cee177aa5b1808c863ac39c0db5c2e4a9c7ca28eb14cb721be1ef4779355412a3bd6cd3f74aa3b50e1fadf4a3c
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001219, caniuse-lite@npm:^1.0.30001228":
+  version: 1.0.30001276
+  resolution: "caniuse-lite@npm:1.0.30001276"
+  checksum: ece91e8eae8605dff7cec5f795263bd82e41f4e68c925a827fd28fe05c6c37120c79566968e5ab58c058d7d8c72e0963a109ca09c4360ffc3aeacf339c5d0ed1
   languageName: node
   linkType: hard
 
@@ -2711,7 +2718,7 @@ __metadata:
     eslint: 7
     eslint-config-next: 12.0.2
     formik: ^2.2.9
-    next: 12.0.2
+    next: ^12.0.2
     postcss: latest
     react: 17.0.2
     react-dom: 17.0.2
@@ -3005,10 +3012,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.3.634, electron-to-chromium@npm:^1.3.723, electron-to-chromium@npm:^1.3.878":
+"electron-to-chromium@npm:^1.3.634, electron-to-chromium@npm:^1.3.878":
   version: 1.3.885
   resolution: "electron-to-chromium@npm:1.3.885"
   checksum: 5609c2b595e9ce0bd9e66d338f5f964e0ddd54eb1b94851cb262789f661738fd26cfbc9fd2bb122391085af5dfe25e62d862fdf0c44754766ee928a74a5a0999
+  languageName: node
+  linkType: hard
+
+"electron-to-chromium@npm:^1.3.723":
+  version: 1.3.888
+  resolution: "electron-to-chromium@npm:1.3.888"
+  checksum: 2571950895c84c3d795ca1656912247871f27437d8f1649895d74efb8a8fb64932f8a3d515d796a52d66fe7b42fe9d2bfb65a253cb0c5789b9f4b6b1b1ec412d
   languageName: node
   linkType: hard
 
@@ -5794,7 +5808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:12.0.2":
+"next@npm:^12.0.2":
   version: 12.0.2
   resolution: "next@npm:12.0.2"
   dependencies:

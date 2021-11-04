@@ -11,3 +11,5 @@ export const RegisterPage: PageComponent<RegisterPageProps> = ({
 }) => {
   return <RegisterForm captchaKey={captchaKey} />;
 };
+
+RegisterPage.requiresAuth = false;

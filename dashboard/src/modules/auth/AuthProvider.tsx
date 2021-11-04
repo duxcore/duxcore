@@ -72,6 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         })
         .finally(() => {
           isAuthenticating.current = false;
+
         });
     }
   }, [axios, hasToken, replace, requiresAuth, user]);
@@ -105,7 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         [user]
       )}
     >
-      {requiresAuth ? <WaitForAuth>{children}</WaitForAuth> : children}
+      {!requiresAuth ? children : <WaitForAuth>{children}</WaitForAuth>}
     </AuthContext.Provider>
   );
 };
