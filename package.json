@@ -4,12 +4,9 @@
   "private": true,
   "workspaces": [
     "website",
-    "api",
     "wrapper",
-    "frontend",
     "core",
-    "dashboard",
-    "dashboard2"
+    "dashboard"
   ],
   "scripts": {
     "commit": "cz",

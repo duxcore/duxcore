@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@duxcore/wrapper": "workspace:wrapper",
     "@hcaptcha/react-hcaptcha": "^0.3.8",
     "@headlessui/react": "^1.4.1",
     "axios": "^0.24.0",
