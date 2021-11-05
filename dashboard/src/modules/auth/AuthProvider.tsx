@@ -8,7 +8,7 @@ import { extractErrors } from "../extractErrors";
 import { useHasToken } from "./useHasToken";
 import { useTokenStore } from "./useTokenStore";
 
-// Need shared types, this is messy
+// Need shared types, this is messy (agreed)
 
 export type User = {
   data: {
@@ -50,7 +50,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   useEffect(() => {
     if (!hasTokens && requiresAuth) {
-      console.log("triggered");
       replace(`/login?next=${asPath}`).then(() => {
         setAuthComplete(true);
       });
@@ -58,8 +57,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
 
     if (!user && hasTokens) {
-      // Our instance will add the token to the
-      // Authorization header automatically
       axios
         .get<User>(`${API_BASEURL}/users/@me`)
         .then((x) => {
