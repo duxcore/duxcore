@@ -1,4 +1,4 @@
-import { NewUser, User } from "../../types/user";
+import { NewUser, TokenPair, User } from "../../types/user";
 import { API_BASEURL } from "../../util/constants";
 import axiosInstance, { setAxiosHeader } from "../axiosInstance";
 import type { AxiosError } from "axios";
@@ -24,7 +24,7 @@ export const createUserController = () => {
             let timestamp = err.response?.data.meta.timestamp;
 
             if (!timestamp) return reject([invalidApiResponseStack]);
-            return reject(err.response?.data.errors);
+            return reject(err.response?.data);
           })
       });
     },
@@ -38,26 +38,26 @@ export const createUserController = () => {
             let timestamp = err.response?.data.meta.timestamp;
 
             if (!timestamp) return reject([invalidApiResponseStack]);
-            return reject(err.response?.data.errors);
+            return reject(err.response);
           })
       });
     },
 
-    login: (email: string, password: string): Promise<void> => {
+    login: (email: string, password: string): Promise<TokenPair> => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/users/auth`, {
           email,
           password
         }).then((res) => {
-          useTokenStore.getState().setTokens({ ...res.data.authorization });
-          setAxiosHeader(res.data.authorization.authToken);
+          useTokenStore.getState().setTokens({ ...res.data.data.authorization });
+          setAxiosHeader(res.data.data.authorization.authToken);
 
-          return resolve();
+          return resolve(res.data.data.authorization);
         }).catch((err: AxiosError) => {
           let timestamp = err.response?.data.meta.timestamp;
 
           if (!timestamp) return reject([invalidApiResponseStack]);
-          return reject(err.response?.data.errors);
+          return reject(err.response);
         })
       });
     },
@@ -66,12 +66,6 @@ export const createUserController = () => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.delete(`${API_BASEURL}/users/@me/revokeAllRefreshTokens`)
           .then(() => {
-            useTokenStore.getState().setTokens({
-              authToken: "",
-              refreshToken: ""
-            });
-            setAxiosHeader("");
-
             return resolve();
           }).catch((err: AxiosError) => {
             let timestamp = err.response?.data.meta.timestamp;

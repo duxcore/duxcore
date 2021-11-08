@@ -7,8 +7,15 @@ export interface User {
 }
 
 export interface NewUser {
-  firstName: string;
-  lastName: string;
+  name: {
+    firstName: string;
+    lastName: string;
+  };
   email: string;
   password: string;
+}
+
+export interface TokenPair {
+  authToken: string;
+  refreshToken: string;
 }
