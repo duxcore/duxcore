@@ -1,1 +1,2 @@
-This is a work in progress! join the [Discord](https://discord.gg/X7jy2aggqC) for more information or see [the roadmap](https://github.com/HoloPanio/duxcore/issues/2)
+# Contributing to Duxcore
+if your pr is bad we just close it without further elaboration :sunglasses:
