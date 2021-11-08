@@ -1,13 +1,13 @@
-import { User } from "../../types/user";
+import { NewUser, User } from "../../types/user";
 import { API_BASEURL } from "../../util/constants";
-import axiosInstance from "../axiosInstance";
-import express from "express"
-import { AxiosError } from "axios";
+import axiosInstance, { setAxiosHeader } from "../axiosInstance";
+import type { AxiosError } from "axios";
 import { invalidApiResponseStack } from "../../util/invalidApiResponseStack";
+import { useTokenStore } from "../useTokenStore";
 
 export const createUserController = () => {
   return {
-    fetchSelf: (): Promise<User> => {
+    me: (): Promise<User> => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/users/@me`)
           .then(res => {
@@ -20,6 +20,59 @@ export const createUserController = () => {
               firstName: data.firstName,
               lastName: data.lastName
             });
+          }).catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response?.data.errors);
+          })
+      });
+    },
+
+    create: (user: NewUser): Promise<void> => {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.post(`${API_BASEURL}/users`, user)
+          .then(() => {
+            return resolve();
+          }).catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response?.data.errors);
+          })
+      });
+    },
+
+    login: (email: string, password: string): Promise<void> => {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.post(`${API_BASEURL}/users/auth`, {
+          email,
+          password
+        }).then((res) => {
+          useTokenStore.getState().setTokens({ ...res.data.authorization });
+          setAxiosHeader(res.data.authorization.authToken);
+
+          return resolve();
+        }).catch((err: AxiosError) => {
+          let timestamp = err.response?.data.meta.timestamp;
+
+          if (!timestamp) return reject([invalidApiResponseStack]);
+          return reject(err.response?.data.errors);
+        })
+      });
+    },
+
+    revokeAllTokens: (): Promise<void> => {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.delete(`${API_BASEURL}/users/@me/revokeAllRefreshTokens`)
+          .then(() => {
+            useTokenStore.getState().setTokens({
+              authToken: "",
+              refreshToken: ""
+            });
+            setAxiosHeader("");
+
+            return resolve();
           }).catch((err: AxiosError) => {
             let timestamp = err.response?.data.meta.timestamp;
 

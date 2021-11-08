@@ -5,3 +5,10 @@ export interface User {
   email: string;
   created: Date;
 }
+
+export interface NewUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
