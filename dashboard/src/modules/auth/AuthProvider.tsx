@@ -1,31 +1,16 @@
+import { User } from "@duxcore/wrapper/lib/types/user";
 import { useRouter } from "next/dist/client/router";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Preloader } from "../../components/PreLoader";
-import { useAxios } from "../../context/AxiosProvider";
-import axiosInstance from "../../lib/axiosInstance";
-import { API_BASEURL } from "../../lib/constants";
+import { useWrapper } from "../../context/WrapperProvider";
 import { extractErrors } from "../extractErrors";
 import { useHasToken } from "./useHasToken";
 import { useTokenStore } from "./useTokenStore";
 
-// Need shared types, this is messy (agreed)
-
-export type User = {
-  data: {
-    user: {
-      id: string;
-      email: string;
-      created: Date;
-      firstName: string;
-      lastName: string;
-    };
-  };
-};
-
 export const AuthContext = React.createContext<{
-  user: User["data"]["user"] | null;
+  user: User | null;
   logOut: () => void;
-  setUser: (u: User["data"]["user"]) => void;
+  setUser: (u: User) => void;
   revokeAllRefreshTokens: () => void;
 }>({
   user: null,
@@ -43,10 +28,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   children,
 }) => {
   const hasTokens = useHasToken();
-  const [user, setUser] = useState<User["data"]["user"] | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [authComplete, setAuthComplete] = useState(false);
   const { replace, asPath } = useRouter();
-  const axios = useAxios();
+  const wrapper = useWrapper();
 
   useEffect(() => {
     if (!hasTokens && requiresAuth) {
@@ -57,23 +42,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
 
     if (!user && hasTokens) {
-      axios
-        .get<User>(`${API_BASEURL}/users/@me`)
-        .then((x) => {
-          setUser(x.data.data.user);
-        })
-        .catch((err) => {
-          if (err.response.status === 401 && requiresAuth) {
-            const errs = extractErrors(err.response.data.data.errors);
-            if (errs.has("AUTH_FAILURE")) {
-              useTokenStore.getState().setTokens({ authToken: "", refreshToken: "" });
-              replace(`/login?next=${window.location.pathname}`);
-            }
+      wrapper.api.user.me().then(user => {
+        setUser(user);
+      }).catch(error => {
+        if (error?.data && requiresAuth) {
+          const errs = extractErrors(error.data.errors.stack);
+          if (errs.has("AUTH_FAILURE")) {
+            useTokenStore.getState().setTokens({ authToken: "", refreshToken: "" });
+            replace(`/login?next=${window.location.pathname}`);
           }
-        })
-        .finally(() => {
-          setAuthComplete(true);
-        });
+        }
+      }).finally(() => setAuthComplete(true));
       return;
     }
 
@@ -96,12 +75,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
             setUser(u);
           },
           revokeAllRefreshTokens: () => {
-            axiosInstance.delete(`${API_BASEURL}/users/@me/revokeAllRefreshTokens`)
-              .then(res => {
-                const { setTokens: setToken } = useTokenStore.getState();
-                setToken({ authToken: "", refreshToken: "" });
-                setUser(null);
-              });
+            wrapper.api.user.revokeAllTokens().then(() => {
+              const { setTokens: setToken } = useTokenStore.getState();
+              setToken({ authToken: "", refreshToken: "" });
+              setUser(null);
+            }).catch(() => {
+              // we should probably let the user know
+            })
           }
         }),
         [user]

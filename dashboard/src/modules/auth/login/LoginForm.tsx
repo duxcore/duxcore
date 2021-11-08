@@ -1,12 +1,11 @@
-import _axios, { AxiosResponse } from "axios";
+import type { TokenPair } from "@duxcore/wrapper/lib/types/user";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { IoLockOpenOutline, IoMailOutline } from "react-icons/io5";
 import { ContentBox } from "../../../components/ContentBox";
 import { Button } from "../../../components/forms/Button";
 import { Input } from "../../../components/forms/Input";
-import { useAxios } from "../../../context/AxiosProvider";
-import { API_BASEURL } from "../../../lib/constants";
+import { useWrapper } from "../../../context/WrapperProvider";
 import { LoginSchema } from "./LoginSchema";
 
 export type LoginResponse = {
@@ -22,11 +21,11 @@ export type LoginResponse = {
 };
 
 interface LoginFormProps {
-  onLogin: (data: LoginResponse["data"]) => void;
+  onLogin: (authorization: TokenPair) => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
-  const axios = useAxios();
+  const wrapper = useWrapper();
   const [formError, setFormError] = useState("");
 
   return (
@@ -40,37 +39,27 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         initialValues={{ email: "", password: "" }}
         validationSchema={LoginSchema}
         onSubmit={async ({ email, password }) => {
-          let res: AxiosResponse<LoginResponse> | null = null;
+          let res: TokenPair | null = null;
 
           try {
-            res = await axios(`${API_BASEURL}/users/auth`, {
-              method: "POST",
-              data: {
-                email,
-                password,
-              },
-            });
-          } catch (error) {
-            if ((error as any).response.data.data.errors.length > 0) {
-              return setFormError((error as any).response.data.data.errors[0].message);
+            res = await wrapper.api.user.login(email, password)
+          } catch (error: any) {
+            if (error.data?.data?.errors.length > 0) {
+              return setFormError(error.data?.data?.errors[0].message);
             }
 
             if (
-              _axios.isAxiosError(error) &&
-              error.response &&
-              "message" in error.response.data
+              error && error.message
             ) {
-              setFormError(error.response.data.message);
+              setFormError(error.message);
               return;
             }
-
-            console.log((error as any).response.data.data);
 
             setFormError("An error occurred");
             return;
           }
 
-          onLogin(res.data.data);
+          onLogin(res);
         }}
       >
         {({ errors, touched }) => (

@@ -1,3 +1,4 @@
+import type { TokenPair } from "@duxcore/wrapper/lib/types/user";
 import { Form, Formik, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -17,11 +18,11 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
   const hasToken = useHasToken();
   const { replace } = useRouter();
 
-  const onLogin = (data: LoginResponse["data"]) => {
+  const onLogin = (authorization: TokenPair) => {
     // Set new auth token as axios Authorization header
-    if (data.authorization) {
-      setAxiosHeader(data.authorization.authToken);
-      useTokenStore.getState().setTokens({ authToken: data.authorization.authToken, refreshToken: data.authorization.refreshToken });
+    if (authorization) {
+      setAxiosHeader(authorization.authToken);
+      useTokenStore.getState().setTokens({ authToken: authorization.authToken, refreshToken: authorization.refreshToken });
     }
 
     let redirectPath = "/";

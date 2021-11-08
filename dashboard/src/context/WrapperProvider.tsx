@@ -19,4 +19,4 @@ export const WrapperProvider: React.FC<WrapperProviderProps> = ({ children }) =>
   );
 };
 
-export const useAxios = () => useContext(WrapperContext);
+export const useWrapper = () => useContext(WrapperContext);

@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
               refreshToken: data.data.refreshToken
             });
 
-            console.log("Successfully refrested tokens.");
+            console.log("Successfully refreshed tokens.");
             setAxiosHeader(data.data.authToken);
             return axiosInstance(originalRequest);
           });
