@@ -6,11 +6,9 @@ import { createWrapper } from "@duxcore/wrapper";
 import "../styles/globals.css";
 import "../styles/utils.css";
 import { WrapperProvider } from "../context/WrapperProvider";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const wrapper = createWrapper({});
-
-  wrapper.test()
 
   return (
     <div suppressHydrationWarning={true}>
