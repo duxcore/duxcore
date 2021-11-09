@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import { useRouter } from "next/router";
 import { useTokenStore } from "./useTokenStore";
 import { API_BASEURL, REFRESH_EXCLUDE_LIST } from "../util/constants";
 

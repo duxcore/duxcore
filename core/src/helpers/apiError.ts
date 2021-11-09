@@ -68,9 +68,9 @@ export const errorConstructor = {
 }
 
 export const errorManifest = {
-  unknwonUser: {
+  unknownUser: {
     code: "UNKNOWN_USER",
-    message: "This user doesn't exits."
+    message: "This user doesn't exist."
   },
   userEmailExists: {
     code: "USER_EMAIL_EXISTS",
