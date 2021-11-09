@@ -4,6 +4,7 @@ import * as envstuff from './util/env'
 import cluster from 'cluster';
 import process from 'process';
 import { config } from "dotenv";
+import { transport } from "./util/mailer";
 
 let ports = [7841, 2105, 3609, 8856, 1104]
 
