@@ -81,7 +81,7 @@ export const apiUsers: ApiRoute[] = [
         status: 404,
         message: "An error has occured",
         data: {
-          errors: apiError.createErrorStack("unknwonUser").stack
+          errors: apiError.createErrorStack("unknownUser").stack
         },
         successful: false
       }));
@@ -145,7 +145,7 @@ export const apiUsers: ApiRoute[] = [
         status: 404,
         message: "Unknown user...",
         data: {
-          errors: apiError.createErrorStack("unknwonUser")
+          errors: apiError.createErrorStack("unknownUser")
         },
         successful: false
       }));

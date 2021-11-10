@@ -1,3 +1,3 @@
-import { AccountPage } from "../../modules/acccount/AccountPage";
+import { AccountPage } from "../../modules/account/AccountPage";
 
 export default AccountPage;
