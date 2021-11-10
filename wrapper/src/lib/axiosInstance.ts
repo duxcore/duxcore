@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import { useRouter } from "next/router";
 import { useTokenStore } from "./useTokenStore";
 import { API_BASEURL, REFRESH_EXCLUDE_LIST } from "../util/constants";
 
@@ -67,7 +66,7 @@ axiosInstance.interceptors.response.use(
               refreshToken: data.data.refreshToken
             });
 
-            console.log("Successfully refrested tokens.");
+            console.log("Successfully refreshed tokens.");
             setAxiosHeader(data.data.authToken);
             return axiosInstance(originalRequest);
           });

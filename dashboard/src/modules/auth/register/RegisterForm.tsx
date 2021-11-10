@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import _axios from "axios";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
@@ -13,10 +12,8 @@ import {
 import { ContentBox } from "../../../components/ContentBox";
 import { Button } from "../../../components/forms/Button";
 import { Input } from "../../../components/forms/Input";
-import { useAxios } from "../../../context/AxiosProvider";
-import { API_BASEURL } from "../../../lib/constants";
-import { useHasToken } from "../useHasToken";
 import createRegisterSchema from "./RegistrationSchema";
+import { useWrapper } from "../../../context/WrapperProvider";
 
 interface RegisterFormProps {
   captchaKey: string;
@@ -26,8 +23,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
   const [schema] = useState(createRegisterSchema());
   const hCaptchaRef = useRef<HCaptcha>(null);
   const { replace } = useRouter();
-  const hasToken = useHasToken();
-  const axios = useAxios();
+  const wrapper = useWrapper();
+  const hasToken = !!wrapper.useTokenStore().authToken;
   const [formError, setFormError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
@@ -79,16 +76,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
 
           // Register user
           try {
-            await axios(`${API_BASEURL}/users`, {
-              method: "POST",
-              data: {
-                name: {
-                  firstName: formData.firstName,
-                  lastName: formData.lastName,
-                },
-                email: formData.email,
-                password: formData.password,
+            await wrapper.api.user.create({
+              name: {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
               },
+              email: formData.email,
+              password: formData.password
             });
 
             // Successful response
@@ -97,15 +91,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
             setTimeout(() => {
               replace("/login");
             }, 500);
-          } catch (error) {
+          } catch (error: any) {
             let errorMessage = "";
 
             if (
-              _axios.isAxiosError(error) &&
-              error.response &&
-              "message" in error.response.data
+              error && error.message
             ) {
-              errorMessage = error.response.data.message;
+              errorMessage = error.message;
             } else {
               errorMessage = "An error occurred";
             }
