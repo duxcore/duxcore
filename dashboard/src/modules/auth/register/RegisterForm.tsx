@@ -12,7 +12,6 @@ import {
 import { ContentBox } from "../../../components/ContentBox";
 import { Button } from "../../../components/forms/Button";
 import { Input } from "../../../components/forms/Input";
-import { useHasToken } from "../useHasToken";
 import createRegisterSchema from "./RegistrationSchema";
 import { useWrapper } from "../../../context/WrapperProvider";
 
@@ -24,8 +23,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
   const [schema] = useState(createRegisterSchema());
   const hCaptchaRef = useRef<HCaptcha>(null);
   const { replace } = useRouter();
-  const hasToken = useHasToken();
   const wrapper = useWrapper();
+  const hasToken = !!wrapper.useTokenStore().authToken;
   const [formError, setFormError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
 

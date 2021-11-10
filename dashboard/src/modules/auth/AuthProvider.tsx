@@ -1,11 +1,9 @@
-import { User } from "@duxcore/wrapper/lib/types/user";
+import { User } from "@duxcore/wrapper";
 import { useRouter } from "next/dist/client/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { Preloader } from "../../components/PreLoader";
 import { useWrapper } from "../../context/WrapperProvider";
 import { extractErrors } from "../extractErrors";
-import { useHasToken } from "./useHasToken";
-import { useTokenStore } from "./useTokenStore";
 
 export const AuthContext = React.createContext<{
   user: User | null;
@@ -27,11 +25,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   requiresAuth,
   children,
 }) => {
-  const hasTokens = useHasToken();
   const [user, setUser] = useState<User | null>(null);
   const [authComplete, setAuthComplete] = useState(false);
   const { replace, asPath } = useRouter();
   const wrapper = useWrapper();
+  const hasTokens = !!wrapper.useTokenStore().authToken;
 
   useEffect(() => {
     if (!hasTokens && requiresAuth) {
@@ -48,7 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         if (error?.data && requiresAuth) {
           const errs = extractErrors(error.data.errors.stack);
           if (errs.has("AUTH_FAILURE")) {
-            useTokenStore.getState().setTokens({ authToken: "", refreshToken: "" });
+            wrapper.useTokenStore.getState().setTokens({ authToken: "", refreshToken: "" });
             replace(`/login?next=${window.location.pathname}`);
           }
         }
@@ -66,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         () => ({
           user,
           logOut: () => {
-            const { setTokens: setToken } = useTokenStore.getState();
+            const { setTokens: setToken } = wrapper.useTokenStore.getState();
             setToken({ authToken: "", refreshToken: "" });
             setUser(null);
             location.href = window.location.origin;
@@ -76,7 +74,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           },
           revokeAllRefreshTokens: () => {
             wrapper.api.user.revokeAllTokens().then(() => {
-              const { setTokens: setToken } = useTokenStore.getState();
+              const { setTokens: setToken } = wrapper.useTokenStore.getState();
               setToken({ authToken: "", refreshToken: "" });
               setUser(null);
             }).catch(() => {

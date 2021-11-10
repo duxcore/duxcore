@@ -1,39 +1,34 @@
-import type { TokenPair } from "@duxcore/wrapper/lib/types/user";
+import type { TokenPair } from "@duxcore/wrapper";
 import { Form, Formik, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useWrapper } from "../../../context/WrapperProvider";
-import { useGetIntendedPath } from "../../../hooks/useGetIntendedPath";
-import { INTENDED_PATH_KEY } from "../../../lib/constants";
 import { PageComponent } from "../../../types/PageComponent";
-import { useHasToken } from "../useHasToken";
-import { useTokenStore } from "../useTokenStore";
 import { LoginForm, LoginResponse } from "./LoginForm";
 
 interface LoginPageProps { }
 
 export const LoginPage: PageComponent<LoginPageProps> = () => {
-  useGetIntendedPath();
   const wrapper = useWrapper();
 
-  const hasToken = useHasToken();
+  const hasToken = !!wrapper.useTokenStore().authToken
   const { replace } = useRouter();
 
   const onLogin = (authorization: TokenPair) => {
     // Set new auth token as axios Authorization header
     if (authorization) {
       wrapper.axios.setHeader(authorization.authToken);
-      useTokenStore.getState().setTokens({ authToken: authorization.authToken, refreshToken: authorization.refreshToken });
+      wrapper.useTokenStore.getState().setTokens({ authToken: authorization.authToken, refreshToken: authorization.refreshToken });
     }
 
     let redirectPath = "/";
 
     try {
-      const possibleIntendedPath = localStorage.getItem(INTENDED_PATH_KEY);
+      const possibleIntendedPath = localStorage.getItem(wrapper.constants.INTENDED_PATH_KEY);
 
       if (possibleIntendedPath && possibleIntendedPath.startsWith("/")) {
         redirectPath = possibleIntendedPath;
-        localStorage.setItem(INTENDED_PATH_KEY, "");
+        localStorage.setItem(wrapper.constants.INTENDED_PATH_KEY, "");
       }
     } catch { }
 
