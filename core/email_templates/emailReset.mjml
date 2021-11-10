@@ -1,0 +1,9 @@
+<mjml>
+  <mj-text>Email Reset Notification</mj-text>
+
+
+  <mj-text> This is a notification to let you know that your email has been updated. </mj-text>
+
+  <mj-text>Old Email: {{ oldEmail }}</mj-text>
+  <mj-text>New Email: {{ newEmail }}</mj-text>
+</mjml>

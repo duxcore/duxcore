@@ -1,6 +1,9 @@
 import { User } from ".prisma/client";
+import Twig from "twig";
 import { prismaInstance } from "../../prisma/instance";
+import { transport } from "../util/mailer";
 import Password from "./Password";
+import mjml2html from 'mjml'
 
 export default class UserManager {
 
@@ -46,17 +49,23 @@ export default class UserManager {
    */
   async updateEmail(email: string): Promise<this> {
     await prismaInstance.user.update({
-      data: {
-        email
-      },
-      where: {
-        id: this.id
-      }
+      data: { email },
+      where: { id: this.id }
     });
 
-    /**
-     * Update Email logic to send verification emails and stuff here in future
-     */
+    Twig.renderFile("./email_templates/emailReset.twig", {
+      oldEmail: this.email,
+      newEmail: email
+    } as any, (err, html) => {
+      console.log(html)
+      transport.sendMail({
+        from: 'noreply@duxcore.co',
+        to: `${email}, ${this.email}`,
+        subject: "Your email address has been changed!",
+        text: "Email has been changed!",
+        html: mjml2html(html).html
+      })
+    })
 
     this._raw.email = email;
     return this;

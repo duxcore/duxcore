@@ -1,10 +1,9 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiManifest } from "./api/manifest";
-import * as envstuff from './util/env'
 import cluster from 'cluster';
 import process from 'process';
 import { config } from "dotenv";
-import { transport } from "./util/mailer";
+import { users } from "./lib/users";
 
 let ports = [7841, 2105, 3609, 8856, 1104]
 
@@ -18,9 +17,8 @@ async function main(port: any) {
 }
 
 if (cluster.isMaster) {
-  console.log(`Primary ${process.pid} is running`);
 
-  console.log(ports.length)
+  console.log(`Primary ${process.pid} is running`);
 
   // Fork workers.
   for (let i = 0; i < ports.length; i++) {
