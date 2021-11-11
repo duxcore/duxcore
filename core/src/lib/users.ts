@@ -2,6 +2,12 @@ import { UserRole } from ".prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import Password from "../classes/Password";
 import UserManager from "../classes/UserManager";
+import { apiError, errorManifest } from "../helpers/apiError";
+import { cryptr } from "../util/cryptr";
+import { emailResetComplete } from "../util/emailTemplates/emailResetComplete";
+import { emailResetConfirmation } from "../util/emailTemplates/emailResetConfirmation";
+import { env } from "../util/env";
+import { sendEmail, transport } from "../util/mailer";
 import { authorizationToken } from "./authorizationTokens";
 
 interface NewUserData {
@@ -89,6 +95,59 @@ export const users = {
         }
       }))?.id ?? null
     }
+  },
+
+  async generateEmailResetToken(userId: string, newEmail: string) {
+    let usr = await users.fetch(userId);
+    let emailExists = await users.emailExists(newEmail);
+
+    if (!usr) throw new Error("INVALID_USER_ID");
+    if (emailExists) throw new Error("EMAIL_EXISTS");
+
+    let encryptedEmail = cryptr.encrypt(newEmail);
+    let resetToken = await prismaInstance.userEmailResetTokens.create({
+      data: {
+        userId,
+        email: encryptedEmail
+      }
+    });
+
+    let resetUrl = `${env.dashUrl}/reset-email?token=${resetToken.token}&email=${encryptedEmail}`;
+    let emailTemplate = emailResetConfirmation({
+      confirmationUrl: resetUrl
+    });
+
+    await sendEmail([newEmail], emailTemplate, "Confirm your new email address!");
+    return;
+  },
+
+  async validateEmailResetToken(token: string, encryptedEmail: string) {
+    let tokenData = await prismaInstance.userEmailResetTokens.findFirst({
+      where: {
+        token: token
+      }
+    });
+
+    if (!tokenData) throw errorManifest.invalidEmailResetToken;
+    if (tokenData.email !== encryptedEmail) throw errorManifest.invalidEmailTokenMatch;
+
+    let newEmail = cryptr.decrypt(encryptedEmail);
+    let oldEmail;
+    let user = await this.fetch(tokenData.userId);
+
+    oldEmail = user?.email;
+
+    if (!user) return errorManifest.unknownUser
+
+    await user.updateEmail(newEmail);
+    await sendEmail([
+      oldEmail,
+      newEmail
+    ],
+      emailResetComplete({}),
+      "Your email address has been reset successfully!"
+    );
+    return;
   },
 
   async emailExists(email: string) {

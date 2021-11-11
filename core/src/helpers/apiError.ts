@@ -106,6 +106,13 @@ export const errorManifest = {
   missingUserModifiers: {
     code: "MISSING_USER_MODIFIERS",
     message: "The body provided has no user modifiers in it..."
+  },
+  invalidEmailResetToken: {
+    code: "INVALID_EMAIL_RESET_TOKEN",
+    message: "The email reset token provided is either invalid or expired..."
+  },
+  invalidEmailTokenMatch: {
+    code: "INVALID_EMAIL_TOKEN_MATCH",
+    message: "The email provided does not match the email we have stored in our database with this email token."
   }
-
 }

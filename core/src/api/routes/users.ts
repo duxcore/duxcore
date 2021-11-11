@@ -3,7 +3,6 @@ import { authorizeRequest } from "../middleware/authorizeRequest";
 import { ApiRoute, manifestation } from "@duxcore/manifestation";
 import { fetchTokenData } from "../../helpers/fetchTokenData";
 import Password from "../../classes/Password";
-import { emails } from "../../lib/emails";
 import validator from "email-validator";
 import { users } from "../../lib/users";
 
@@ -157,8 +156,9 @@ export const apiUsers: ApiRoute[] = [
 
           if (!validator.validate(newEmail)) return errorStack.append(errorConstructor.invalidEmail(newEmail));
 
-          return await emails.createResetToken(tokenData['userId'], newEmail)
+          return await users.generateEmailResetToken(tokenData['userId'], newEmail)
             .then(() => {
+              console.log("complete")
               return true;
             })
             .catch(err => {
@@ -185,7 +185,7 @@ export const apiUsers: ApiRoute[] = [
 
       return manifestation.sendApiResponse(res, manifestation.newApiResponse({
         status: 200,
-        message: "Successfully modified user!",
+        message: "Modifiers executed successfully!",
         successful: true
       }))
     }
