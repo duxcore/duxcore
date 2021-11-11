@@ -9,5 +9,6 @@ export const env = {
     port: parseInt(penv.SMTP_PORT ?? "0"),
     user: penv.SMTP_USER,
     password: penv.SMTP_PASSWORD
-  }
+  },
+  dashUrl: penv.DASH_URL
 }

@@ -65,6 +65,13 @@ export const errorConstructor = {
       message: `Invalid Email Address...`
     }
   },
+  invalidUserModifier: (modifier: string): ApiError => {
+    return {
+      code: "INVALID_USER_MODIFIER",
+      value: modifier,
+      message: "This is anot a valid user modifier..."
+    }
+  }
 }
 
 export const errorManifest = {
@@ -95,6 +102,10 @@ export const errorManifest = {
   invalidPassword: {
     code: "INVALID_PASSWORD",
     message: "Invalid Password."
+  },
+  missingUserModifiers: {
+    code: "MISSING_USER_MODIFIERS",
+    message: "The body provided has no user modifiers in it..."
   }
 
 }
