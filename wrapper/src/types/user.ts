@@ -15,6 +15,15 @@ export interface NewUser {
   password: string;
 }
 
+export interface UserEdit {
+  // TODO: Add name changes after it's implemented server-side
+  // name?: {
+  //   firstName?: string;
+  //   lastName?: string;
+  // };
+  email?: string;
+}
+
 export interface TokenPair {
   authToken: string;
   refreshToken: string;
