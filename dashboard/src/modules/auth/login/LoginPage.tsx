@@ -25,6 +25,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
 
     try {
       const possibleIntendedPath = localStorage.getItem(wrapper.constants.INTENDED_PATH_KEY);
+      console.log(possibleIntendedPath);
 
       if (possibleIntendedPath && possibleIntendedPath.startsWith("/")) {
         redirectPath = possibleIntendedPath;

@@ -4,8 +4,10 @@ import { PageComponent } from "../types/PageComponent";
 import "../styles/globals.css";
 import "../styles/utils.css";
 import { WrapperProvider } from "../context/WrapperProvider";
+import { useGetIntendedPath } from "../hooks/useGetIntendedPath";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useGetIntendedPath();
 
   return (
     <div suppressHydrationWarning={true}>
