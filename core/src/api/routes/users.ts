@@ -155,6 +155,8 @@ export const apiUsers: ApiRoute[] = [
         if (modifier == "email") {
           let newEmail = req.body['email'];
 
+          if (!validator.validate(newEmail)) return errorStack.append(errorConstructor.invalidEmail(newEmail));
+
           return await emails.createResetToken(tokenData['userId'], newEmail)
             .then(() => {
               return true;
