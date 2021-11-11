@@ -53,20 +53,6 @@ export default class UserManager {
       where: { id: this.id }
     });
 
-    Twig.renderFile("./email_templates/emailReset.twig", {
-      oldEmail: this.email,
-      newEmail: email
-    } as any, (err, html) => {
-      console.log(html)
-      transport.sendMail({
-        from: 'noreply@duxcore.co',
-        to: `${email}, ${this.email}`,
-        subject: "Your email address has been changed!",
-        text: "Email has been changed!",
-        html: mjml2html(html).html
-      })
-    })
-
     this._raw.email = email;
     return this;
   }

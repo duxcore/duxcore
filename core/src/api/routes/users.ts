@@ -1,12 +1,11 @@
-import { ApiRoute, manifestation } from "@duxcore/manifestation";
 import { apiError, errorConstructor } from "../../helpers/apiError";
+import { authorizeRequest } from "../middleware/authorizeRequest";
+import { ApiRoute, manifestation } from "@duxcore/manifestation";
+import { fetchTokenData } from "../../helpers/fetchTokenData";
 import Password from "../../classes/Password";
+import { emails } from "../../lib/emails";
 import validator from "email-validator";
 import { users } from "../../lib/users";
-import jwt from 'jsonwebtoken';
-import { authorizationToken } from "../../lib/authorizationTokens";
-import { authorizeRequest } from "../middleware/authorizeRequest";
-import { fetchTokenData } from "../../helpers/fetchTokenData";
 
 export const apiUsers: ApiRoute[] = [
   manifestation.newRoute({
@@ -128,6 +127,63 @@ export const apiUsers: ApiRoute[] = [
             user: user?.toJson()
           }
         })(),
+        successful: true
+      }))
+    }
+  }),
+  manifestation.newRoute({
+    route: "/users/@me",
+    method: "post",
+    middleware: [authorizeRequest],
+    async executor(req, res) {
+      let tokenData = fetchTokenData(res.locals);
+      let errorStack = apiError.createErrorStack();
+      let modifiers = [
+        "email"
+      ];
+
+      const requestedModifiers = Object.keys(req.body)
+      requestedModifiers.map(m => {
+        if (!modifiers.includes(m))
+          return errorStack.append(errorConstructor.invalidUserModifier(m));
+      });
+
+      if (requestedModifiers.length == 0) errorStack.append("missingUserModifiers");
+
+      const processedModifiers = await Promise.all(requestedModifiers.map(async modifier => {
+        if (errorStack.stack.length > 0) return false;
+        if (modifier == "email") {
+          let newEmail = req.body['email'];
+
+          return await emails.createResetToken(tokenData['userId'], newEmail)
+            .then(() => {
+              return true;
+            })
+            .catch(err => {
+              let msg = err.message;
+
+              if (msg === "INVALID_USER_ID") return errorStack.append({
+                code: "INVALID_USER_ID",
+                message: "The user ID used to change user email is invalid!"
+              });
+
+              if (msg === "EMAIL_EXISTS") return errorStack.append("userEmailExists");
+            });
+        }
+      }));
+
+      if (errorStack.stack.length > 0) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 400,
+        message: "Errors have occured",
+        data: {
+          errors: errorStack.stack
+        },
+        successful: false
+      }));
+
+      return manifestation.sendApiResponse(res, manifestation.newApiResponse({
+        status: 200,
+        message: "Successfully modified user!",
         successful: true
       }))
     }

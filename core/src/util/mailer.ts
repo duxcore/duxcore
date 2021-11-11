@@ -10,3 +10,14 @@ export let transport = nodemailer.createTransport({
     pass: env.smtp.password
   }
 })
+
+export const sendEmail = async (recipients: string[], body: string, subject: string) => {
+  await transport.sendMail({
+    from: "noreply@duxcore.co",
+    to: recipients.join(", "),
+    subject,
+    html: body,
+  });
+
+  return;
+}

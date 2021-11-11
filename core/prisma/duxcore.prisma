@@ -15,19 +15,20 @@ enum UserRole {
 }
 
 model User {
-  id            String              @id @default(uuid())
-  index         Int                 @default(autoincrement())
-  firstName     String
-  lastName      String
-  email         String              @unique
-  password      String?
-  loginAttempts UserLoginAttempts[]
-  created       DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  role          UserRole            @default(USER)
-  meta_tags     UserMetaTags?
-  refreshTokens UserRefreshToken[]
-  meta          Json                @default("{}")
+  id                   String                @id @default(uuid())
+  index                Int                   @default(autoincrement())
+  firstName            String
+  lastName             String
+  email                String                @unique
+  password             String?
+  loginAttempts        UserLoginAttempts[]
+  created              DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  role                 UserRole              @default(USER)
+  meta_tags            UserMetaTags?
+  refreshTokens        UserRefreshToken[]
+  meta                 Json                  @default("{}")
+  UserEmailResetTokens UserEmailResetTokens?
 }
 
 model UserMetaTags {
@@ -55,4 +56,12 @@ model UserRefreshToken {
   user    User    @relation(references: [id], fields: [userId])
   userId  String
   revoked Boolean @default(false)
+}
+
+model UserEmailResetTokens {
+  id     Int    @id @default(autoincrement())
+  token  String @default(uuid())
+  email  String
+  user   User   @relation(references: [id], fields: [userId])
+  userId String @unique
 }
