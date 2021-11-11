@@ -1,4 +1,4 @@
-import { NewUser, TokenPair, User } from "../../types/user";
+import { NewUser, TokenPair, User, UserEdit } from "../../types/user";
 import { API_BASEURL } from "../../util/constants";
 import axiosInstance, { setAxiosHeader } from "../axiosInstance";
 import type { AxiosError } from "axios";
@@ -32,6 +32,20 @@ export const createUserController = () => {
     create: (user: NewUser): Promise<void> => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/users`, user)
+          .then(() => {
+            return resolve();
+          }).catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response);
+          })
+      });
+    },
+
+    edit: (user: UserEdit): Promise<void> => {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.post(`${API_BASEURL}/users/@me`, user)
           .then(() => {
             return resolve();
           }).catch((err: AxiosError) => {
