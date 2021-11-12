@@ -1,14 +1,14 @@
-import { UserRole } from ".prisma/client";
-import { prismaInstance } from "../../prisma/instance";
-import Password from "../classes/Password";
-import UserManager from "../classes/UserManager";
-import { apiError, errorManifest } from "../helpers/apiError";
-import { cryptr } from "../util/cryptr";
-import { emailResetComplete } from "../util/emailTemplates/emailResetComplete";
 import { emailResetConfirmation } from "../util/emailTemplates/emailResetConfirmation";
-import { env } from "../util/env";
-import { sendEmail, transport } from "../util/mailer";
+import { emailResetComplete } from "../util/emailTemplates/emailResetComplete";
+import { errorManifest } from "../helpers/apiError";
 import { authorizationToken } from "./authorizationTokens";
+import { prismaInstance } from "../../prisma/instance";
+import { sendEmail } from "../util/mailer";
+import UserManager from "../classes/UserManager";
+import { UserRole } from ".prisma/client";
+import Password from "../classes/Password";
+import { cryptr } from "../util/cryptr";
+import { env } from "../util/env";
 
 interface NewUserData {
   firstName: string;

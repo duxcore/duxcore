@@ -13,7 +13,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
   const wrapper = useWrapper();
   const execRedirection = useNextRedirection();
 
-  const hasToken = !!wrapper.useTokenStore().authToken
+  const hasToken = !!wrapper.useTokenStore().authToken;
   const { replace } = useRouter();
 
   const onLogin = (authorization: TokenPair) => {
@@ -23,7 +23,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
       wrapper.useTokenStore.getState().setTokens({ authToken: authorization.authToken, refreshToken: authorization.refreshToken });
     }
 
-    execRedirection()
+    execRedirection();
   };
 
   useEffect(() => {

@@ -30,13 +30,14 @@ export const ResetEmailForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
         initialValues={{ password: "" }}
         validationSchema={LoginSchema}
         onSubmit={async ({ password }) => {
-          let token = query['token']?.toString() as string;
-          let email = query['email']?.toString() as string;
+          const token = query.token?.toString() as string;
+          const email = query.email?.toString() as string;
 
-          setLoading(true)
+          setLoading(true);
 
-          try { await wrapper.api.user.verifyEmailReset(token, email, password) }
-          catch (error: any) {
+          try {
+ await wrapper.api.user.verifyEmailReset(token, email, password);
+} catch (error: any) {
             if (error.data?.data?.errors.length > 0) setFormError(error.data?.data?.errors[0].message);
             else if (error && error.message) setFormError(error.message);
             else setFormError("An error occurred");

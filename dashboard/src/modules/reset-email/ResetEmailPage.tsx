@@ -9,7 +9,7 @@ import { ResetEmailForm } from "./ResetEmailForm";
 interface ResetEmailPageProps { }
 
 export const ResetEmailPage: PageComponent<ResetEmailPageProps> = () => {
-  const { query } = useRouter()
+  const { query } = useRouter();
   const execRedirection = useNextRedirection();
 
   const onSubmit = () => {
@@ -25,7 +25,7 @@ export const ResetEmailPage: PageComponent<ResetEmailPageProps> = () => {
       }}
       className="flex justify-center align-middle max-w-x-lg"
     />
-  )
+  );
 
   return <ResetEmailForm onSubmit={onSubmit} />;
 };

@@ -79,7 +79,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
               setUser(null);
             }).catch(() => {
               // we should probably let the user know
-            })
+            });
           }
         }),
         [user]

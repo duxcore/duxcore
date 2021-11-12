@@ -30,7 +30,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           let res: TokenPair | null = null;
 
           try {
-            res = await wrapper.api.user.login(email, password)
+            res = await wrapper.api.user.login(email, password);
           } catch (error: any) {
             if (error.data?.data?.errors.length > 0) {
               return setFormError(error.data?.data?.errors[0].message);

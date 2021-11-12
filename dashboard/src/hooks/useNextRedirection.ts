@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { useWrapper } from "../context/WrapperProvider";
 
 export function useNextRedirection() {
-  let wrapper = useWrapper()
-  let { replace } = useRouter()
+  const wrapper = useWrapper();
+  const { replace } = useRouter();
 
   return (() => {
     let redirectPath = "/";
@@ -17,7 +17,7 @@ export function useNextRedirection() {
       }
     } catch { }
 
-    console.log(redirectPath)
+    console.log(redirectPath);
     replace(redirectPath);
-  })
+  });
 }
