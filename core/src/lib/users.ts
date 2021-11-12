@@ -121,7 +121,7 @@ export const users = {
     return;
   },
 
-  async validateEmailResetToken(token: string, encryptedEmail: string) {
+  async validateEmailResetToken(token: string, encryptedEmail: string, password: string) {
     let tokenData = await prismaInstance.userEmailResetTokens.findFirst({
       where: {
         token: token
@@ -138,6 +138,7 @@ export const users = {
     oldEmail = user?.email;
 
     if (!user) return errorManifest.unknownUser
+    if (!user?.validatePassowrd(password)) throw errorManifest.invalidPassword
 
     await user.updateEmail(newEmail);
     await sendEmail([

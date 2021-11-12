@@ -57,6 +57,23 @@ export const createUserController = () => {
       });
     },
 
+    verifyEmailReset(token: string, code: string, password: string): Promise<void> {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.post(`${API_BASEURL}/resetEmail`, {
+          token,
+          code,
+          password
+        })
+          .then(r => resolve())
+          .catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response);
+          })
+      })
+    },
+
     login: (email: string, password: string): Promise<TokenPair> => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/users/auth`, {

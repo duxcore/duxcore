@@ -13,13 +13,15 @@ export const resetEmail = manifestation.newRoute({
 
     let token = req.body['token'];
     let email = req.body['email'];
+    let password = req.body['password'];
 
     let errors = apiError.createErrorStack();
 
     if (!token) errors.append(errorConstructor.missingValue("token"));
     if (!email) errors.append(errorConstructor.missingValue("email"));
+    if (!password) errors.append(errorConstructor.missingValue("password"));
 
-    if (errors.stack.length == 0) await users.validateEmailResetToken(token, email).catch(async err => {
+    if (errors.stack.length == 0) await users.validateEmailResetToken(token, email, password).catch(async err => {
       errors.append(...err);
       return;
     });

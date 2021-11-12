@@ -80,6 +80,19 @@ export default class UserManager {
   }
 
   /**
+   * Validate User Password
+   * 
+   * This method will simply take an input string and check to see if it matches
+   * the users password.
+   * 
+   * @param password - The password you'd like to validate
+   * @returns - Weather the password is valid or not.
+   */
+  validatePassowrd(password: string): boolean {
+    return Password.validate(password, this._raw.password ?? "");
+  }
+
+  /**
    * Get plain user object.
    * @returns - JSON Object reflecting user data.
    */
