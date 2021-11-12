@@ -57,11 +57,11 @@ export const createUserController = () => {
       });
     },
 
-    verifyEmailReset(token: string, code: string, password: string): Promise<void> {
+    verifyEmailReset(token: string, email: string, password: string): Promise<void> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/resetEmail`, {
           token,
-          code,
+          email,
           password
         })
           .then(r => resolve())

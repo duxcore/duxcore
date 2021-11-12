@@ -148,6 +148,11 @@ export const users = {
       emailResetComplete({}),
       "Your email address has been reset successfully!"
     );
+    await prismaInstance.userEmailResetTokens.delete({
+      where: {
+        id: tokenData.id
+      }
+    })
     return;
   },
 

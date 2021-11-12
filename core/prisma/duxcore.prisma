@@ -15,20 +15,20 @@ enum UserRole {
 }
 
 model User {
-  id                   String                @id @default(uuid())
-  index                Int                   @default(autoincrement())
+  id                   String                 @id @default(uuid())
+  index                Int                    @default(autoincrement())
   firstName            String
   lastName             String
-  email                String                @unique
+  email                String                 @unique
   password             String?
   loginAttempts        UserLoginAttempts[]
-  created              DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  role                 UserRole              @default(USER)
+  created              DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  role                 UserRole               @default(USER)
   meta_tags            UserMetaTags?
   refreshTokens        UserRefreshToken[]
-  meta                 Json                  @default("{}")
-  UserEmailResetTokens UserEmailResetTokens?
+  meta                 Json                   @default("{}")
+  UserEmailResetTokens UserEmailResetTokens[]
 }
 
 model UserMetaTags {
@@ -51,17 +51,19 @@ model UserLoginAttempts {
 }
 
 model UserRefreshToken {
-  id      Int     @id @default(autoincrement())
-  token   String  @default(uuid())
-  user    User    @relation(references: [id], fields: [userId])
+  id      Int      @id @default(autoincrement())
+  token   String   @default(uuid())
+  user    User     @relation(references: [id], fields: [userId])
+  created DateTime @default(now())
   userId  String
-  revoked Boolean @default(false)
+  revoked Boolean  @default(false)
 }
 
 model UserEmailResetTokens {
-  id     Int    @id @default(autoincrement())
-  token  String @default(uuid())
-  email  String
-  user   User   @relation(references: [id], fields: [userId])
-  userId String @unique
+  id      Int      @id @default(autoincrement())
+  token   String   @default(uuid())
+  email   String
+  user    User     @relation(references: [id], fields: [userId])
+  created DateTime @default(now())
+  userId  String
 }

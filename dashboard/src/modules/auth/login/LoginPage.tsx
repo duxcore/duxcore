@@ -3,13 +3,15 @@ import { Form, Formik, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useWrapper } from "../../../context/WrapperProvider";
+import { useNextRedirection } from "../../../hooks/useNextRedirection";
 import { PageComponent } from "../../../types/PageComponent";
-import { LoginForm, LoginResponse } from "./LoginForm";
+import { LoginForm } from "./LoginForm";
 
 interface LoginPageProps { }
 
 export const LoginPage: PageComponent<LoginPageProps> = () => {
   const wrapper = useWrapper();
+  const execRedirection = useNextRedirection();
 
   const hasToken = !!wrapper.useTokenStore().authToken
   const { replace } = useRouter();
@@ -21,19 +23,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
       wrapper.useTokenStore.getState().setTokens({ authToken: authorization.authToken, refreshToken: authorization.refreshToken });
     }
 
-    let redirectPath = "/";
-
-    try {
-      const possibleIntendedPath = localStorage.getItem(wrapper.constants.INTENDED_PATH_KEY);
-      console.log(possibleIntendedPath);
-
-      if (possibleIntendedPath && possibleIntendedPath.startsWith("/")) {
-        redirectPath = possibleIntendedPath;
-        localStorage.setItem(wrapper.constants.INTENDED_PATH_KEY, "");
-      }
-    } catch { }
-
-    replace(redirectPath);
+    execRedirection()
   };
 
   useEffect(() => {
@@ -42,7 +32,7 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
       // of verifying the auth token validity
       replace("/");
     }
-  }, [hasToken, replace]);
+  }, []);
 
   return <LoginForm onLogin={onLogin} />;
 };

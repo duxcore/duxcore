@@ -8,18 +8,6 @@ import { Input } from "../../../components/forms/Input";
 import { useWrapper } from "../../../context/WrapperProvider";
 import { LoginSchema } from "./LoginSchema";
 
-export type LoginResponse = {
-  data: {
-    authorization: {
-      authToken: string,
-      refreshToken: string
-    } | null;
-    emailExists: boolean;
-    passwordValid: boolean;
-    userId: any;
-  };
-};
-
 interface LoginFormProps {
   onLogin: (authorization: TokenPair) => void;
 }

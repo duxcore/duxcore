@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   useEffect(() => {
     if (!hasTokens && requiresAuth) {
-      replace(`/login?next=${asPath}`).then(() => {
+      replace(`/login?next=${encodeURIComponent(asPath)}`).then(() => {
         setAuthComplete(true);
       });
       return;
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           const errs = extractErrors(error.data.errors.stack);
           if (errs.has("AUTH_FAILURE")) {
             wrapper.useTokenStore.getState().setTokens({ authToken: "", refreshToken: "" });
-            replace(`/login?next=${window.location.pathname}`);
+            replace(`/login?next=${encodeURIComponent(window.location.pathname)}`);
           }
         }
       }).finally(() => setAuthComplete(true));
