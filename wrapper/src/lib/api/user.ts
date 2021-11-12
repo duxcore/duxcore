@@ -7,7 +7,7 @@ import { useTokenStore } from "../useTokenStore";
 
 export const createUserController = () => {
   return {
-    me: (): Promise<User> => {
+    me(): Promise<User> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/users/@me`)
           .then(res => {
@@ -29,7 +29,7 @@ export const createUserController = () => {
       });
     },
 
-    create: (user: NewUser): Promise<void> => {
+    create(user: NewUser): Promise<void> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/users`, user)
           .then(() => {
@@ -43,7 +43,7 @@ export const createUserController = () => {
       });
     },
 
-    edit: (user: UserEdit): Promise<void> => {
+    edit(user: UserEdit): Promise<void> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/users/@me`, user)
           .then(() => {
@@ -74,7 +74,7 @@ export const createUserController = () => {
       })
     },
 
-    login: (email: string, password: string): Promise<TokenPair> => {
+    login(email: string, password: string): Promise<TokenPair> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.post(`${API_BASEURL}/users/auth`, {
           email,
@@ -93,7 +93,7 @@ export const createUserController = () => {
       });
     },
 
-    revokeAllTokens: (): Promise<void> => {
+    revokeAllTokens(): Promise<void> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.delete(`${API_BASEURL}/users/@me/revokeAllRefreshTokens`)
           .then(() => {
