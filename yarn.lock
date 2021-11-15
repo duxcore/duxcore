@@ -349,12 +349,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@duxcore/manifestation@npm:^1.0.9":
-  version: 1.1.0
-  resolution: "@duxcore/manifestation@npm:1.1.0"
+"@duxcore/manifestation@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "@duxcore/manifestation@npm:1.2.3"
   dependencies:
     express: ^4.17.1
-  checksum: 029de71124cb4851faa489dfa7f2a57377adbba57399e5d6b26933554eda1401429cda4a11b3e00c96cda0f8d7d2100b61ab8d637d08c746aa345df559f08bc2
+  checksum: fed7783b322fa4b6a7a57ca334d55e001e80814c20ecb03d01f50e8f70f8f874a37fa11d94bd5e8ae5889e539e414a3e3bb9056848c8c6c4950a7f700f5f401b
   languageName: node
   linkType: hard
 
@@ -2571,7 +2571,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "core@workspace:core"
   dependencies:
-    "@duxcore/manifestation": ^1.0.9
+    "@duxcore/manifestation": ^1.2.3
     "@prisma/client": ^3.3.0
     "@types/body-parser": ^1.19.1
     "@types/cors": ^2.8.12

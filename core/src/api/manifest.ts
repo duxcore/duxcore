@@ -3,10 +3,10 @@ import { apiLimiter } from "./middleware/rateLimit";
 import { teapot } from "./routes/teapot";
 import cors from 'cors'
 import { apiStatus } from "./routes/status";
-import { apiUsers } from "./routes/users";
 import bodyParser from "body-parser";
 import { authRoutes } from "./routes/auth";
 import { resetEmail } from "./routes/resetEmail";
+import { apiUsersRouter } from "./routes/users";
 
 export const apiManifest = manifestation.newManifest({
   middleware: [cors(), bodyParser.json()],
@@ -14,7 +14,8 @@ export const apiManifest = manifestation.newManifest({
     {
       version: 1,
       middleware: [apiLimiter, cors()],
-      routes: [teapot, apiStatus, ...apiUsers, ...authRoutes, resetEmail]
+      routes: [teapot, apiStatus, ...authRoutes, resetEmail],
+      routers: [apiUsersRouter]
     }
   ]
 })
