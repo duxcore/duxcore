@@ -6,7 +6,8 @@ import { apiStatus } from "./routes/status";
 import bodyParser from "body-parser";
 import { authRoutes } from "./routes/auth";
 import { resetEmail } from "./routes/resetEmail";
-import { apiUsersRouter } from "./routes/users";
+import { apiUserBaseRoutes } from "./routes/users";
+import { selfUserRouter } from "./routes/users/selfUserRouter";
 
 export const apiManifest = manifestation.newManifest({
   middleware: [cors(), bodyParser.json()],
@@ -15,7 +16,13 @@ export const apiManifest = manifestation.newManifest({
       version: 1,
       middleware: [apiLimiter, cors()],
       routes: [teapot, apiStatus, ...authRoutes, resetEmail],
-      routers: [apiUsersRouter]
+      routers: [
+        {
+          route: "/users",
+          routes: apiUserBaseRoutes,
+          routers: [selfUserRouter]
+        }
+      ]
     }
   ]
 })
