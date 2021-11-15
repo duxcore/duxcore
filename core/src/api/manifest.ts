@@ -6,7 +6,7 @@ import { apiStatus } from "./routes/status";
 import bodyParser from "body-parser";
 import { authRoutes } from "./routes/auth";
 import { resetEmail } from "./routes/resetEmail";
-import { apiUserBaseRoutes } from "./routes/users";
+import { apiUserBaseRoutes } from "./routes/users/users";
 import { selfUserRouter } from "./routes/users/selfUserRouter";
 
 export const apiManifest = manifestation.newManifest({

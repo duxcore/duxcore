@@ -1,10 +1,10 @@
-import { apiError, errorConstructor } from "../../helpers/apiError";
-import { authorizeRequest } from "../middleware/authorizeRequest";
+import { apiError, errorConstructor } from "../../../helpers/apiError";
+import { authorizeRequest } from "../../middleware/authorizeRequest";
 import { ApiRoute, manifestation } from "@duxcore/manifestation";
-import { fetchTokenData } from "../../helpers/fetchTokenData";
-import Password from "../../classes/Password";
+import { fetchTokenData } from "../../../helpers/fetchTokenData";
+import Password from "../../../classes/Password";
 import validator from "email-validator";
-import { users } from "../../lib/users";
+import { users } from "../../../lib/users";
 
 export const apiUserBaseRoutes = [
   manifestation.newRoute({
