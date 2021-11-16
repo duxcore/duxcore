@@ -349,6 +349,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discordjs/collection@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "@discordjs/collection@npm:0.3.2"
+  checksum: f5c2b63f85082805cebf67d518d07190ec9f52788ee2fdad9efff43aed6b9366022f9a2da9766e0815b82d919231df3898734531905da5ed72bb2f2321445195
+  languageName: node
+  linkType: hard
+
 "@duxcore/manifestation@npm:^1.2.3":
   version: 1.2.3
   resolution: "@duxcore/manifestation@npm:1.2.3"
@@ -2571,6 +2578,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "core@workspace:core"
   dependencies:
+    "@discordjs/collection": ^0.3.2
     "@duxcore/manifestation": ^1.2.3
     "@prisma/client": ^3.3.0
     "@types/body-parser": ^1.19.1

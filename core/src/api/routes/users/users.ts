@@ -1,7 +1,5 @@
 import { apiError, errorConstructor } from "../../../helpers/apiError";
-import { authorizeRequest } from "../../middleware/authorizeRequest";
-import { ApiRoute, manifestation } from "@duxcore/manifestation";
-import { fetchTokenData } from "../../../helpers/fetchTokenData";
+import { manifestation } from "@duxcore/manifestation";
 import Password from "../../../classes/Password";
 import validator from "email-validator";
 import { users } from "../../../lib/users";

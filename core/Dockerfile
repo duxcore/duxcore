@@ -1,4 +1,4 @@
-FROM node:14 AS base
+FROM node:16 AS base
 
 WORKDIR /usr/duxcore-core
 COPY package.json .env ./

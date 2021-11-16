@@ -29,6 +29,7 @@ model User {
   refreshTokens        UserRefreshToken[]
   meta                 Json                   @default("{}")
   UserEmailResetTokens UserEmailResetTokens[]
+  ServiceCollection    ServiceCollection[]
 }
 
 model UserMetaTags {
@@ -66,4 +67,17 @@ model UserEmailResetTokens {
   user    User     @relation(references: [id], fields: [userId])
   created DateTime @default(now())
   userId  String
+}
+
+model ServiceCollection {
+  id    String @id @default(uuid())
+  index Int    @default(autoincrement())
+
+  name String
+
+  creator   User   @relation(references: [id], fields: [creatorId])
+  creatorId String
+
+  created  DateTime @default(now())
+  upatedAt DateTime @updatedAt
 }

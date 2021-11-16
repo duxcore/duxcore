@@ -4,6 +4,8 @@ import { fetchTokenData } from "../../../helpers/fetchTokenData";
 import { users } from "../../../lib/users";
 import { authorizeRequest } from "../../middleware/authorizeRequest";
 import validator from "email-validator";
+import { sendApiErrors } from "../../../helpers/sendApiErrors";
+import UserManager from "../../../classes/UserManager";
 
 
 export const selfUserRouter = manifestation.newRouter({
@@ -41,7 +43,8 @@ export const selfUserRouter = manifestation.newRouter({
         let tokenData = fetchTokenData(res.locals);
         let errorStack = apiError.createErrorStack();
         let modifiers = [
-          "email"
+          "email",
+          "password"
         ];
 
         const requestedModifiers = Object.keys(req.body)
@@ -60,10 +63,7 @@ export const selfUserRouter = manifestation.newRouter({
             if (!validator.validate(newEmail)) return errorStack.append(errorConstructor.invalidEmail(newEmail));
 
             return await users.generateEmailResetToken(tokenData['userId'], newEmail)
-              .then(() => {
-                console.log("complete")
-                return true;
-              })
+              .then(() => true)
               .catch(err => {
                 let msg = err.message;
 
@@ -77,20 +77,45 @@ export const selfUserRouter = manifestation.newRouter({
           }
         }));
 
-        if (errorStack.stack.length > 0) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 400,
-          message: "Errors have occured",
-          data: {
-            errors: errorStack.stack
-          },
-          successful: false
-        }));
+        if (errorStack.stack.length > 0) return sendApiErrors(res, ...errorStack.stack);
 
         return manifestation.sendApiResponse(res, manifestation.newApiResponse({
           status: 200,
           message: "Modifiers executed successfully!",
           successful: true
         }))
+      }
+    }),
+    manifestation.newRoute({
+      route: '/updatePassword',
+      method: "post",
+      middleware: [],
+      executor: async (req, res) => {
+        let errors = apiError.createErrorStack();
+        let tokenData = fetchTokenData(res.locals);
+
+        let user = ((await users.fetch(tokenData.userId)) ?? errors.append("unknownUser")) as UserManager;
+        let oldPassword = req.body['oldPassword'] ?? errors.append(errorConstructor.missingValue("oldPassword"));
+        let newPassword = req.body['newPassword'] ?? errors.append(errorConstructor.missingValue("newPassword"));
+
+        if (!user.validatePassowrd(oldPassword)) errors.append("invalidPassword");
+
+        if (errors.stack.length === 0) {
+          await user.updatePassword(newPassword).catch(e => {
+            return errors.append({
+              code: "UPDATE_PASSWORD_FAILURE",
+              message: "Failed to update your password"
+            });
+          });
+        }
+
+        if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
+        return manifestation.sendApiResponse(res, {
+          status: 200,
+          message: "Successfully updated user password",
+          successful: true
+        })
       }
     }),
     manifestation.newRoute({
