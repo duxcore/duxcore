@@ -32,6 +32,20 @@ export const createServiceCollectionsController = () => {
             return reject(err.response);
           })
       });
+    },
+
+    get(id: string): Promise<Collection> {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.get(`${API_BASEURL}/services/collections/${id}`)
+          .then((res) => {
+            return resolve(res.data);
+          }).catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response);
+          })
+      });
     }
   }
 }
