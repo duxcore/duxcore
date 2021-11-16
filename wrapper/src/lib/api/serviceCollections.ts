@@ -1,10 +1,10 @@
-import { Collection, NewCollection } from "../../types/collection";
+import { Collection, NewCollection } from "../../types/serviceCollections";
 import { API_BASEURL } from "../../util/constants";
 import axiosInstance from "../axiosInstance";
 import type { AxiosError } from "axios";
 import { invalidApiResponseStack } from "../../util/invalidApiResponseStack";
 
-export const createCollectionController = () => {
+export const createServiceCollectionsController = () => {
   return {
     create(collection: NewCollection): Promise<void> {
       return new Promise(async (resolve, reject) => {
