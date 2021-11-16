@@ -8,7 +8,6 @@ import { serviceCollection } from "../../../lib/serviceCollections";
 export const collectionsRouter = manifestation.newRouter({
   route: "/collections",
   middleware: [],
-  routers: [],
   routes: [
     manifestation.newRoute({
       route: "/",
@@ -41,6 +40,28 @@ export const collectionsRouter = manifestation.newRouter({
           status: 200,
           message: "Successfully created new collection!",
           data: newCollection?.toJson(),
+          successful: true
+        })
+      }
+    }),
+    manifestation.newRoute({
+      route: "/:collection",
+      method: "get",
+      executor: async (req, res) => {
+        let tokenData = fetchTokenData(res.locals);
+        let collectionId = req.params.collection;
+        let errors = apiError.createErrorStack();
+
+        const collection = await serviceCollection.fetch(collectionId);
+
+        if (!collection) errors.append("invalidServiceCollectionId");
+        if (!(await serviceCollection.checkUserPermission(tokenData.userId, collectionId))) errors.append("collectionNoAccess");
+
+        if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+        return manifestation.sendApiResponse(res, {
+          status: 200,
+          message: "Successfully fetched collection!",
+          data: collection?.toJson(),
           successful: true
         })
       }

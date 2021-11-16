@@ -114,5 +114,13 @@ export const errorManifest = {
   invalidEmailTokenMatch: {
     code: "INVALID_EMAIL_TOKEN_MATCH",
     message: "The email provided does not match the email we have stored in our database with this email token."
+  },
+  invalidServiceCollectionId: {
+    code: "INVALID_SERVICE_COLLECTION_ID",
+    message: "The collection id provided is not a valid collection id"
+  },
+  collectionNoAccess: {
+    code: "COLLECTION_ACCESS_DENIED",
+    message: "You do not have permission to view or modify this collection..."
   }
 }

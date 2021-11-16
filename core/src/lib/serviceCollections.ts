@@ -46,6 +46,13 @@ export const serviceCollection = {
     return;
   },
 
+  async checkUserPermission(userId: string, collectionId: string): Promise<boolean> {
+    const userCollections = await this.fetchAllByUser(userId);
+
+    if (userCollections.has(collectionId)) return true;
+    return false;
+  },
+
   async count(): Promise<number> {
     let count = await prismaInstance.serviceCollection.count();
     return count;
