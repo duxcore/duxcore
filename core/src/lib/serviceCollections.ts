@@ -45,4 +45,9 @@ export const serviceCollection = {
 
     return;
   },
+
+  async count(): Promise<number> {
+    let count = await prismaInstance.serviceCollection.count();
+    return count;
+  }
 }
