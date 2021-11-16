@@ -4,11 +4,13 @@ import { CreateWrapperOptions } from './types/options';
 import { createUserController } from './lib/api/user';
 import { useTokenStore } from './lib/useTokenStore';
 import { isServer } from './util/isServer';
+import { createServiceCollectionsController } from './lib/api/serviceCollections';
 
 export const createWrapper = (options: CreateWrapperOptions) => {
   return {
     api: {
       user: createUserController(),
+      serviceCollections: createServiceCollectionsController(),
     },
 
     axios: {
