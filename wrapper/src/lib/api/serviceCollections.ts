@@ -34,7 +34,7 @@ export const createServiceCollectionsController = () => {
       });
     },
 
-    get(id: string): Promise<Collection> {
+    fetch(id: string): Promise<Collection> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/services/collections/${id}`)
           .then((res) => {
