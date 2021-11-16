@@ -105,6 +105,23 @@ export const createUserController = () => {
             return reject(err.response?.data.errors);
           })
       });
+    },
+
+    resetPassword(oldPassword: string, newPassword: string): Promise<void> {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.post(`${API_BASEURL}/users/@me/updatePassword`, {
+          oldPassword,
+          newPassword
+        }).then((res) => {
+          if (!res.data.successful) return reject(res.data.errors);
+
+          return resolve();
+        }).catch((err: AxiosError) => {
+          let timestamp = err.response?.data.meta.timestamp;
+          
+          if (!timestamp) return reject([invalidApiResponseStack]);
+        })
+      });
     }
   }
 }
