@@ -1,9 +1,8 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiManifest } from "./api/manifest";
+import { config } from "dotenv";
 import cluster from 'cluster';
 import process from 'process';
-import { config } from "dotenv";
-import { users } from "./lib/users";
 
 let ports = [7841, 2105, 3609, 8856, 1104]
 

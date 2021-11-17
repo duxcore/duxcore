@@ -1,8 +1,9 @@
 import { apiError, errorConstructor } from "../../../helpers/apiError";
 import { manifestation } from "@duxcore/manifestation";
 import Password from "../../../classes/Password";
-import validator from "email-validator";
 import { users } from "../../../lib/users";
+import validator from "email-validator";
+import { sendApiErrors } from "../../../helpers/sendApiErrors";
 
 export const apiUserBaseRoutes = [
   manifestation.newRoute({
@@ -10,6 +11,7 @@ export const apiUserBaseRoutes = [
     method: "post",
     executor: async (req, res) => {
       let errors = apiError.createErrorStack();
+      let responseData;
 
       if (!req.body.password) errors.append(errorConstructor.missingValue("password"))
       if (!req.body.email) errors.append(errorConstructor.missingValue("email"));
@@ -18,45 +20,30 @@ export const apiUserBaseRoutes = [
       if (!req.body.name || !req.body.name.firstName) errors.append(errorConstructor.missingValue("name.firstName"));
       if (!req.body.name || !req.body.name.lastName) errors.append(errorConstructor.missingValue("name.lastName"));
 
-      if (!!req.body.email && await users.emailExists(req.body.email)) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-        status: 400,
-        message: "An error has occured",
-        successful: false,
-        data: {
-          stack: apiError.createErrorStack("userEmailExists").stack
-        }
-      }));
+      if (!!req.body.email && await users.emailExists(req.body.email)) errors.append("userEmailExists");
 
-      if (errors.stack.length > 0) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-        status: 400,
-        message: "Error(s) have occured...",
-        successful: false,
-        data: {
-          errors: errors.stack
-        }
-      }))
-
-      users.create({
+      if (errors.stack.length === 0) await users.create({
         email: req.body.email,
         password: Password.hash(req.body.password),
         firstName: req.body.name.firstName,
         lastName: req.body.name.lastName,
         role: "USER"
-      }).then(() => {
-        manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 201,
-          message: "User has been registered.",
-          successful: true
-        }))
+      }).then((newUser) => {
+        responseData = newUser.toJson()
       }).catch((e) => {
-        manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 500,
-          message: "An internal error has occured.",
-          data: {
-            error: e.message
-          },
-          successful: false
-        }))
+        errors.append({
+          code: "INTERNAL_SERVER_ERROR",
+          message: e.message
+        })
+      });
+
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "User registration successful!",
+        data: responseData,
+        successful: true
       })
     }
   }),
@@ -73,36 +60,25 @@ export const apiUserBaseRoutes = [
       if (!req.body.email) errors.append(errorConstructor.missingValue("email"));
       if (!req.body.email) errors.append(errorConstructor.missingValue("password"));
 
-      if (!(await users.emailExists(email))) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-        status: 404,
-        message: "An error has occured",
-        data: {
-          errors: apiError.createErrorStack("unknownUser").stack
-        },
-        successful: false
-      }));
+      if (!(await users.emailExists(email))) errors.append("unknownUser");
 
-      if (errors.stack.length > 0) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-        status: 400,
-        message: "Error(s) have occured",
-        data: {
-          errors: errors.stack
-        }
-      }));
+      if (errors.stack.length === 0) await users.login(email, password, ip as string).then((after) => {
+        if (!after.passwordValid) return errors.append("invalidPassword");
 
-      users.login(email, password, ip as string).then((after) => {
         const response = manifestation.newApiResponse({
           status: after.passwordValid == true ? 200 : 400,
           message: after.passwordValid ? "Authentication Successful." : "Authentication Failed.",
           data: {
-            errors: !after.passwordValid ? apiError.createErrorStack("invalidPassword").stack : undefined,
             ...after
           },
           successful: after.passwordValid
         });
 
         manifestation.sendApiResponse(res, response)
-      })
+      });
+
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
     }
   })
 ]

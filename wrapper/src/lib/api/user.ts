@@ -118,7 +118,7 @@ export const createUserController = () => {
           return resolve();
         }).catch((err: AxiosError) => {
           let timestamp = err.response?.data.meta.timestamp;
-          
+
           if (!timestamp) return reject([invalidApiResponseStack]);
         })
       });

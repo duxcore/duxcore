@@ -32,8 +32,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           try {
             res = await wrapper.api.user.login(email, password);
           } catch (error: any) {
-            if (error.data?.data?.errors.length > 0) {
-              return setFormError(error.data?.data?.errors[0].message);
+            console.log(error)
+            if (error.data.data.errors.length > 0) {
+              return setFormError(error.data.data.errors[0].message);
             }
 
             if (
