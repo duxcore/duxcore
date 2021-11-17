@@ -24,7 +24,7 @@ export const createServiceCollectionsController = () => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/services/collections`)
           .then((res) => {
-            return resolve(res.data);
+            return resolve(res.data.data);
           }).catch((err: AxiosError) => {
             let timestamp = err.response?.data.meta.timestamp;
 
@@ -38,7 +38,7 @@ export const createServiceCollectionsController = () => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/services/collections/${id}`)
           .then((res) => {
-            return resolve(res.data);
+            return resolve(res.data.data);
           }).catch((err: AxiosError) => {
             let timestamp = err.response?.data.meta.timestamp;
 

@@ -37,3 +37,4 @@ export const createWrapper = (options: CreateWrapperOptions) => {
 export type { TokenPair, NewUser, User, UserEdit } from './types/user'
 export type { CreateWrapperOptions } from './types/options'
 export type { APIError } from './types/api'
+export type { Collection } from './types/serviceCollections'
