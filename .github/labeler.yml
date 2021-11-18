@@ -4,5 +4,7 @@ daemon:
   - daemon/**/*
 website:
   - website/**/*
+dashboard:
+  - dashboard/**/*
 wrapper:
   - wrapper/**/*
