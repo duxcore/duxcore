@@ -2,13 +2,16 @@ import React from "react";
 import { useAuth } from "../modules/auth/useAuth";
 import { Header } from "./header/Header";
 
-interface LayoutProps { }
+interface LayoutProps {
+  title?: string;
+}
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   const { user, logOut, revokeAllRefreshTokens } = useAuth();
 
   return (
     <>
+      <title>Duxcore {title ? `| ${title}` : ""}</title>
       <Header>
         <div className="px-30">
           <h1>Welcome {user?.firstName}</h1>
