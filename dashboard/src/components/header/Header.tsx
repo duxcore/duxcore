@@ -21,7 +21,6 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
 
   return (
     <header className="w-full h-10 bg-black border-b border-gray-800 border-solid sticky top-0 flex justify-between px-2 md:gap-6 sm:gap-3">
-      {/* {children} */}
       <Link href={"/"} passHref={true}>
         <a className="h-full w-auto relative flex items-center gap-1 mr-2 md:mr-0">
           <img
@@ -35,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
             src="/logo-full.svg"
             alt="Duxcore"
             className="h-full hidden md:block"
-            style={{ padding: "3.5vh 0 3.5vh 0" }}
+            style={{ padding: "2.2rem 0 2.2rem 0" }}
           />
         </a>
       </Link>
