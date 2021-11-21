@@ -18,7 +18,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
         </a>
       </Link>
       <title>Duxcore {title ? `| ${title}` : ""}</title>
-      <Header></Header>
+      <Header/>
       <main id="main" className="w-full p-1 bg-gray-900 px-5 md:px-30">
         {children}
       </main>
