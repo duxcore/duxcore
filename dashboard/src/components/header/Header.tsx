@@ -23,23 +23,21 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
     <header className="w-full h-10 bg-black border-b border-gray-800 border-solid sticky top-0 flex justify-between px-2 md:gap-6 sm:gap-3">
       {/* {children} */}
       <Link href={"/"} passHref={true}>
-        <>
-          <a className="h-full w-auto relative flex items-center gap-1 mr-2 md:mr-0 md:hidden">
-            <img
-              height={"45rem"}
-              width={"45rem"}
-              src="/logo.svg"
-              alt="Duxcore"
-              className="h-full"
-            />
-          </a>
-          <a
-            className="h-full w-auto relative hidden items-center gap-1 mr-2 md:mr-0 md:block"
+        <a className="h-full w-auto relative flex items-center gap-1 mr-2 md:mr-0">
+          <img
+            height={"45rem"}
+            width={"45rem"}
+            src="/logo.svg"
+            alt="Duxcore"
+            className="h-full md:hidden"
+          />
+          <img
+            src="/logo-full.svg"
+            alt="Duxcore"
+            className="h-full hidden md:block"
             style={{ padding: "3.5vh 0 3.5vh 0" }}
-          >
-            <img src="/logo-full.svg" alt="Duxcore" className="h-full" />
-          </a>
-        </>
+          />
+        </a>
       </Link>
       <nav className="flex-grow flex items-center gap-2 overflow-x-auto">
         {navLinks.map((link, i) => {
