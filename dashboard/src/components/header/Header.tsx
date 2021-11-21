@@ -1,14 +1,66 @@
-import React from "react";
+/* eslint-disable @next/next/no-img-element */
+import React, { useState } from "react";
+import Image from "next/image";
 import { useAuth } from "../../modules/auth/useAuth";
-
-interface HeaderProps { }
+import { useRouter } from "next/router";
+import { Button } from "../forms/Button";
+import { IoChevronDown } from "react-icons/io5";
+import { AccountDrop } from "./AccountDrop";
+import Link from "next/link";
+interface HeaderProps {}
 
 export const Header: React.FC<HeaderProps> = ({ children }) => {
   const { user, logOut } = useAuth();
+  const router = useRouter();
+
+  const navLinks = [
+    ["Overview", "/"],
+    ["Usage", "/usage"],
+    ["Settings", "/settings"],
+  ];
 
   return (
-    <div className="w-full h-10 bg-black border-b border-gray-800 border-solid">
-      {children}
-    </div>
+    <header className="w-full h-10 bg-black border-b border-gray-800 border-solid sticky top-0 flex justify-between px-2 md:gap-6 sm:gap-3">
+      {/* {children} */}
+      <Link href={"/"} passHref={true}>
+        <>
+          <a className="h-full w-auto relative flex items-center gap-1 mr-2 md:mr-0 md:hidden">
+            <img
+              height={"45rem"}
+              width={"45rem"}
+              src="/logo.svg"
+              alt="Duxcore"
+              className="h-full"
+            />
+          </a>
+          <a
+            className="h-full w-auto relative hidden items-center gap-1 mr-2 md:mr-0 md:block"
+            style={{ padding: "3.5vh 0 3.5vh 0" }}
+          >
+            <img src="/logo-full.svg" alt="Duxcore" className="h-full" />
+          </a>
+        </>
+      </Link>
+      <nav className="flex-grow flex items-center gap-2 overflow-x-auto">
+        {navLinks.map((link, i) => {
+          return (
+            <Button
+              className="px-1"
+              key={i}
+              onClick={() => router.push(link[1])}
+              color={
+                router.pathname === link[1] ? "invisibleClicking" : "invisible"
+              }
+            >
+              {link[0]}
+            </Button>
+          );
+        })}
+        {children}
+      </nav>
+      <div className="flex-shrink flex items-center relative">
+        <AccountDrop />
+      </div>
+    </header>
   );
 };
