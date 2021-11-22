@@ -8,7 +8,7 @@ interface DropdownButtonProps
 }
 
 export const DropdownButton: React.FC<DropdownButtonProps> = ({
-  onClick = () => undefined,
+  onClick,
   href = "#",
   icon = <></>,
   children,
