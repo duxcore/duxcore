@@ -9,8 +9,10 @@ services:
       POSTGRES_DB: duxcore
     volumes:
       - ./.docker/postgres:/var/lib/postgresql/data
-    
-  nginx: 
+    ports:
+      - 5432:5432
+
+  nginx:
     image: nginx:latest
     restart: always
     volumes:
@@ -29,6 +31,8 @@ services:
       DATABASE_URL: postgres://duxcore:123web123@postgres/duxcore
     ports:
       - 40765:40765
+    links:
+      - postgres
     depends_on:
       postgres:
         condition: service_started
@@ -38,5 +42,5 @@ services:
     restart: unless-stopped
     ports:
       - 8080:8080
-    depends_on: 
+    depends_on:
       - postgres

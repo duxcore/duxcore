@@ -15,21 +15,23 @@ enum UserRole {
 }
 
 model User {
-  id                   String                 @id @default(uuid())
-  index                Int                    @default(autoincrement())
-  firstName            String
-  lastName             String
-  email                String                 @unique
-  password             String?
-  loginAttempts        UserLoginAttempts[]
-  created              DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  role                 UserRole               @default(USER)
-  meta_tags            UserMetaTags?
-  refreshTokens        UserRefreshToken[]
-  meta                 Json                   @default("{}")
-  UserEmailResetTokens UserEmailResetTokens[]
-  ServiceCollection    ServiceCollection[]
+  id            String              @id @default(uuid())
+  index         Int                 @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String              @unique
+  password      String?
+  loginAttempts UserLoginAttempts[]
+  created       DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  role          UserRole            @default(USER)
+  meta_tags     UserMetaTags?
+  refreshTokens UserRefreshToken[]
+  meta          Json                @default("{}")
+
+  UserEmailResetTokens    UserEmailResetTokens[]
+  ServiceCollection       ServiceCollection[]
+  ServerMonitoringService ServerMonitoringService[]
 }
 
 model UserMetaTags {
@@ -70,14 +72,49 @@ model UserEmailResetTokens {
 }
 
 model ServiceCollection {
-  id    String @id @default(uuid())
-  index Int    @default(autoincrement())
-
-  name String
-
-  creator   User   @relation(references: [id], fields: [creatorId])
+  id        String   @id @default(uuid())
+  index     Int      @default(autoincrement())
+  name      String
+  creator   User     @relation(references: [id], fields: [creatorId])
   creatorId String
+  created   DateTime @default(now())
+  upatedAt  DateTime @updatedAt
 
-  created  DateTime @default(now())
-  upatedAt DateTime @updatedAt
+  ServerMonitoringService ServerMonitoringService[]
+}
+
+model ServerMonitoringService {
+  id     String @id @default(uuid())
+  index  Int    @default(autoincrement())
+  secret String @default(uuid())
+
+  collection   ServiceCollection @relation(references: [id], fields: [collectionId])
+  collectionId String
+
+  name                  String
+  creator               User                 @relation(references: [id], fields: [creatorId])
+  creatorId             String
+  MonitoringDynamicData MonitorDynamicData[]
+  MonitorStaticData     MonitorStaticData?
+}
+
+model MonitorStaticData {
+  id        Int                     @id @default(autoincrement())
+  monitor   ServerMonitoringService @relation(references: [id], fields: [monitorId])
+  monitorId String                  @unique
+
+  ipAddress       String
+  operatingSystem String
+}
+
+model MonitorDynamicData {
+  id Int @id @default(autoincrement())
+
+  monitor   ServerMonitoringService @relation(references: [id], fields: [monitorId])
+  monitorId String
+
+  date      DateTime @default(now())
+  cpuUsage  Int
+  ramUsage  Int
+  diskUsage Int
 }

@@ -1,4 +1,5 @@
 import { manifestation } from "@duxcore/manifestation";
+import { monitoring } from "../../lib/monitoring";
 import { serviceCollection } from "../../lib/serviceCollections";
 import { users } from "../../lib/users";
 
@@ -13,6 +14,9 @@ export const apiStats = manifestation.newRoute({
       },
       services: {
         totalCount: null,
+        serverMonitors: {
+          totalCount: await monitoring.server.count()
+        },
         collections: {
           totalCount: await serviceCollection.count()
         }
