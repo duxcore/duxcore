@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { useAuth } from "../modules/auth/useAuth";
 import { Header } from "./header/Header";
@@ -11,19 +12,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
   return (
     <>
+      <Link href={"#main"}>
+        <a className="fixed top-0 opacity-0 z-10 pointer-events-none focus:pointer-events-auto focus:cursor-pointer text-white focus:opacity-100">
+          Skip to content
+        </a>
+      </Link>
       <title>Duxcore {title ? `| ${title}` : ""}</title>
-      <Header>
-        <div className="px-30">
-          <h1>Welcome {user?.firstName}</h1>
-          <button
-            onClick={() => logOut()}
-            className="py-0.5 px-2 bg-gray-800 hover:bg-gray-700 rounded-5"
-          >Logout</button>
-        </div>
-      </Header>
-      <div className="w-full p-1 bg-gray-900 px-30">
+      <Header/>
+      <main id="main" className="w-full p-1 bg-gray-900 px-5 md:px-30">
         {children}
-      </div>
+      </main>
     </>
   );
 };
