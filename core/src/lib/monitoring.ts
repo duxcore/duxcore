@@ -1,3 +1,4 @@
+import Collection from "@discordjs/collection";
 import { blake2sHex } from "blakets";
 import { prismaInstance } from "../../prisma/instance";
 import ServerMonitorManager from "../classes/ServerMonitorManager";
@@ -20,7 +21,7 @@ export const monitoring = {
     },
 
     async create({ name, creator, collection }: ServerMonitorCreationData): Promise<ServerMonitorManager> {
-      let rawDat = prismaInstance.serverMonitoringService.create({
+      let rawDat = await prismaInstance.serverMonitoringService.create({
         data: {
           name,
           collectionId: collection,
@@ -28,10 +29,22 @@ export const monitoring = {
         }
       });
 
-      return rawDat;
+      return new ServerMonitorManager(rawDat);
     },
 
-    async delete(id: string): Promise<void> { },
+    async fetchUserMonitors(userId: string): Promise<Collection<string, ServerMonitorManager>> {
+      let collection = new Collection<string, ServerMonitorManager>()
+
+      let monitors = (await prismaInstance.serverMonitoringService.findMany({
+        where: {
+          creatorId: userId
+        }
+      }));
+
+      monitors.map(monitor => collection.set(monitor.id, new ServerMonitorManager(monitor)));
+
+      return collection;
+    },
 
     async count(): Promise<number> {
       return await prismaInstance.serverMonitoringService.count();
