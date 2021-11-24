@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export default function Discord() {
   let { replace } = useRouter();
 
-  useEffect(() => { replace("https://discord.gg/vZTbxBNSVA") }, []);
+  useEffect(() => { replace("https://discord.gg/dTGJ5Bchnq") }, []);
 
   return (<>Discord Broski</>)
 }
