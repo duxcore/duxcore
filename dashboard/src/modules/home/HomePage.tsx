@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "../../components/header/Header";
+import { Header } from "../../components/layout/Header";
 import { Layout } from "../../components/Layout";
 import { CollectionsArray } from "../../components/serviceCollections/CollectionsArray";
 import { PageComponent } from "../../types/PageComponent";

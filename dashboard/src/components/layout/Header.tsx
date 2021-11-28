@@ -20,12 +20,15 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
   ];
 
   return (
-    <header className="w-full h-10 bg-black border-b border-gray-800 border-solid sticky top-0 flex justify-between px-2 md:gap-6 sm:gap-3">
-      <Link href={"/"} passHref={true}>
+    <header
+      className="w-full h-full bg-black border-b border-gray-800 border-solid sticky top-0 flex justify-between px-2 md:gap-6 sm:gap-3"
+      style={{ gridArea: "header" }}
+    >
+      {/* <Link href={"/"} passHref={true}>
         <a className="h-full w-auto relative flex items-center gap-1 mr-2 md:mr-0">
           <img
-            height={"45rem"}
-            width={"45rem"}
+            height={"45em"}
+            width={"45em"}
             src="/logo.svg"
             alt="Duxcore"
             className="h-full md:hidden"
@@ -37,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
             style={{ padding: "2.2rem 0 2.2rem 0" }}
           />
         </a>
-      </Link>
+      </Link> */}
       <nav className="flex-grow flex items-center gap-2 overflow-x-auto">
         {navLinks.map((link, i) => {
           return (

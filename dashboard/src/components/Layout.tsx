@@ -1,7 +1,8 @@
 import Link from "next/link";
 import React from "react";
 import { useAuth } from "../modules/auth/useAuth";
-import { Header } from "./header/Header";
+import { Header } from "./layout/Header";
+import { Sidebar } from "./layout/Sidebar";
 
 interface LayoutProps {
   title?: string;
@@ -12,15 +13,22 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
 
   return (
     <>
-      <Link href={"#main"}>
-        <a className="fixed top-0 opacity-0 z-10 pointer-events-none focus:pointer-events-auto focus:cursor-pointer text-white focus:opacity-100">
-          Skip to content
-        </a>
-      </Link>
       <title>Duxcore {title ? `| ${title}` : ""}</title>
-      <Header></Header>
-      <main id="main" className="w-full p-1 bg-gray-900 px-5 md:px-30">
-        {children}
+      <main
+        id="maincontent"
+        className="w-full p-0 bg-gray-900 grid h-screen"
+        style={{
+          gridTemplate: `
+            "sidebar header header header header" 5rem 
+            "sidebar content content content content" / 5rem
+            `,
+        }}
+      >
+        <Header></Header>
+        <Sidebar></Sidebar>
+        <article style={{ gridArea: "content" }} className="p-4">
+          {children}
+        </article>
       </main>
     </>
   );

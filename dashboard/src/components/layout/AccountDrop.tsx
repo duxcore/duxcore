@@ -39,7 +39,7 @@ export const AccountDrop: React.FC<AccountDropProps> = ({ children }) => {
         />
       </Button>
       <div
-        className={`bg-gray-800 rounded absolute top-8 w-15 md:w-full right-0 shadow-lg transition-all overflow-hidden ${
+        className={`bg-gray-800 rounded absolute top-8 min-w-15 right-0 shadow-lg transition-all overflow-hidden ${
           clicked ? "opacity-100" : "opacity-0"
         }`}
       >
