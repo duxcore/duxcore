@@ -13,7 +13,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="w-screen h-screen bg-black flex flex-col items-center justify-center">
-          <h1>If you have to check then it's probably too old</h1>
+          <h1 className="text-white text-lg">If you have to check then it's probably too old</h1>
 
         {/** Somebody insert logic to actually check and verify... */}
       </div>
