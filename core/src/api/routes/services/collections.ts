@@ -18,7 +18,7 @@ export const collectionsRouter = manifestation.newRouter({
         return manifestation.sendApiResponse(res, {
           status: 200,
           message: "Successfully fetched service collections!",
-          data: await (await serviceCollection.fetchAllByUser(tokenData.userId)).map(s => s.toJson()),
+          data: await Promise.all((await serviceCollection.fetchAllByUser(tokenData.userId)).map(async s => await s.toJson())),
           successful: true
         })
       }
