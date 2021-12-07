@@ -7,6 +7,5 @@ export interface ServerMonitor {
 
 export interface NewServerMonitor {
   name: string;
-  creatorId: string;
   collectionId: string;
 }
