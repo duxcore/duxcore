@@ -1,3 +1,5 @@
+import { ServerMonitor } from "./serverMonitors"
+
 export interface NewCollection {
   name: string
 }
@@ -8,4 +10,5 @@ export interface Collection {
   creator: string
   created: string
   lastUpdated: string
+  monitors: ServerMonitor[]
 }
