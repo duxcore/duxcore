@@ -39,8 +39,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
           <Head>
             <title>{`Duxcore ${title ? `| ${title}` : ""} `}</title>
           </Head>
-          <Header></Header>
-          <Sidebar></Sidebar>
+          <Header/>
+          <Sidebar/>
           <article
             style={{ gridArea: "content" }}
             className="p-4 overflow-auto"
