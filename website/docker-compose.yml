@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  duxcore-website:
+    image: duxcore-website
+    ports:
+      - 8050:8050
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/:/usr/duxcore-website/src
+      - /usr/duxcore-website/node_modules
+      - /usr/duxcore-website/.next

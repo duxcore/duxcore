@@ -4,4 +4,7 @@ module.exports = {
     domains: ['plchldr.co']
   },
   reactStrictMode: true,
+  images: {
+    domains: ['placekitten.co', 'plchldr.co'],
+  },
 };

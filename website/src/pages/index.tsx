@@ -18,14 +18,14 @@ export default function Home() {
           A new hosting platform?
         </div>
         <div className="flex space-x-4">
-          <a href="https://github.com/HoloPanio/duxcore">
+          <a href="/github">
             <SolidGitHub
               width="20"
               height="20"
               className="text-white opacity-30 hover:opacity-100 transition"
             />
           </a>
-          <a href="https://discord.gg/vZTbxBNSVA">
+          <a href="/discord">
             <SolidDiscord
               width="20"
               height="20"

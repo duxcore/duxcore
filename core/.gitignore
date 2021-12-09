@@ -5,3 +5,5 @@ private.key
 # misc
 .DS_Store
 *.pem
+
+/lib/

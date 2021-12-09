@@ -8,6 +8,7 @@ import { authRoutes } from "./routes/auth";
 import { resetEmail } from "./routes/resetEmail";
 import { servicesRouter } from "./routes/services/services";
 import { usersRouter } from "./routes/users/users";
+import { monitorRouter } from "./routes/monitors/monitors";
 
 export const apiManifest = manifestation.newManifest({
   middleware: [cors(), bodyParser.json()],
@@ -18,7 +19,8 @@ export const apiManifest = manifestation.newManifest({
       routes: [teapot, apiStats, ...authRoutes, resetEmail],
       routers: [
         servicesRouter,
-        usersRouter
+        usersRouter,
+        monitorRouter
       ]
     }
   ]

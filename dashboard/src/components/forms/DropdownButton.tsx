@@ -3,13 +3,12 @@ import Link from "next/link";
 
 interface DropdownButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  onClick?: () => void;
   href?: string;
   icon?: JSX.Element;
 }
 
 export const DropdownButton: React.FC<DropdownButtonProps> = ({
-  onClick = () => undefined,
+  onClick,
   href = "#",
   icon = <></>,
   children,
