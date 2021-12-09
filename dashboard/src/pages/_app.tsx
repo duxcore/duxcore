@@ -5,17 +5,24 @@ import "../styles/globals.css";
 import "../styles/utils.css";
 import { WrapperProvider } from "../context/WrapperProvider";
 import { useGetIntendedPath } from "../hooks/useGetIntendedPath";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useGetIntendedPath();
+  const ComponentPage = Component as PageComponent<unknown>;
 
   return (
     <div suppressHydrationWarning={true}>
+      <Head>
+        <title>Duxcore</title>
+      </Head>
       <WrapperProvider>
-        <AuthProvider
-          requiresAuth={(Component as PageComponent<unknown>).requiresAuth ?? true}
-        >
-          <Component {...pageProps} />
+        <AuthProvider requiresAuth={ComponentPage.requiresAuth ?? true}>
+          {ComponentPage.getLayout ? (
+            ComponentPage.getLayout(<Component {...pageProps} />)
+          ) : (
+            <Component {...pageProps} />
+          )}
         </AuthProvider>
       </WrapperProvider>
     </div>

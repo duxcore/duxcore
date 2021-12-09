@@ -12,15 +12,6 @@ module.exports = {
         8: "8px",
       },
     },
-    fontSize: {
-      sm: "13px",
-      base: "15px",
-      md: "17px",
-      lg: "20px",
-      xl: "25px",
-      "2xl": "30px",
-      "3xl": "35px",
-    },
     colors: {
       black: "#000",
       white: "#FFF",
@@ -37,11 +28,7 @@ module.exports = {
         800: "var(--color-gray-800)",
         900: "var(--color-gray-900)",
       },
-      accent: {
-        DEFAULT: "var(--color-accent)",
-        light: "var(--color-accent-light)",
-        lighter: "var(--color-accent-lighter)",
-      },
+      accent: "#E6343F",
       error: {
         DEFAULT: "var(--color-error)",
       },
@@ -64,6 +51,7 @@ module.exports = {
     spacing: {
       0: "0rem",
       0.1: "0.063rem",
+      0.25: "0.22rem",
       0.5: "0.313rem",
       1: "0.625rem",
       1.5: "0.938rem",

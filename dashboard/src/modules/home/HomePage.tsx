@@ -1,15 +1,15 @@
 import React from "react";
-import { Header } from "../../components/header/Header";
-import { Layout } from "../../components/Layout";
+import { Header } from "../../components/layout/Header";
+import { Layout, useLayout } from "../../components/Layout";
 import { CollectionsArray } from "../../components/serviceCollections/CollectionsArray";
 import { PageComponent } from "../../types/PageComponent";
 import { useAuth } from "../auth/useAuth";
+import Head from "next/head";
 
-interface HomePageProps { }
+interface HomePageProps {}
 
 export const HomePage: PageComponent<HomePageProps> = () => {
   const { revokeAllRefreshTokens } = useAuth();
-
 
   /*
         <button
@@ -19,10 +19,14 @@ export const HomePage: PageComponent<HomePageProps> = () => {
       */
 
   return (
-    <Layout>
+    <>
       <CollectionsArray />
-    </Layout>
+    </>
   );
 };
 
 HomePage.requiresAuth = true;
+
+HomePage.getLayout = (page) => {
+  return <Layout>{page}</Layout>;
+};

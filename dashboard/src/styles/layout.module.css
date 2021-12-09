@@ -1,0 +1,24 @@
+/* Move this over to tailwind if it ever supports grid templates. */
+
+.layout {
+  grid-template:
+    "header header header header header" 5rem
+    "content content content content content" auto
+    "sidebar sidebar sidebar sidebar sidebar" 5rem
+    / 5rem;
+}
+
+.sidebar {
+  grid-template: 
+  "logo" 5rem 
+  "nav";
+}
+
+@media (min-width: 768px) {
+  .layout {
+    grid-template:
+      "sidebar header header header header" 5rem
+      "sidebar content content content content" / 5rem;
+  }
+
+}
