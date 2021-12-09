@@ -40,8 +40,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
 
     if (!user && hasTokens) {
-      wrapper.api.user.me().then(user => {
-        setUser(user);
+      wrapper.api.user.me().then(u => {
+        setUser(u);
       }).catch(error => {
         if (error?.data && requiresAuth) {
           const errs = extractErrors(error.data.errors.stack);
@@ -55,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
 
     setAuthComplete(true);
-  });
+  }, [hasTokens, requiresAuth, user, replace, asPath, wrapper.api.user, wrapper.useTokenStore]);
 
 
   return (
@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
             });
           }
         }),
-        [user]
+        [user, wrapper.api.user, wrapper.useTokenStore]
       )}
     >
       <Preloader active={!authComplete}>{children}</Preloader>

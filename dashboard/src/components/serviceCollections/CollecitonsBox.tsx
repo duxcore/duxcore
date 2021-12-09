@@ -1,25 +1,33 @@
 import { Collection } from "@duxcore/wrapper";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import React from "react";
 
 interface CollectionBoxProps {
   data: Collection;
 }
 
-export const CollectionBox: React.FC<CollectionBoxProps> = ({ children, data }) => {
-  const { replace, push } = useRouter()
+export const CollectionBox: React.FC<CollectionBoxProps> = ({
+  children,
+  data,
+}) => {
+  const { replace, push } = useRouter();
 
   return (
-    <div className="flex-none p-1 truncate transition border border-gray-700 cursor-pointer rounded-5 hover:border-white" onClick={
-      (e) => {
-        return push(`/collection/${data.id}`)
-      }
-    } style={{
-      width: "32%"
-    }}>
-      <p>{data.name}</p>
-      <p className="text-gray-600" style={{
-        fontSize: "8px"
-      }}>{data.id}</p>
-    </div>
+    <Link href={`/collection/${data.id}`} passHref={true}>
+    <a
+      className="flex-none p-1 truncate transition border border-gray-700 rounded-5 hover:border-white text-left"
+    >
+      <h4>{data.name}</h4>
+      <p
+        className="text-gray-600"
+        style={{
+          fontSize: "8px",
+        }}
+      >
+        {data.id}
+      </p>
+    </a>
+    </Link>
   );
-}
+};

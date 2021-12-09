@@ -1,8 +1,24 @@
-import Link from "next/link";
-import React from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "../modules/auth/useAuth";
 import { Header } from "./layout/Header";
 import { Sidebar } from "./layout/Sidebar";
+import styles from "../styles/layout.module.css";
+import { useRouter } from "next/router";
+import Head from "next/head";
+
+const LayoutContext = createContext<{
+  searchResults: Array<{ name: string; url: string }> | undefined;
+  setSearchResults: (
+    results?: Array<{ name: string; url: string }>
+  ) => undefined | void;
+}>({
+  searchResults: undefined,
+  setSearchResults: () => undefined,
+});
+
+export const useLayout = () => {
+  return useContext(LayoutContext);
+};
 
 interface LayoutProps {
   title?: string;
@@ -10,26 +26,29 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   const { user, logOut, revokeAllRefreshTokens } = useAuth();
+  const [searchResults, setSearchResults] =
+    useState<Array<{ name: string; url: string }>>();
 
   return (
     <>
-      <title>Duxcore {title ? `| ${title}` : ""}</title>
-      <main
-        id="maincontent"
-        className="w-full p-0 bg-gray-900 grid h-screen"
-        style={{
-          gridTemplate: `
-            "sidebar header header header header" 5rem 
-            "sidebar content content content content" / 5rem
-            `,
-        }}
-      >
-        <Header></Header>
-        <Sidebar></Sidebar>
-        <article style={{ gridArea: "content" }} className="p-4">
-          {children}
-        </article>
-      </main>
+      <LayoutContext.Provider value={{ searchResults, setSearchResults }}>
+        <main
+          id="maincontent"
+          className={`w-full p-0 bg-gray-900 grid h-screen ${styles.layout}`}
+        >
+          <Head>
+            <title>{`Duxcore ${title ? `| ${title}` : ""} `}</title>
+          </Head>
+          <Header></Header>
+          <Sidebar></Sidebar>
+          <article
+            style={{ gridArea: "content" }}
+            className="p-4 overflow-auto"
+          >
+            {children}
+          </article>
+        </main>
+      </LayoutContext.Provider>
     </>
   );
 };
