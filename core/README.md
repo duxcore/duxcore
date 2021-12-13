@@ -4,7 +4,7 @@ This is the core of Duxcore, this is what houses the Duxcore API that handles ta
 
 ## The Structure of the core
 
-This application utilizes [Node.JS clusters](https://nodejs.org/api/cluster.html) and [Socket.IO](https://socket.io) to create a system where there is one master process and you can create and add as many nodes as you want to the master process. These nodes can create and destroy api nodes and task executors.
+This application utilizes [Node.JS clusters](https://nodejs.org/api/cluster.html) and [Socket.IO](https://socket.io) to create a system where there is one master process, and you can create and add as many nodes as you want to the master process. These nodes can create and destroy API nodes and task executors.
 
 ### Master Process
 
