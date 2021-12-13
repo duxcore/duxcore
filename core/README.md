@@ -1,6 +1,6 @@
 <h1 align=center>Duxcore Core</h1>
 
-This is the core of Duxcore, this is what houses the duxcore api, what handles task execution, what manages the daemons, etc. This is a very intricate part of duxcore, and because of such there is a bit to know about it.
+This is the core of Duxcore, this is what houses the Duxcore API that handles task execution, manages the daemons, etc. This is a very intricate part of Duxcore, and so there is a bit to know about it.
 
 ## The Structure of the core
 
