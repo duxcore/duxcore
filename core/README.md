@@ -14,7 +14,7 @@ The master process is the brain of Duxcore. It controls everything from the API 
 
 Node secrets are used to authenticate the nodes with the master process. These must be generated using the node creation tool. To use this tool, you can simply run the command below and you will be given a node secret that you can provide to your node process.
 
-> **NOTE**: Before you run this command, you must have your development database running and placed in the `.env` file. or else this tool will not work.
+> **NOTE**: Before you run this command, you must have your development database running and placed in the `.env` file, or else this tool will not work.
 
 ```bash
 $ yarn tool:createNode {NODE_NAME}
