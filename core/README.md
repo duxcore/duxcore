@@ -38,7 +38,7 @@ If you are looking to get involved with Duxcore's Core application, continue rea
 
 ### Installing and settting up dependencies
 
-> If you are not alredy in the core directory, start by running this command
+> If you are not already in the core directory, start by running this command
 >
 > ```bash
 > cd core
