@@ -34,7 +34,7 @@ Once you have these three things, you can run your node process and it should si
 
 ## Setting up your development enviornment
 
-If you are looking to get involved on working with Duxcore's Core application, continue reading pas this point and we will go over how you can get the core up and running on your local machine.
+If you are looking to get involved with Duxcore's Core application, continue reading past this point and we will go over how you can get the core up and running on your local machine.
 
 ### Installing and settting up dependencies
 
