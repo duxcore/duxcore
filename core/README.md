@@ -8,7 +8,7 @@ This application utilizes [Node.JS clusters](https://nodejs.org/api/cluster.html
 
 ### Master Process
 
-The master process is the brain of Duxcore, it controls everything from the api nodes, to the daemons, to the task executors. This master process hosts a Socket.IO server which the nodes connect to, but in order for this to work the nodes must be granted a secret. This secret will be used to ensure that the node is authorized to connect into the duxcore network.
+The master process is the brain of Duxcore. It controls everything from the API nodes, to the daemons, to the task executors. This master process hosts a Socket.IO server, which the nodes connect to. In order for this to work, the nodes must be granted a secret. This secret will be used to ensure that the node is authorized to connect to the Duxcore network.
 
 ### Node Secrets
 
