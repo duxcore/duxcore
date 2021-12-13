@@ -1,7 +1,24 @@
-import Link from "next/link";
-import React from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "../modules/auth/useAuth";
-import { Header } from "./header/Header";
+import { Header } from "./layout/Header";
+import { Sidebar } from "./layout/Sidebar";
+import styles from "../styles/layout.module.css";
+import { useRouter } from "next/router";
+import Head from "next/head";
+
+const LayoutContext = createContext<{
+  searchResults: Array<{ name: string; url: string }> | undefined;
+  setSearchResults: (
+    results?: Array<{ name: string; url: string }>
+  ) => undefined | void;
+}>({
+  searchResults: undefined,
+  setSearchResults: () => undefined,
+});
+
+export const useLayout = () => {
+  return useContext(LayoutContext);
+};
 
 interface LayoutProps {
   title?: string;
@@ -9,19 +26,29 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   const { user, logOut, revokeAllRefreshTokens } = useAuth();
+  const [searchResults, setSearchResults] =
+    useState<Array<{ name: string; url: string }>>();
 
   return (
     <>
-      <Link href={"#main"}>
-        <a className="fixed top-0 opacity-0 z-10 pointer-events-none focus:pointer-events-auto focus:cursor-pointer text-white focus:opacity-100">
-          Skip to content
-        </a>
-      </Link>
-      <title>Duxcore {title ? `| ${title}` : ""}</title>
-      <Header/>
-      <main id="main" className="w-full p-1 bg-gray-900 px-5 md:px-30">
-        {children}
-      </main>
+      <LayoutContext.Provider value={{ searchResults, setSearchResults }}>
+        <main
+          id="maincontent"
+          className={`w-full p-0 bg-gray-900 grid h-screen ${styles.layout}`}
+        >
+          <Head>
+            <title>{`Duxcore ${title ? `| ${title}` : ""} `}</title>
+          </Head>
+          <Header/>
+          <Sidebar/>
+          <article
+            style={{ gridArea: "content" }}
+            className="p-4 overflow-auto"
+          >
+            {children}
+          </article>
+        </main>
+      </LayoutContext.Provider>
     </>
   );
 };

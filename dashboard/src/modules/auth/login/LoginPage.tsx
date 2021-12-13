@@ -37,4 +37,6 @@ export const LoginPage: PageComponent<LoginPageProps> = () => {
   return <LoginForm onLogin={onLogin} />;
 };
 
+LoginPage.displayName = "Login";
+
 LoginPage.requiresAuth = false;

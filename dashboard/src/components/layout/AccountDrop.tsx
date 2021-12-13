@@ -3,13 +3,7 @@ import Image from "next/image";
 import { useAuth } from "../../modules/auth/useAuth";
 import { Button } from "../forms/Button";
 import { Popover } from "@headlessui/react";
-import {
-  IoChevronDown,
-  IoAlbums,
-  IoPieChart,
-  IoSettings,
-  IoLogOut,
-} from "react-icons/io5";
+import { IoChevronDown, IoLogOut, IoPerson } from "react-icons/io5";
 import { DropdownButton } from "../forms/DropdownButton";
 interface AccountDropProps {}
 
@@ -25,7 +19,8 @@ export const AccountDrop: React.FC<AccountDropProps> = ({ children }) => {
         clickHook={[clicked, setClicked, true]}
       >
         <Image
-          src="https://plchldr.co/i/256x256?bg=fd4d4d"
+          // src="https://plchldr.co/i/256x256?bg=fd4d4d"
+          src="/profilePlaceholder.png"
           alt={`${user?.firstName}'s Profile Picture`}
           objectFit="cover"
           className="rounded-full"
@@ -39,14 +34,22 @@ export const AccountDrop: React.FC<AccountDropProps> = ({ children }) => {
         />
       </Button>
       <div
-        className={`bg-gray-800 rounded absolute top-8 w-15 md:w-full right-0 shadow-lg transition-all overflow-hidden ${
-          clicked ? "opacity-100" : "opacity-0"
+        className={`bg-gray-800 rounded absolute top-8 min-w-15 right-0 shadow-lg transition-all overflow-hidden ${
+          clicked ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
-        <DropdownButton href="/@me" icon={<IoAlbums className="inline" />}>
+        <DropdownButton
+          disabled={!clicked}
+          href="/profile"
+          icon={<IoPerson className="inline" />}
+        >
           Overview
         </DropdownButton>
-        <DropdownButton onClick={logOut} icon={<IoLogOut className="inline" />}>
+        <DropdownButton
+          disabled={!clicked}
+          onClick={logOut}
+          icon={<IoLogOut className="inline" />}
+        >
           Logout
         </DropdownButton>
       </div>
