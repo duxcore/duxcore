@@ -70,7 +70,7 @@ The .env file has many values that are critical to the functionality of the core
 cp .env.example .env
 ```
 
-Now that you've coppied the example env file, you can now fill in the following values below:
+Now that you've copied the example env file, you can now fill in the following values below:
 
 - **`DASH_URL`**: `http://localhost:3000` - You can change this if you have already changed it, but by default, this is what is set to by default.
 - **`MASTER_SERVER`**: `ws://localhost:49758` - You can change this if you need to, but it is advised that you do not change it.
