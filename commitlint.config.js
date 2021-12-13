@@ -9,7 +9,8 @@ module.exports = {
         "global",
         "website",
         "wrapper",
-        "dashboard"
+        "dashboard",
+        "daemon"
       ],
     ],
   },

@@ -1,17 +1,5 @@
 version: "3"
 services:
-  postgres:
-    image: postgres:13-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: duxcore
-      POSTGRES_PASSWORD: 123web123
-      POSTGRES_DB: duxcore
-    volumes:
-      - ./.docker/postgres:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-
   nginx:
     image: nginx:latest
     restart: always
@@ -28,19 +16,5 @@ services:
     build: ./
     restart: always
     environment:
-      DATABASE_URL: postgres://duxcore:123web123@postgres/duxcore
-    ports:
-      - 40765:40765
-    links:
-      - postgres
-    depends_on:
-      postgres:
-        condition: service_started
-
-  adminer:
-    image: adminer
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-    depends_on:
-      - postgres
+      - MASTER_SERVER=ws://host.docker.internal:49758
+      - DATABASE_URL=postgres://duxcore:123web123@host.docker.internal/duxcore
