@@ -104,4 +104,4 @@ If you have your node secret in place, then you need to run the command below an
 yarn dev
 ```
 
-Now that you have your development enviornment setup, you can begin programming and contributing to the Duxcore Core application!
+Now that you have your development environment setup, you can begin programming and contributing to the Duxcore Core application!
