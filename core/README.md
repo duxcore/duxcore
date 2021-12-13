@@ -96,7 +96,7 @@ yarn master:dev
 
 ### Setting up a local Node Process
 
-As mentioned earlier, the node processes are the processes that manage everything so they are very important. If you've already created your node, please place the **`NODE_ID`** and **`NODE_SECRET`** into the `.env` file, if you have not generated these things, please run the command above under the section on how to setup a node.
+As mentioned earlier, the node processes are the processes that manage everything, so they are very important. If you've already created your node, please place the **`NODE_ID`** and **`NODE_SECRET`** into the `.env` file, if you have not generated these things, please run the command above under the section on how to setup a node.
 
 If you have your node Secret in place, then you need to run the command below and it will start a node process.
 
