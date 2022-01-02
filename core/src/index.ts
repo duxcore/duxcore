@@ -14,7 +14,7 @@ enum WorkerPurpose {
 }
 
 if (cluster.isPrimary) {
-  log.status(`Primary Process`, process.pid.toString(), "is now running!");
+  log.status(`Primary Process ${process.pid} is now starting!`);
 
   let socket = io(process.env.MASTER_SERVER ?? "", {
     auth: {
