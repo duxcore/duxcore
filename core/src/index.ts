@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import cluster from "cluster";
 import process from "process";
 import io from "socket.io-client";
+import { log } from "./lib/logger";
 
 config();
 
@@ -13,7 +14,7 @@ enum WorkerPurpose {
 }
 
 if (cluster.isPrimary) {
-  console.log(`Primary Process`, process.pid, "is now running!");
+  log.status(`Primary Process`, process.pid.toString(), "is now running!");
 
   let socket = io(process.env.MASTER_SERVER ?? "", {
     auth: {
@@ -26,15 +27,15 @@ if (cluster.isPrimary) {
 
   // Connection error with master process
   socket.on("connect_error", (err) => {
-    console.log(err instanceof Error);
-    console.log(err.message);
+    log.error(err instanceof Error ? "Error" : "Not Error");
+    log.error(err.message);
 
     setTimeout(() => socket.connect(), 500);
   });
 
   // Get the Node Instance Data
   socket.on("node_instance", (data) => {
-    console.log(data);
+    log.debug(data);
   });
 
   // Start An API Worker
@@ -61,11 +62,11 @@ if (cluster.isPrimary) {
     const port = process.env.port;
 
     api.listen(port, () => {
-      console.log(
+      log.status(
         `Worker`,
-        process.pid,
+        process.pid.toString(),
         `has started an api server on port`,
-        port
+        port?.toString() || ''
       );
       if (!process.send) return;
     });
@@ -80,13 +81,13 @@ async function main(port: any) {
   const api = manifestation.createServer(apiManifest, {});
 
   api.listen(port, () => {
-    console.log(`API Server started on port ${port}.`);
+    log.status(`API Server started on port ${port}.`);
   })
 }
 
 if (cluster.isMaster) {
 
-  console.log(`Primary ${process.pid} is running`);
+  log.status(`Primary ${process.pid} is running`);
 
   // Fork workers.
   for (let i = 0; i < ports.length; i++) {
@@ -100,12 +101,12 @@ if (cluster.isMaster) {
   }
 
   cluster.on('exit', (worker, code, signal) => {
-    console.log(`worker ${worker.process.pid} died`);
+    log.status(`worker ${worker.process.pid} died`);
     //cluster.fork(worker.process['env']);
   });
 } else {
   main(process.env.port)
-  console.log(`Worker ${process.pid} started`);
+  log.status(`Worker ${process.pid} started`);
 }
 
 //main();
