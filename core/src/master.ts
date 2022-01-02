@@ -39,9 +39,9 @@ export default function main() {
 
             log.worker(
               `[ ${chalk.green(this.name)} ] API Worker`,
-              process.pid,
+              process.pid.toString(),
               `has started with port`,
-              process.port,
+              process.port.toString(),
               `on node`,
               chalk.redBright(this.nodeId)
             );
@@ -109,7 +109,7 @@ export default function main() {
   });
 
   server.listen(49758, () => {
-    log.status("Master Node Process API started on port", 49758);
+    log.status("Master Node Process API started on port", "49758");
   });
 }
 
