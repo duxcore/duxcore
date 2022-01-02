@@ -27,7 +27,6 @@ if (cluster.isPrimary) {
 
   // Connection error with master process
   socket.on("connect_error", (err) => {
-    log.error(err instanceof Error ? "Error" : "Not Error");
     log.error(err.message);
 
     setTimeout(() => socket.connect(), 500);
