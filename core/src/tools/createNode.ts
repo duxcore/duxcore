@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import { prismaInstance } from "../../prisma/instance";
 import Password from "../classes/Password";
+import { log } from "../lib/logger";
 
 function randStr(length: number): string {
   let result: string[] = [];
@@ -40,7 +41,7 @@ export default async function main() {
 
   let divider: string = chalk.gray("=-=-=-=-=-=-=-=-=-=-=-=-=");
 
-  console.log(
+  log.status(
     divider,
     "\n",
     "API Node generated successfully!",
