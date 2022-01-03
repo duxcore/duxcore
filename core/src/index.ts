@@ -4,7 +4,6 @@ import { config } from "dotenv";
 import cluster from "cluster";
 import process from "process";
 import io from "socket.io-client";
-import { log } from "./lib/logger";
 
 config();
 
@@ -14,7 +13,7 @@ enum WorkerPurpose {
 }
 
 if (cluster.isPrimary) {
-  log.status(`Primary Process ${process.pid} is now starting!`);
+  console.log(`Primary Process`, process.pid, "is now running!");
 
   let socket = io(process.env.MASTER_SERVER ?? "", {
     auth: {
@@ -27,14 +26,15 @@ if (cluster.isPrimary) {
 
   // Connection error with master process
   socket.on("connect_error", (err) => {
-    log.error(err.message);
+    console.log(err instanceof Error);
+    console.log(err.message);
 
     setTimeout(() => socket.connect(), 500);
   });
 
   // Get the Node Instance Data
   socket.on("node_instance", (data) => {
-    log.debug(data);
+    console.log(data);
   });
 
   // Start An API Worker
@@ -61,11 +61,11 @@ if (cluster.isPrimary) {
     const port = process.env.port;
 
     api.listen(port, () => {
-      log.status(
+      console.log(
         `Worker`,
-        process.pid.toString(),
+        process.pid,
         `has started an api server on port`,
-        port?.toString() || ''
+        port
       );
       if (!process.send) return;
     });
@@ -80,13 +80,13 @@ async function main(port: any) {
   const api = manifestation.createServer(apiManifest, {});
 
   api.listen(port, () => {
-    log.status(`API Server started on port ${port}.`);
+    console.log(`API Server started on port ${port}.`);
   })
 }
 
 if (cluster.isMaster) {
 
-  log.status(`Primary ${process.pid} is running`);
+  console.log(`Primary ${process.pid} is running`);
 
   // Fork workers.
   for (let i = 0; i < ports.length; i++) {
@@ -100,12 +100,12 @@ if (cluster.isMaster) {
   }
 
   cluster.on('exit', (worker, code, signal) => {
-    log.status(`worker ${worker.process.pid} died`);
+    console.log(`worker ${worker.process.pid} died`);
     //cluster.fork(worker.process['env']);
   });
 } else {
   main(process.env.port)
-  log.status(`Worker ${process.pid} started`);
+  console.log(`Worker ${process.pid} started`);
 }
 
 //main();
