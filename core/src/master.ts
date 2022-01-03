@@ -1,4 +1,5 @@
 import Collection from "@discordjs/collection";
+import { prisma } from "@prisma/client";
 import chalk from "chalk";
 import { randomUUID } from "crypto";
 import { config } from "dotenv";
@@ -7,7 +8,6 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import { prismaInstance } from "../prisma/instance";
 import Password from "./classes/Password";
-import { log } from "./lib/logger";
 
 export default function main() {
   config();
@@ -15,6 +15,9 @@ export default function main() {
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
+
+  const logMessage = (scope: string, ...args) =>
+    console.log(`[ ${chalk.green(scope)} ]`, ...args);
 
   const createNodeInstace = (nodeId: string, name: string, socket: Socket) => {
     return {
@@ -37,11 +40,11 @@ export default function main() {
             this.processes.set(id, process);
             res(process);
 
-            log.worker(
+            console.log(
               `[ ${chalk.green(this.name)} ] API Worker`,
-              process.pid.toString(),
+              process.pid,
               `has started with port`,
-              process.port.toString(),
+              process.port,
               `on node`,
               chalk.redBright(this.nodeId)
             );
@@ -79,7 +82,7 @@ export default function main() {
     const isAuthenticated = Password.validate(authSecret, node.secret);
     if (!isAuthenticated) return next(errors.authFailure);
 
-    log.worker(
+    logMessage(
       node.name,
       chalk.redBright(`(${node.id})`),
       "Successfully Authenticated!"
@@ -105,11 +108,11 @@ export default function main() {
     socket.emit("node_instance", node);
     socket.on("worker_exit", (pid) => {});
 
-    log.worker("Node Instance Connected!");
+    console.log("Node Instance Connected!");
   });
 
   server.listen(49758, () => {
-    log.status("Master Node Process API started on port", "49758");
+    console.log("Master Node Process API started on port", 49758);
   });
 }
 

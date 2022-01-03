@@ -528,13 +528,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lvksh/logger@npm:^1.5.2":
-  version: 1.5.2
-  resolution: "@lvksh/logger@npm:1.5.2"
-  checksum: c4aab1caa5445b477f12b06f2299c75b1ea949cf8032c5fb66b10c6e616a2a6c19f89c3dd364aa8f11b14835c7f39891c892b1b7c59ce0207062cfdce8101259
-  languageName: node
-  linkType: hard
-
 "@napi-rs/triples@npm:1.0.3":
   version: 1.0.3
   resolution: "@napi-rs/triples@npm:1.0.3"
@@ -2770,7 +2763,6 @@ __metadata:
   dependencies:
     "@discordjs/collection": ^0.3.2
     "@duxcore/manifestation": ^1.2.3
-    "@lvksh/logger": ^1.5.2
     "@prisma/client": ^3.3.0
     "@types/body-parser": ^1.19.1
     "@types/cors": ^2.8.12
