@@ -1,0 +1,7 @@
+{
+  "image": "node:16",
+  "Cmd": ["bash", "-c", "apt update -y; git clone https://github.com/duxcore/duxcore duxcore; cd duxcore; git switch overhaul; yarn install; cd website; yarn build; yarn start"],
+  "exposedPorts": {
+      "3000": "7419"
+  }
+}

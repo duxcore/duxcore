@@ -3,12 +3,12 @@
   "private": true,
   "scripts": {
     "build": "prisma generate && tsc",
-    "migrate": "prisma db push --accept-data-loss",
     "dev": "docker-compose up --build",
     "start": "node lib/src/index",
     "tool:createNode": "ts-node src/tools/createNode.ts",
     "tool:generateKeys": "ts-node scripts/generateKeys.ts",
     "master:dev": "nodemon --exec ts-node src/master.ts",
+    "db:migrate": "prisma db push --accept-data-loss",
     "db:dev": "docker-compose -f ../.docker/core/pgsql-docker-compose.yml up --build"
   },
   "prisma": {
