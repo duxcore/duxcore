@@ -18,5 +18,6 @@ jobs:
           api-bearer: ${{ secrets.API_BEARER }}
           api-secret: ${{ secrets.API_SECRET }}
           config: website/.deployment.json
+          branch: overhaul
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
