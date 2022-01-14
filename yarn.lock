@@ -1864,7 +1864,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.0.2":
+"base64-js@npm:^1.0.2, base64-js@npm:^1.3.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: c1b41a26ddc6620eb7f1ee6c29c812f5942a4e328e74263f995872cfb8ca3aee08542beb25cd10fd7ef16e4f16603e25c35a26e776c01fd55277e5035e829e0e
@@ -3595,7 +3595,16 @@ __metadata:
   checksum: 282d5696a4916383b0f71a87375505e33ef0be0c3a30939fb559a878b691873d48acc61ee6dcbfacf3e68404ab4462e081bcfd0aa3c9a3f1fabb900306aad77d
   languageName: node
   linkType: hard
-  
+
+"end-of-stream@npm:^1.1.0, end-of-stream@npm:^1.4.1":
+  version: 1.4.4
+  resolution: "end-of-stream@npm:1.4.4"
+  dependencies:
+    once: ^1.4.0
+  checksum: 7da60e458bdb5e16c006a45e85ef3bc1e3791db5ba275b0913258ccddc8899acb9252c4ddbcce87bd1b46e2a3f97315aafb9f0c0330e8aac44defb504a9d3ccd
+  languageName: node
+  linkType: hard
+
 "engine.io-client@npm:~6.1.1":
   version: 6.1.1
   resolution: "engine.io-client@npm:6.1.1"
@@ -4473,6 +4482,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"from@npm:~0":
+  version: 0.1.7
+  resolution: "from@npm:0.1.7"
+  checksum: 23cc6301f6475806242a68cc2d70e40d363ffe0590c4c053c44638a9fb8c7c77a521f20d5c880b10a5e523a7ba1ca3e0827ccef32bddf0f3ad7b6bda771b1194
+  languageName: node
+  linkType: hard
 
 "fs-constants@npm:^1.0.0":
   version: 1.0.0
@@ -6348,7 +6363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:1.2.5, minimist@npm:^1.1.1, minimist@npm:^1.2.0, minimist@npm:^1.2.5":
+"minimist@npm:1.2.5, minimist@npm:^1.1.1, minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.5":
   version: 1.2.5
   resolution: "minimist@npm:1.2.5"
   checksum: b77b8590147a4e217ff34266236bc39de23b52e6e33054076991ff674c7397a1380a7bde11111916f16f003a94aaa7e4f3d92595a32189644ff607fabc65a5b6
