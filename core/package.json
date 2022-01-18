@@ -49,6 +49,7 @@
     "@types/socket.io": "^3.0.2",
     "@types/socket.io-client": "^3.0.0",
     "@types/twig": "^1.12.6",
+    "nodemon": "^2.0.15",
     "prisma": "^3.3.0"
   }
 }

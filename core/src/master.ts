@@ -8,6 +8,7 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import { prismaInstance } from "../prisma/instance";
 import Password from "./classes/Password";
+import { NodeStatusObject } from "./types/node";
 
 export default function main() {
   config();
@@ -15,13 +16,19 @@ export default function main() {
   const app = express();
   const server = http.createServer(app);
   const io = new Server(server);
+  let ports = [7841, 2105, 3609, 8856, 1104];
 
   const logMessage = (scope: string, ...args) =>
     console.log(`[ ${chalk.green(scope)} ]`, ...args);
 
-  const createNodeInstace = (nodeId: string, name: string, socket: Socket) => {
+  const activeNodeInstances = new Collection<
+    string,
+    ReturnType<typeof createNodeInstace>
+  >();
+
+  const createNodeInstace = (id: string, name: string, socket: Socket) => {
     return {
-      nodeId,
+      id,
       name,
       opened: new Date(),
       processes: new Collection<string, NodeProcessData>(),
@@ -34,7 +41,7 @@ export default function main() {
               pid,
               port,
               started: new Date(),
-              node: this.nodeId,
+              node: this.id,
             };
 
             this.processes.set(id, process);
@@ -46,11 +53,18 @@ export default function main() {
               `has started with port`,
               process.port,
               `on node`,
-              chalk.redBright(this.nodeId)
+              chalk.redBright(this.id)
             );
 
             socket.emit("node_instance", this);
           });
+        });
+      },
+      fetchWorkers(): Promise<NodeStatusObject> {
+        return new Promise((res, rej) => {
+          socket.emit("fetchWorkers", (status: NodeStatusObject) =>
+            res(status)
+          );
         });
       },
     };
@@ -91,7 +105,6 @@ export default function main() {
   });
 
   io.on("connection", async (socket) => {
-    let ports = [7841, 2105, 3609, 8856, 1104];
     let nodeId = socket.handshake.auth["id"];
     let rawNodeData = await prismaInstance.node.findFirst({
       where: { id: nodeId },
@@ -100,6 +113,7 @@ export default function main() {
     if (!rawNodeData) return socket.disconnect();
 
     const node = createNodeInstace(nodeId, rawNodeData.name, socket);
+    activeNodeInstances.set(node.id, node);
 
     ports.map((port) => {
       node.startApiWorker(port);
@@ -109,6 +123,8 @@ export default function main() {
     socket.on("worker_exit", (pid) => {});
 
     console.log("Node Instance Connected!");
+
+    setTimeout(async () => console.log(await node.fetchWorkers()), 3000);
   });
 
   server.listen(49758, () => {
