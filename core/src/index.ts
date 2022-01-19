@@ -13,6 +13,68 @@ enum WorkerPurpose {
   TASK_EXECUTOR = "task_executor",
 }
 
+const activeInstances = new Collection<
+  string,
+  ReturnType<typeof createInstanceObject>
+>();
+
+const createInstanceObject = (
+  worker: Worker,
+  data: {
+    id: string;
+    port: string;
+    autoRevive?: boolean;
+  }
+) => {
+  let object = {
+    id: data.id,
+    port: data.port,
+    isOnline: true,
+    worker,
+    setOnline(online: boolean): boolean {
+      if (this.isOnline == online) return this.isOnline;
+      this.isOnline = online;
+
+      return this.isOnline;
+    },
+    onExit(): Promise<{
+      code: number;
+      signal: string;
+      worker: Worker;
+    }> {
+      return new Promise((res, rej) => {
+        worker.on("exit", (code, signal) => {
+          return res({
+            signal,
+            code,
+            worker,
+          });
+        });
+      });
+    },
+    toJson() {
+      return {
+        id: this.id,
+        port: parseInt(this.port),
+        isOnline: this.isOnline,
+        worker: {
+          pid: worker.process.pid,
+        },
+      };
+    },
+  };
+
+  worker.on("exit", (code, signal) => {
+    object.setOnline(false);
+  });
+
+  worker.on("online", () => {
+    object.setOnline(true);
+  });
+
+  return object;
+};
+
 if (cluster.isPrimary) {
   console.log(`Primary Process`, process.pid, "is now running!");
 
@@ -25,77 +87,21 @@ if (cluster.isPrimary) {
     reconnection: true,
   });
 
-  const activeInstances = new Collection<
-    string,
-    ReturnType<typeof createInstanceObject>
-  >();
-
-  const createInstanceObject = (
-    worker: Worker,
-    data: {
-      id: string;
-      port: string;
-      autoRevive?: boolean;
-    }
-  ) => {
-    let object = {
-      id: data.id,
-      port: data.port,
-      isOnline: true,
-      worker,
-      setOnline(online: boolean): boolean {
-        if (this.isOnline == online) return this.isOnline;
-        this.isOnline = online;
-
-        return this.isOnline;
-      },
-      onExit(): Promise<{
-        code: number;
-        signal: string;
-        worker: Worker;
-      }> {
-        return new Promise((res, rej) => {
-          worker.on("exit", (code, signal) => {
-            return res({
-              signal,
-              code,
-              worker,
-            });
-          });
-        });
-      },
-      toJson() {
-        return {
-          id: this.id,
-          port: this.port,
-          isOnline: this.isOnline,
-          worker: {
-            pid: worker.process.pid,
-          },
-        };
-      },
-    };
-
-    worker.on("exit", (code, signal) => {
-      object.setOnline(false);
-    });
-
-    worker.on("online", () => {
-      object.setOnline(true);
-    });
-
-    return object;
-  };
-
-  const startApiWorker = (id, port) => {
-    const fork = cluster.fork({
-      id,
-      port,
-      purpose: WorkerPurpose.API_SERVER,
-    });
-    fork.on("online", () => {
-      const instance = createInstanceObject(fork, { id, port });
-      activeInstances.set(instance.id, instance);
+  const startApiWorker = (
+    id,
+    port
+  ): Promise<ReturnType<typeof createInstanceObject>> => {
+    return new Promise((res) => {
+      const fork = cluster.fork({
+        id,
+        port,
+        purpose: WorkerPurpose.API_SERVER,
+      });
+      fork.on("online", () => {
+        const instance = createInstanceObject(fork, { id, port });
+        activeInstances.set(instance.id, instance);
+        res(instance);
+      });
     });
   };
 
@@ -117,7 +123,9 @@ if (cluster.isPrimary) {
 
   // Start An API Worker
   socket.on("startApiWorker", async ({ id, port }, cb) => {
-    startApiWorker(id, port);
+    startApiWorker(id, port).then((instance) => {
+      cb(instance.toJson());
+    });
   });
 } else {
   if (WorkerPurpose.API_SERVER == process.env.purpose) {
@@ -136,3 +144,7 @@ if (cluster.isPrimary) {
     });
   }
 }
+
+export type NodeStatusObject = ReturnType<
+  ReturnType<typeof createInstanceObject>["toJson"]
+>;

@@ -6,9 +6,9 @@ import { config } from "dotenv";
 import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
+import { NodeStatusObject } from ".";
 import { prismaInstance } from "../prisma/instance";
 import Password from "./classes/Password";
-import { NodeStatusObject } from "./types/node";
 
 export default function main() {
   config();
@@ -31,38 +31,34 @@ export default function main() {
       id,
       name,
       opened: new Date(),
-      processes: new Collection<string, NodeProcessData>(),
+      instances: new Collection<string, NodeStatusObject>(),
       startApiWorker(port: number) {
-        return new Promise<NodeProcessData>((res, _rej) => {
+        return new Promise<NodeStatusObject>((res, _rej) => {
           let id = randomUUID();
-          socket.emit("startApiWorker", { id, port }, (pid: string) => {
-            let process: NodeProcessData = {
-              id,
-              pid,
-              port,
-              started: new Date(),
-              node: this.id,
-            };
+          socket.emit(
+            "startApiWorker",
+            { id, port },
+            (instance: NodeStatusObject) => {
+              this.instances.set(id, instance);
+              res(instance);
 
-            this.processes.set(id, process);
-            res(process);
+              console.log(
+                `[ ${chalk.green(this.name)} ] API Worker`,
+                instance.worker.pid,
+                `has started with port`,
+                instance.port,
+                `on node`,
+                chalk.redBright(this.id)
+              );
 
-            console.log(
-              `[ ${chalk.green(this.name)} ] API Worker`,
-              process.pid,
-              `has started with port`,
-              process.port,
-              `on node`,
-              chalk.redBright(this.id)
-            );
-
-            socket.emit("node_instance", this);
-          });
+              socket.emit("node_instance", this);
+            }
+          );
         });
       },
-      fetchWorkers(): Promise<NodeStatusObject> {
+      fetchWorkers(): Promise<NodeStatusObject[]> {
         return new Promise((res, rej) => {
-          socket.emit("fetchWorkers", (status: NodeStatusObject) =>
+          socket.emit("fetchWorkers", (status: NodeStatusObject[]) =>
             res(status)
           );
         });
@@ -115,16 +111,16 @@ export default function main() {
     const node = createNodeInstace(nodeId, rawNodeData.name, socket);
     activeNodeInstances.set(node.id, node);
 
-    ports.map((port) => {
-      node.startApiWorker(port);
+    const activePorts = (await node.fetchWorkers()).map((v) => v.port);
+
+    ports.map(async (port) => {
+      if (!activePorts.includes(port)) node.startApiWorker(port);
     });
 
     socket.emit("node_instance", node);
     socket.on("worker_exit", (pid) => {});
 
     console.log("Node Instance Connected!");
-
-    setTimeout(async () => console.log(await node.fetchWorkers()), 3000);
   });
 
   server.listen(49758, () => {
@@ -133,11 +129,3 @@ export default function main() {
 }
 
 main();
-
-interface NodeProcessData {
-  id: string;
-  pid: string;
-  port: number;
-  started: Date;
-  node: string;
-}
