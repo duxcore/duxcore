@@ -1911,7 +1911,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"blakets@npm:^0.1.4":
+"blakets@npm:0.1.4":
   version: 0.1.4
   resolution: "blakets@npm:0.1.4"
   dependencies:
@@ -2886,7 +2886,7 @@ __metadata:
     "@types/socket.io": ^3.0.2
     "@types/socket.io-client": ^3.0.0
     "@types/twig": ^1.12.6
-    blakets: ^0.1.4
+    blakets: 0.1.4
     body-parser: ^1.19.0
     chalk: 4.1.2
     cors: ^2.8.5
@@ -3490,9 +3490,9 @@ __metadata:
   linkType: hard
 
 "doge-json@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "doge-json@npm:1.2.3"
-  checksum: bdc52af839f4be77dbacc886fbd1fe792aeda2742de5be8b607fdfe433b895cd241d3ac985df57c573c9cc2eacb55b2e26f734e68cbca487ffa40ab45a52fb54
+  version: 1.2.8
+  resolution: "doge-json@npm:1.2.8"
+  checksum: e9c8e0dd49732d5cf3aa23e84260eea124a7270f16dc5e8348db9b6314fc954400efdc51924d6e2292b3dceee661b60611c37eaa04048613586d3228f85b95f5
   languageName: node
   linkType: hard
 

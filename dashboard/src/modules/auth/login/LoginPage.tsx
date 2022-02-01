@@ -1,4 +1,4 @@
-import type { TokenPair } from "@duxcore/wrapper";
+import type { TokenPair } from "wrapper";
 import { Form, Formik, FormikValues } from "formik";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";

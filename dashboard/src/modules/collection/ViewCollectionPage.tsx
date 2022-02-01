@@ -1,4 +1,4 @@
-import { Collection } from "@duxcore/wrapper";
+import { Collection } from "wrapper";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";

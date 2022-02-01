@@ -1,4 +1,4 @@
-import type { TokenPair } from "@duxcore/wrapper";
+import type { TokenPair } from "wrapper";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { IoLockOpenOutline, IoMailOutline } from "react-icons/io5";

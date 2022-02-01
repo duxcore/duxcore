@@ -1,4 +1,4 @@
-import { User } from "@duxcore/wrapper";
+import { User } from "wrapper";
 import { useRouter } from "next/dist/client/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { Preloader } from "../../components/PreLoader";

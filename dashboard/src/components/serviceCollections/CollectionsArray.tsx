@@ -1,4 +1,4 @@
-import { Collection } from "@duxcore/wrapper";
+import { Collection } from "wrapper";
 import React, { useEffect, useState } from "react";
 import { useWrapper } from "../../context/WrapperProvider";
 import { CollectionBox } from "./CollecitonsBox";

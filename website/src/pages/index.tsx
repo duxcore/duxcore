@@ -3,8 +3,6 @@ import wrapper from "wrapper";
 import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
 
 export default function Home() {
-  const wrap = wrapper("test");
-
   return (
     <>
       <Head>
@@ -12,9 +10,9 @@ export default function Home() {
         <meta name="description" content="Duxcore" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="w-screen h-screen bg-black flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-black">
         <DuxcoreIcon />
-        <div className="text-white opacity-30 my-5">
+        <div className="my-5 text-white opacity-30">
           A new hosting platform?
         </div>
         <div className="flex space-x-4">
@@ -22,14 +20,14 @@ export default function Home() {
             <SolidGitHub
               width="20"
               height="20"
-              className="text-white opacity-30 hover:opacity-100 transition"
+              className="text-white transition opacity-30 hover:opacity-100"
             />
           </a>
           <a href="/discord">
             <SolidDiscord
               width="20"
               height="20"
-              className="text-white opacity-30 hover:opacity-100 transition"
+              className="text-white transition opacity-30 hover:opacity-100"
             />
           </a>
         </div>

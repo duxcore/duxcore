@@ -1,4 +1,4 @@
-import { createWrapper } from "@duxcore/wrapper";
+import { createWrapper } from "wrapper";
 import React, { useContext, useMemo } from "react";
 
 const wrapper = createWrapper({});

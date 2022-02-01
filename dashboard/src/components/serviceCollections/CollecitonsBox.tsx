@@ -1,4 +1,4 @@
-import { Collection } from "@duxcore/wrapper";
+import { Collection } from "wrapper";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -16,7 +16,7 @@ export const CollectionBox: React.FC<CollectionBoxProps> = ({
   return (
     <Link href={`/collection/${data.id}`} passHref={true}>
     <a
-      className="flex-none p-1 truncate transition border border-gray-700 rounded-5 hover:border-white text-left"
+      className="flex-none p-1 text-left truncate transition border border-gray-700 rounded-5 hover:border-white"
     >
       <h4>{data.name}</h4>
       <p
