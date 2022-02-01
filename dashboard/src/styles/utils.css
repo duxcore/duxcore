@@ -1,0 +1,21 @@
+/* ---------------------------------- Misc ---------------------------------- */
+
+.center-xy {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}
+
+.center-left {
+  @apply absolute top-2/4 left-0 transform -translate-y-1/2;
+}
+
+.center-right {
+  @apply absolute top-2/4 right-0 transform -translate-y-1/2;
+}
+
+.center-y {
+  @apply absolute top-2/4 transform -translate-y-1/2;
+}
+
+.center-x {
+  @apply absolute left-2/4 transform -translate-x-1/2;
+}

@@ -1,10 +1,10 @@
-api:
-  - api/**/*
-backend:
-  - backend/**/*
+core:
+  - core/**/*
 daemon:
   - daemon/**/*
 website:
   - website/**/*
+dashboard:
+  - dashboard/**/*
 wrapper:
   - wrapper/**/*

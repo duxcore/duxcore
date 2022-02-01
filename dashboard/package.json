@@ -1,0 +1,37 @@
+{
+  "name": "dashboard",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^0.3.8",
+    "@headlessui/react": "^1.4.1",
+    "axios": "^0.24.0",
+    "formik": "^2.2.9",
+    "next": "^12.0.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
+    "sharp": "^0.29.3",
+    "wrapper": "workspace:wrapper",
+    "yup": "^0.32.11",
+    "yup-password": "^0.2.2",
+    "zustand": "^3.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.6",
+    "@types/react": "17.0.33",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "autoprefixer": "latest",
+    "eslint": "7",
+    "eslint-config-next": "12.0.2",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "4.4.4"
+  }
+}

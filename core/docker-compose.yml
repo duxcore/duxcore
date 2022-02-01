@@ -1,0 +1,19 @@
+version: "3"
+services:
+  duxcore-core:
+    build: ./
+    restart: always
+    environment:
+      - MASTER_SERVER=ws://host.docker.internal:49758
+      - DATABASE_URL=postgres://duxcore:123web123@host.docker.internal/duxcore
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    depends_on:
+      duxcore-core:
+        condition: service_started

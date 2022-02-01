@@ -1,0 +1,36 @@
+name: Build Packages
+
+on:
+  pull_request:
+    types: [ready_for_review, assigned, opened, synchronize, reopened]
+
+jobs:
+  build-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: cd core
+      - run: yarn workspace core install
+      - run: yarn workspace core build
+  build-website:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: yarn workspace website install
+      - run: yarn workspace website build
+  build-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: yarn workspace dashboard install
+      - run: yarn workspace wrapper build
+      - run: yarn workspace dashboard build

@@ -1,0 +1,128 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  SUPER_ADMINISTRATOR
+  ADMINISTRATOR
+  MODERATOR
+  USER
+}
+
+model Node {
+  id      String   @id @default(uuid())
+  index   Int      @default(autoincrement())
+  created DateTime @default(now())
+  name    String
+  secret  String
+}
+
+model User {
+  id            String              @id @default(uuid())
+  index         Int                 @default(autoincrement())
+  firstName     String
+  lastName      String
+  email         String              @unique
+  password      String?
+  loginAttempts UserLoginAttempts[]
+  created       DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  role          UserRole            @default(USER)
+  meta_tags     UserMetaTags?
+  refreshTokens UserRefreshToken[]
+  meta          Json                @default("{}")
+
+  UserEmailResetTokens    UserEmailResetTokens[]
+  ServiceCollection       ServiceCollection[]
+  ServerMonitoringService ServerMonitoringService[]
+}
+
+model UserMetaTags {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String   @unique
+  updatedAt     DateTime @updatedAt
+  emailVerified Boolean  @default(false)
+  isStaff       Boolean  @default(false)
+}
+
+model UserLoginAttempts {
+  id           Int      @id @default(autoincrement())
+  date         DateTime @default(now())
+  ip           String
+  user         User     @relation(references: [id], fields: [userId])
+  userId       String
+  accepted     Boolean
+  denialReason String?
+}
+
+model UserRefreshToken {
+  id      Int      @id @default(autoincrement())
+  token   String   @default(uuid())
+  user    User     @relation(references: [id], fields: [userId])
+  created DateTime @default(now())
+  userId  String
+  revoked Boolean  @default(false)
+}
+
+model UserEmailResetTokens {
+  id      Int      @id @default(autoincrement())
+  token   String   @default(uuid())
+  email   String
+  user    User     @relation(references: [id], fields: [userId])
+  created DateTime @default(now())
+  userId  String
+}
+
+model ServiceCollection {
+  id        String   @id @default(uuid())
+  index     Int      @default(autoincrement())
+  name      String
+  creator   User     @relation(references: [id], fields: [creatorId])
+  creatorId String
+  created   DateTime @default(now())
+  upatedAt  DateTime @updatedAt
+
+  ServerMonitoringService ServerMonitoringService[]
+}
+
+model ServerMonitoringService {
+  id     String @id @default(uuid())
+  index  Int    @default(autoincrement())
+  secret String @default(uuid())
+
+  collection   ServiceCollection @relation(references: [id], fields: [collectionId])
+  collectionId String
+
+  name                  String
+  creator               User                 @relation(references: [id], fields: [creatorId])
+  creatorId             String
+  MonitoringDynamicData MonitorDynamicData[]
+  MonitorStaticData     MonitorStaticData?
+}
+
+model MonitorStaticData {
+  id        Int                     @id @default(autoincrement())
+  monitor   ServerMonitoringService @relation(references: [id], fields: [monitorId])
+  monitorId String                  @unique
+
+  ipAddress       String
+  operatingSystem String
+}
+
+model MonitorDynamicData {
+  id Int @id @default(autoincrement())
+
+  monitor   ServerMonitoringService @relation(references: [id], fields: [monitorId])
+  monitorId String
+
+  date      DateTime @default(now())
+  cpuUsage  Int
+  ramUsage  Int
+  diskUsage Int
+}

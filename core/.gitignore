@@ -1,0 +1,9 @@
+.docker
+jwt.key
+private.key
+
+# misc
+.DS_Store
+*.pem
+
+/lib/
