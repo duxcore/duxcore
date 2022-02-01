@@ -8,28 +8,28 @@ export const apiStats = manifestation.newRoute({
   method: "get",
   executor: async (req, res) => {
     const data = {
-      server: process.env.server,
+      node_id: process.env.id,
       users: {
-        totalCount: await users.count()
+        totalCount: await users.count(),
       },
       services: {
         totalCount: null,
         serverMonitors: {
-          totalCount: await monitoring.server.count()
+          totalCount: await monitoring.server.count(),
         },
         collections: {
-          totalCount: await serviceCollection.count()
-        }
-      }
-    }
+          totalCount: await serviceCollection.count(),
+        },
+      },
+    };
 
     const response = manifestation.newApiResponse({
       status: 200,
       message: "Successfuly fetched duxcore stats.",
       data,
-      successful: true
+      successful: true,
     });
 
     manifestation.sendApiResponse(res, response);
-  }
-})
+  },
+});

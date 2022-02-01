@@ -14,4 +14,4 @@ COPY --from=dependencies /usr/duxcore-core/prod_node_modules ./node_modules
 COPY . .
 
 RUN yarn build
-CMD yarn migrate && yarn start
+CMD yarn db:migrate && yarn start

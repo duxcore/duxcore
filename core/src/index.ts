@@ -1,9 +1,10 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiManifest } from "./api/manifest";
 import { config } from "dotenv";
-import cluster from "cluster";
+import cluster, { Worker } from "cluster";
 import process from "process";
 import io from "socket.io-client";
+import Collection from "@discordjs/collection";
 
 config();
 
@@ -11,6 +12,68 @@ enum WorkerPurpose {
   API_SERVER = "api_server",
   TASK_EXECUTOR = "task_executor",
 }
+
+const activeInstances = new Collection<
+  string,
+  ReturnType<typeof createInstanceObject>
+>();
+
+const createInstanceObject = (
+  worker: Worker,
+  data: {
+    id: string;
+    port: string;
+    autoRevive?: boolean;
+  }
+) => {
+  let object = {
+    id: data.id,
+    port: data.port,
+    isOnline: true,
+    worker,
+    setOnline(online: boolean): boolean {
+      if (this.isOnline == online) return this.isOnline;
+      this.isOnline = online;
+
+      return this.isOnline;
+    },
+    onExit(): Promise<{
+      code: number;
+      signal: string;
+      worker: Worker;
+    }> {
+      return new Promise((res, rej) => {
+        worker.on("exit", (code, signal) => {
+          return res({
+            signal,
+            code,
+            worker,
+          });
+        });
+      });
+    },
+    toJson() {
+      return {
+        id: this.id,
+        port: parseInt(this.port),
+        isOnline: this.isOnline,
+        worker: {
+          pid: worker.process.pid,
+        },
+      };
+    },
+  };
+
+  worker.on("exit", (code, signal) => {
+    object.setOnline(false);
+  });
+
+  worker.on("online", () => {
+    object.setOnline(true);
+  });
+
+  return object;
+};
 
 if (cluster.isPrimary) {
   console.log(`Primary Process`, process.pid, "is now running!");
@@ -24,6 +87,24 @@ if (cluster.isPrimary) {
     reconnection: true,
   });
 
+  const startApiWorker = (
+    id,
+    port
+  ): Promise<ReturnType<typeof createInstanceObject>> => {
+    return new Promise((res) => {
+      const fork = cluster.fork({
+        id,
+        port,
+        purpose: WorkerPurpose.API_SERVER,
+      });
+      fork.on("online", () => {
+        const instance = createInstanceObject(fork, { id, port });
+        activeInstances.set(instance.id, instance);
+        res(instance);
+      });
+    });
+  };
+
   // Connection error with master process
   socket.on("connect_error", (err) => {
     console.log(err instanceof Error);
@@ -33,25 +114,17 @@ if (cluster.isPrimary) {
   });
 
   // Get the Node Instance Data
-  socket.on("node_instance", (data) => {
-    console.log(data);
-  });
+  socket.on("node_instance", console.log);
+
+  // Master Request an index of the workers
+  socket.on("fetchWorkers", async (cb) =>
+    cb(await activeInstances.map((v) => v.toJson()))
+  );
 
   // Start An API Worker
   socket.on("startApiWorker", async ({ id, port }, cb) => {
-    const fork = cluster.fork({
-      id,
-      port,
-      purpose: WorkerPurpose.API_SERVER,
-    });
-    fork.on("online", () => {
-      cb(fork.process.pid);
-    });
-  });
-
-  cluster.on("fork", (worker) => {
-    worker.on("exit", (code, signal) => {
-      socket.emit("worker_exit", worker.process.pid, code, signal);
+    startApiWorker(id, port).then((instance) => {
+      cb(instance.toJson());
     });
   });
 } else {
@@ -72,41 +145,6 @@ if (cluster.isPrimary) {
   }
 }
 
-/*
-let ports = [7841, 2105, 3609, 8856, 1104]
-
-async function main(port: any) {
-  config();
-  const api = manifestation.createServer(apiManifest, {});
-
-  api.listen(port, () => {
-    console.log(`API Server started on port ${port}.`);
-  })
-}
-
-if (cluster.isMaster) {
-
-  console.log(`Primary ${process.pid} is running`);
-
-  // Fork workers.
-  for (let i = 0; i < ports.length; i++) {
-    let env = {
-      port: ports[i],
-      server: i
-    }
-
-    let worker = cluster.fork(env);
-    worker.process['env'] = env;
-  }
-
-  cluster.on('exit', (worker, code, signal) => {
-    console.log(`worker ${worker.process.pid} died`);
-    //cluster.fork(worker.process['env']);
-  });
-} else {
-  main(process.env.port)
-  console.log(`Worker ${process.pid} started`);
-}
-
-//main();
-*/
+export type NodeStatusObject = ReturnType<
+  ReturnType<typeof createInstanceObject>["toJson"]
+>;
