@@ -1,0 +1,33 @@
+name: Build Packages
+
+on: [pull_request]
+
+jobs:
+  build-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 17
+      - run: cd core
+      - run: yarn install
+      - run: yarn build
+  build-website:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 17
+      - run: yarn workspace website install
+      - run: yarn workspace website build
+  build-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 17
+      - run: yarn workspace dashboard install
+      - run: yarn workspace dashboard build
