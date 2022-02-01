@@ -381,19 +381,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@duxcore/wrapper@workspace:wrapper":
-  version: 0.0.0-use.local
-  resolution: "@duxcore/wrapper@workspace:wrapper"
-  dependencies:
-    axios: ^0.21.1
-    express: ^4.17.1
-    next: ^12.0.2
-    react: ^17.0.2
-    react-dom: ^17.0.2
-    typescript: 4.3.4
-  languageName: unknown
-  linkType: soft
-
 "@endemolshinegroup/cosmiconfig-typescript-loader@npm:^3.0.2":
   version: 3.0.2
   resolution: "@endemolshinegroup/cosmiconfig-typescript-loader@npm:3.0.2"
@@ -3201,7 +3188,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dashboard@workspace:dashboard"
   dependencies:
-    "@duxcore/wrapper": "workspace:wrapper"
     "@hcaptcha/react-hcaptcha": ^0.3.8
     "@headlessui/react": ^1.4.1
     "@types/node": 16.11.6
@@ -3221,6 +3207,7 @@ __metadata:
     sharp: ^0.29.3
     tailwindcss: latest
     typescript: 4.4.4
+    wrapper: "workspace:wrapper"
     yup: ^0.32.11
     yup-password: ^0.2.2
     zustand: ^3.6.2
@@ -10844,12 +10831,18 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"wrapper@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "wrapper@npm:0.1.0"
-  checksum: 94a9ed09d6446e477171ba6861778a2f89b931d1cc211c75be8223f736ac9b1e98d66463935b09d2b95a5a6609bf6f7d21de754a069f5d264519fbcf07eb6fdb
-  languageName: node
-  linkType: hard
+"wrapper@^0.1.0, wrapper@workspace:wrapper":
+  version: 0.0.0-use.local
+  resolution: "wrapper@workspace:wrapper"
+  dependencies:
+    axios: ^0.21.1
+    express: ^4.17.1
+    next: ^12.0.2
+    react: ^17.0.2
+    react-dom: ^17.0.2
+    typescript: 4.3.4
+  languageName: unknown
+  linkType: soft
 
 "wrappy@npm:1":
   version: 1.0.2

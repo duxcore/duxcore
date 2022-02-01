@@ -1,5 +1,5 @@
 {
-  "name": "@duxcore/wrapper",
+  "name": "wrapper",
   "private": true,
   "version": "0.1.0",
   "main": "lib/index",

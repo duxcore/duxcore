@@ -8,7 +8,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@duxcore/wrapper": "workspace:wrapper",
     "@hcaptcha/react-hcaptcha": "^0.3.8",
     "@headlessui/react": "^1.4.1",
     "axios": "^0.24.0",
@@ -18,6 +17,7 @@
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
     "sharp": "^0.29.3",
+    "wrapper": "workspace:wrapper",
     "yup": "^0.32.11",
     "yup-password": "^0.2.2",
     "zustand": "^3.6.2"
