@@ -75,7 +75,7 @@ const createInstanceObject = (
   return object;
 };
 
-if (cluster.isPrimary) {
+if (cluster.isMaster) {
   console.log(`Primary Process`, process.pid, "is now running!");
 
   let socket = io(process.env.MASTER_SERVER ?? "", {

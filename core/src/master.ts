@@ -1,5 +1,4 @@
 import Collection from "@discordjs/collection";
-import { prisma } from "@prisma/client";
 import chalk from "chalk";
 import { randomUUID } from "crypto";
 import { config } from "dotenv";
