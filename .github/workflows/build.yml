@@ -22,8 +22,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 17
-      - run: yarn workspace website install
-      - run: yarn workspace website build
+      - run: yarn workspace @duxcore/website install
+      - run: yarn workspace @duxcore/website build
   build-dashboard:
     runs-on: ubuntu-latest
     steps:
