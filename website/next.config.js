@@ -1,4 +1,5 @@
 module.exports = {
+  poweredByHeader: false,
   async redirects() {
     return [
       {
