@@ -4,8 +4,8 @@ services:
     build: ./
     restart: always
     environment:
-      - MASTER_SERVER=ws://host.docker.internal:49758
-      - DATABASE_URL=postgres://duxcore:123web123@host.docker.internal/duxcore
+      - MASTER_SERVER=ws://172.17.0.1:49758
+      - DATABASE_URL=postgres://duxcore:123web123@172.17.0.1/duxcore
 
   nginx:
     image: nginx:latest
