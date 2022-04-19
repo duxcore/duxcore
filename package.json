@@ -50,12 +50,10 @@
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
   },
-  "resolutions": {
-    "typescript": "4.3.2"
-  },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^0.3.6",
     "@prisma/client": "^2.25.0",
-    "trixi": "^1.1.1"
+    "trixi": "^1.1.1",
+    "typescript": "^4.6.3"
   }
 }
