@@ -1,0 +1,19 @@
+[package]
+name = "duxcore-daemon"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = "1"
+serde = "1"
+bytes = "1"
+futures = "0"
+base64 = "0"
+
+rocket = { version = "0.5.0-rc.1", features = ["json"] }
+
+libunftp = "0"
+unftp-sbe-fs = "0"
+
+hyper = "0"
+bollard = "0"
