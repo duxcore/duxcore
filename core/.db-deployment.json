@@ -1,0 +1,7 @@
+{
+  "image": "postgres",
+  "Cmd": ["bash", "-c", "apt update -y; apt upgrade -y; apt update -y; apt install git -y; git clone https://github.com/duxcore/duxcore duxcore; cd duxcore; yarn install; cd core; yarn prisma migrate dev"],
+  "exposedPorts": {
+    "5432":"54321"
+  }
+}
