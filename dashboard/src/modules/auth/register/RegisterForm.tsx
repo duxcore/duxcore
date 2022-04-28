@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
@@ -27,6 +27,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
   const hasToken = !!wrapper.useTokenStore().authToken;
   const [formError, setFormError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
+
 
   useEffect(() => {
     if (hasToken) {

@@ -18,7 +18,7 @@
   "dependencies": {
     "@discordjs/collection": "^0.3.2",
     "@duxcore/manifestation": "^1.2.3",
-    "@prisma/client": "^3.3.0",
+    "@prisma/client": "^3.13.0",
     "@types/express-rate-limit": "^5.1.3",
     "blakets": "0.1.4",
     "body-parser": "^1.19.0",
