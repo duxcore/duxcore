@@ -55,5 +55,8 @@
     "@prisma/client": "^2.25.0",
     "trixi": "^1.1.1",
     "typescript": "^4.6.3"
+  },
+  "resolutions": {
+    "@types/react": "17.0.43"
   }
 }
