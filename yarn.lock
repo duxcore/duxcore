@@ -2054,7 +2054,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hcaptcha/react-hcaptcha@npm:^0.3.6, @hcaptcha/react-hcaptcha@npm:^0.3.8":
+"@hcaptcha/react-hcaptcha@npm:0.3.9":
+  version: 0.3.9
+  resolution: "@hcaptcha/react-hcaptcha@npm:0.3.9"
+  peerDependencies:
+    react: ">= 16.3.0"
+    react-dom: ">= 16.3.0"
+  checksum: edb37fafc3ae84811291a49a40fe3042633aa5b19f0cdfecc774be803cbbfad9957c5c308a631a8d082773c733cc4cd9933cc45c5426f408201459cb14fd73f6
+  languageName: node
+  linkType: hard
+
+"@hcaptcha/react-hcaptcha@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@hcaptcha/react-hcaptcha@npm:1.1.1"
+  peerDependencies:
+    react: ">= 16.3.0"
+    react-dom: ">= 16.3.0"
+  checksum: 0a7ee76e69227bf5a0d297cb0fe3bb738ac9517d84f081bace72852f3611f23a7914e597f5bbf965c255606c3e384f03573793ba49510b0075caa4306d79fd76
+  languageName: node
+  linkType: hard
+
+"@hcaptcha/react-hcaptcha@npm:^0.3.6":
   version: 0.3.10
   resolution: "@hcaptcha/react-hcaptcha@npm:0.3.10"
   peerDependencies:
@@ -2609,7 +2629,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^3.3.0":
+"@prisma/client@npm:^3.13.0":
   version: 3.13.0
   resolution: "@prisma/client@npm:3.13.0"
   dependencies:
@@ -7240,7 +7260,7 @@ __metadata:
   dependencies:
     "@discordjs/collection": ^0.3.2
     "@duxcore/manifestation": ^1.2.3
-    "@prisma/client": ^3.3.0
+    "@prisma/client": ^3.13.0
     "@types/body-parser": ^1.19.1
     "@types/cors": ^2.8.12
     "@types/cryptr": ^4.0.1
@@ -7634,7 +7654,7 @@ __metadata:
   resolution: "dashboard@workspace:dashboard"
   dependencies:
     "@babel/core": ^7.17.0
-    "@hcaptcha/react-hcaptcha": ^0.3.8
+    "@hcaptcha/react-hcaptcha": 0.3.9
     "@headlessui/react": ^1.4.1
     "@mdx-js/react": ^1.6.22
     "@storybook/addon-actions": ^6.4.18
@@ -7658,7 +7678,7 @@ __metadata:
     formik: ^2.2.9
     next: ^12.0.2
     postcss: ^8
-    react: 17.0.2
+    react: ^18.1.0
     react-dom: 17.0.2
     react-icons: ^4.3.1
     sharp: ^0.29.3
@@ -13808,6 +13828,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nextjs@npm:latest":
+  version: 0.0.3
+  resolution: "nextjs@npm:0.0.3"
+  checksum: 863a1121b51eda269b59955ff3d63e56abc53a67f93774896b8b9fdcf89c7cb8b67bd2c136ab622aa1cc8797c1733d03388e3e4778fc85addf49942c933a8372
+  languageName: node
+  linkType: hard
+
 "nice-try@npm:^1.0.4":
   version: 1.0.5
   resolution: "nice-try@npm:1.0.5"
@@ -15938,6 +15965,15 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
+  languageName: node
+  linkType: hard
+
+"react@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "react@npm:18.1.0"
+  dependencies:
+    loose-envify: ^1.1.0
+  checksum: 5bb296b561b43ef2220395da4faac86c14a087c8c80e1a7598a5740f01ee605c11eaf249985c1e2000971c4cd32ccb46d40f00479bbd9fb6b1c7cf857393b7d4
   languageName: node
   linkType: hard
 
@@ -19333,6 +19369,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "website@workspace:website"
   dependencies:
+    "@hcaptcha/react-hcaptcha": 1.1.1
     "@types/node": ^15.3.0
     "@types/react": ^17.0.5
     "@typescript-eslint/eslint-plugin": ^4.24.0
@@ -19342,6 +19379,7 @@ __metadata:
     eslint-plugin-react: ^7.23.2
     eslint-plugin-react-hooks: ^4.2.0
     next: 10.2.0
+    nextjs: latest
     postcss: latest
     react: 17.0.2
     react-dom: 17.0.2

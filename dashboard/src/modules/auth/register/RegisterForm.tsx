@@ -28,6 +28,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
   const [formError, setFormError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
+
   useEffect(() => {
     if (hasToken) {
       // AuthContext and WaitForAuth will take care
