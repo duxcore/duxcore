@@ -32,7 +32,8 @@
     "eslint": "^7.26.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "typescript": "^4.6.3"
   },
   "config": {
     "commitizen": {
@@ -51,10 +52,7 @@
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
-    "@hcaptcha/react-hcaptcha": "^0.3.6",
-    "@prisma/client": "^2.25.0",
     "next": "^12.0.2",
-    "trixi": "^1.1.1",
     "typescript": "^4.6.3"
   },
   "resolutions": {
