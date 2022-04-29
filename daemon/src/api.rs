@@ -2,22 +2,77 @@ use bollard::{container, image, models};
 use futures::{StreamExt, TryStreamExt};
 use rocket::data::ToByteUnit;
 use rocket::serde::json::Json;
-use rocket::{data, fairing, request};
+use rocket::{data, fairing, http, request};
 use serde::*;
 use tokio::io::AsyncReadExt;
+use tokio::{fs, io};
 
 pub const API_VERSION: &str = "v1";
 
-struct CoreSignature;
+pub struct CoreKey(Vec<u8>);
+
+impl CoreKey {
+    pub async fn load(filename: &str) -> io::Result<Self> {
+        let mut buf = Vec::with_capacity(1024);
+
+        fs::File::open(filename).await?.read_buf(&mut buf).await?;
+
+        Ok(CoreKey(buf))
+    }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum CoreAuthError {
+    #[error("Missing header")]
+    MissingHeader,
+    #[error("Base64 error: {0}")]
+    Format(#[from] base64::DecodeError),
+    #[error("Wrong core key: {0}")]
+    WrongKey(String),
+}
+
+pub struct CoreAuthorization;
 
 #[rocket::async_trait]
-impl<'r> request::FromRequest<'r> for CoreSignature {
-    type Error = ();
+impl<'r> request::FromRequest<'r> for CoreAuthorization {
+    type Error = CoreAuthError;
 
     async fn from_request(request: &'r rocket::Request<'_>) -> request::Outcome<Self, Self::Error> {
-        // todo
-        request::Outcome::Success(CoreSignature)
+        if let Some(header) = request.headers().get_one("X-Duxcore-CoreKey") {
+            let bin = match base64::decode(header) {
+                Ok(x) => x,
+                Err(e) => {
+                    return request::Outcome::Failure((
+                        http::Status::Unauthorized,
+                        CoreAuthError::from(e),
+                    ))
+                }
+            };
+            let key: &CoreKey = request.rocket().state().unwrap();
+
+            if key.0 == bin {
+                request::Outcome::Success(CoreAuthorization)
+            } else {
+                request::Outcome::Failure((
+                    http::Status::Unauthorized,
+                    CoreAuthError::WrongKey(header.into()),
+                ))
+            }
+        } else {
+            request::Outcome::Failure((http::Status::Unauthorized, CoreAuthError::MissingHeader))
+        }
     }
+}
+
+#[rocket::catch(401)]
+fn unauthorized() -> serde_json::Value {
+    serde_json::json!({
+        "error": {
+            "code": 401,
+            "reason": "Unauthorized",
+            "description": "Accessing this daemon requires core authorization."
+        }
+    })
 }
 
 #[derive(Deserialize)]
@@ -27,7 +82,7 @@ struct ImageConfig {
 
 #[rocket::post("/service/docker/remote", data = "<image_config>")]
 async fn create_docker_remote(
-    _signature: CoreSignature,
+    _auth: CoreAuthorization,
     image_config: Json<ImageConfig>,
     docker: &rocket::State<bollard::Docker>,
 ) -> Json<CreateServiceResponse> {
@@ -44,7 +99,7 @@ async fn create_docker_remote(
 
     while let Some(Ok(x)) = image_stream.next().await {
         if let (Some(status), Some(progress)) = (&x.status, &x.progress) {
-            log::info!("{} {}", status, progress);
+            rocket::info_!("{} {}", status, progress);
         }
     }
 
@@ -76,7 +131,7 @@ struct CreateServiceResponse {
 
 #[rocket::post("/service/docker/raw", data = "<image_data>")]
 async fn create_docker_raw(
-    _signature: CoreSignature,
+    _auth: CoreAuthorization,
     image_data: data::Data<'_>,
     docker: &rocket::State<bollard::Docker>,
 ) -> Json<CreateServiceResponse> {
@@ -152,9 +207,16 @@ async fn create_docker_raw(
 
 pub fn fairing() -> impl fairing::Fairing {
     fairing::AdHoc::on_ignite("HTTP API", |rocket| async {
-        rocket.mount(
-            format!("/api/{}", API_VERSION),
-            rocket::routes![create_docker_remote, create_docker_raw],
-        )
+        rocket
+            .register("/", rocket::catchers![unauthorized])
+            .mount(
+                format!("/api/{}", API_VERSION),
+                rocket::routes![create_docker_remote, create_docker_raw],
+            )
+            .manage(
+                CoreKey::load("corekey.bin")
+                    .await
+                    .expect("missing corekey.bin"),
+            )
     })
 }
