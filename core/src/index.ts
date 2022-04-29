@@ -75,7 +75,7 @@ export default async function main() {
     return (await client.get(currentMasterDBKey)) == uuid;
   };
 
-  if (cluster.isPrimary) {
+  if (cluster.isMaster) {
     cluster.fork();
 
     cluster.on("disconnect", (worker) => {
