@@ -1,4 +1,6 @@
 pub mod api;
+pub mod corekey;
+pub mod util;
 
 use unftp_sbe_fs::ServerExt;
 
