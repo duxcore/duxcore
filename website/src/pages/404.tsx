@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 import { DuxcoreIcon, SolidDiscord, SolidGitHub } from '../icons';
 
 export default function NotFound() {
