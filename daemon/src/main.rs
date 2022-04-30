@@ -2,11 +2,12 @@ pub mod api;
 pub mod corekey;
 pub mod util;
 
+use std::error::Error;
+
 use unftp_sbe_fs::ServerExt;
 
 #[tokio::main]
-async fn main() {
-    let rocket_task = tokio::spawn(async {
+async fn main() -> Result<(), Box<dyn Error>> {
         let docker = bollard::Docker::connect_with_local_defaults().unwrap();
 
         rocket::build()
@@ -26,9 +27,11 @@ async fn main() {
         server.listen("127.0.0.1:2121").await.unwrap();
     });
 
-    // not join because only rocket listens for ctrl-c
     tokio::select![
-        x = rocket_task => {},
-        x = unftp_task => {}
+        x = rocket_task => x.unwrap()?,
+        x = attach_task => x.unwrap()?,
+        x = unftp_task => x.unwrap()?,
     ];
+
+    Ok(())
 }
