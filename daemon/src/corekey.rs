@@ -2,6 +2,7 @@ use rocket::{http, request};
 use tokio::io::AsyncReadExt;
 use tokio::{fs, io};
 
+#[derive(Clone)]
 pub struct CoreKey(Vec<u8>);
 
 impl CoreKey {
@@ -11,6 +12,16 @@ impl CoreKey {
         fs::File::open(filename).await?.read_buf(&mut buf).await?;
 
         Ok(CoreKey(buf))
+    }
+
+    pub fn check_b64(&self, data: &str) -> Result<bool, base64::DecodeError> {
+        let bin = base64::decode(data)?;
+
+        if self.0 == bin {
+            Ok(true)
+        } else {
+            Ok(false)
+        }
     }
 }
 
@@ -32,24 +43,17 @@ impl<'r> request::FromRequest<'r> for CoreAuthorization {
 
     async fn from_request(request: &'r rocket::Request<'_>) -> request::Outcome<Self, Self::Error> {
         if let Some(header) = request.headers().get_one("X-Duxcore-CoreKey") {
-            let bin = match base64::decode(header) {
-                Ok(x) => x,
-                Err(e) => {
-                    return request::Outcome::Failure((
-                        http::Status::Unauthorized,
-                        CoreAuthError::from(e),
-                    ))
-                }
-            };
             let key: &CoreKey = request.rocket().state().unwrap();
 
-            if key.0 == bin {
-                request::Outcome::Success(CoreAuthorization)
-            } else {
-                request::Outcome::Failure((
+            match key.check_b64(header) {
+                Ok(true) => request::Outcome::Success(CoreAuthorization),
+                Ok(false) => request::Outcome::Failure((
                     http::Status::Unauthorized,
                     CoreAuthError::WrongKey(header.into()),
-                ))
+                )),
+                Err(e) => {
+                    request::Outcome::Failure((http::Status::Unauthorized, CoreAuthError::from(e)))
+                }
             }
         } else {
             request::Outcome::Failure((http::Status::Unauthorized, CoreAuthError::MissingHeader))

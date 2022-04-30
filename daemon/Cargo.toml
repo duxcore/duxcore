@@ -4,15 +4,20 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = { version = "1", features = ["fs"] }
+tokio-util = "0"
+tokio = { version = "1", features = ["fs", "net"] }
 serde = "1"
 bytes = "1"
 futures = "0"
 base64 = "0"
 thiserror = "1"
 serde_json = "1"
+log = "0"
 
 rocket = { version = "0.5.0-rc.1", features = ["json"] }
+
+tokio-tungstenite = "0"
+tungstenite = "0"
 
 libunftp = "0"
 unftp-sbe-fs = "0"

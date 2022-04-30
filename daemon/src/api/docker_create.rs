@@ -42,7 +42,9 @@ pub async fn remote(
             None,
             container::Config {
                 image: Some(&image_config.name),
-                cmd: Some(vec!["/bin/echo", "hello world"]),
+                open_stdin: Some(true),
+                tty: Some(true),
+                cmd: Some(vec!["/bin/sh"]),
                 ..Default::default()
             },
         )
@@ -92,7 +94,9 @@ pub async fn raw(
             None,
             container::Config {
                 image: Some(&image_id.unwrap()),
-                cmd: Some(vec!["/bin/echo", "hello world"]),
+                open_stdin: Some(true),
+                tty: Some(true),
+                cmd: Some(vec!["/bin/sh"]),
                 ..Default::default()
             },
         )

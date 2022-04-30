@@ -1,6 +1,5 @@
 mod docker_create;
 
-use crate::corekey::*;
 use rocket::fairing;
 use serde_json::{json, Value};
 
@@ -19,16 +18,9 @@ fn unauthorized() -> Value {
 
 pub fn fairing() -> impl fairing::Fairing {
     fairing::AdHoc::on_ignite("HTTP API", |rocket| async {
-        rocket
-            .register("/", rocket::catchers![unauthorized])
-            .mount(
-                format!("/api/{}", API_VERSION),
-                rocket::routes![docker_create::remote, docker_create::raw],
-            )
-            .manage(
-                CoreKey::load("corekey.bin")
-                    .await
-                    .expect("missing corekey.bin"),
-            )
+        rocket.register("/", rocket::catchers![unauthorized]).mount(
+            format!("/api/{}", API_VERSION),
+            rocket::routes![docker_create::remote, docker_create::raw],
+        )
     })
 }
