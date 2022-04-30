@@ -1,5 +1,5 @@
 import Head from "next/head";
-import wrapper from "wrapper";
+// import wrapper from "wrapper";
 import { DuxcoreIcon, DuxcoreLogo, SolidDiscord, SolidGitHub } from "../icons";
 
 export default function Home() {
