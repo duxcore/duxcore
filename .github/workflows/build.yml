@@ -92,4 +92,5 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn
+      - run: yarn workspace wrapper build
       - run: yarn workspace dashboard build
