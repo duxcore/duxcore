@@ -86,7 +86,9 @@ jobs:
       - uses: actions/cache@v3
         id: cache-dependencies
         with:
-          path: node_modules
+          path: |
+            **/node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn
