@@ -17,4 +17,4 @@ base64 -w 0 corekey.bin
 ```
 
 ### Attachment
-See the `attach-example.js` file. You can run it in Deno or just paste it in your browser's console. It's supposed to open an attachment stream and type `ls /` to it. You may expect to have the shell interpret that and print back the files in the container's root directory.
+See the `attach-example.js` file. You can run it in Deno (specifying the container ID as the first argument). It's supposed to open an attachment stream and type `ls /` to it. You may expect to have the shell interpret that and print back the files in the container's root directory.
