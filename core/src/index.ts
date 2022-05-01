@@ -5,133 +5,91 @@ import cluster, { Worker } from "cluster";
 import process from "process";
 import io from "socket.io-client";
 import Collection from "@discordjs/collection";
+import { createClient, RedisClientType } from "redis";
+import { randomUUID } from "crypto";
+import PgBoss from "pg-boss";
 
 config();
 
-enum WorkerPurpose {
-  API_SERVER = "api_server",
-  TASK_EXECUTOR = "task_executor",
+async function createRedisConnection() {
+  const redis = {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  };
+
+  const client = createClient({
+    password: redis.password,
+    url: `redis://${redis.host}:${redis.port}`,
+  });
+
+  client.on("error", (err) => console.log("Redis Client Error", err));
+
+  await client.connect();
+
+  return client;
 }
 
-const activeInstances = new Collection<
-  string,
-  ReturnType<typeof createInstanceObject>
->();
+export default async function main() {
+  const currentMasterDBKey = "current_master";
 
-const createInstanceObject = (
-  worker: Worker,
-  data: {
-    id: string;
-    port: string;
-    autoRevive?: boolean;
-  }
-) => {
-  let object = {
-    id: data.id,
-    port: data.port,
-    isOnline: true,
-    worker,
-    setOnline(online: boolean): boolean {
-      if (this.isOnline == online) return this.isOnline;
-      this.isOnline = online;
+  const promoteSelfMaster = (
+    client: Awaited<ReturnType<typeof createRedisConnection>>,
+    uuid: string
+  ) => {
+    client.set(currentMasterDBKey, uuid, {
+      EX: 8,
+    });
 
-      return this.isOnline;
-    },
-    onExit(): Promise<{
-      code: number;
-      signal: string;
-      worker: Worker;
-    }> {
-      return new Promise((res, rej) => {
-        worker.on("exit", (code, signal) => {
-          return res({
-            signal,
-            code,
-            worker,
-          });
+    let refreshMasterInterval = setInterval(async () => {
+      if ((await client.get(currentMasterDBKey)) == uuid)
+        client.set(currentMasterDBKey, uuid, {
+          EX: 8,
         });
-      });
-    },
-    toJson() {
-      return {
-        id: this.id,
-        port: parseInt(this.port),
-        isOnline: this.isOnline,
-        worker: {
-          pid: worker.process.pid,
-        },
-      };
-    },
+      else clearInterval(refreshMasterInterval);
+      console.log("Refreshed Master Key");
+    }, 7000);
+  };
+  const beginMasterLifeCycle = async (
+    client: Awaited<ReturnType<typeof createRedisConnection>>,
+    uuid: string
+  ) => {
+    // Assign self master if no master is assigned
+    if (!(await client.get(currentMasterDBKey)))
+      promoteSelfMaster(client, uuid);
+
+    // Start waiting for no master
+    if (await client.get(currentMasterDBKey)) {
+      let waitNoMasterResponse = setInterval(async () => {
+        if (await client.get(currentMasterDBKey)) return;
+        else return promoteSelfMaster(client, uuid);
+      }, Math.floor(Math.random() * 30000));
+    }
+
+    console.log(await client.get(currentMasterDBKey));
+  };
+  const isMaster = async (
+    client: Awaited<ReturnType<typeof createRedisConnection>>,
+    uuid: string
+  ) => {
+    return (await client.get(currentMasterDBKey)) == uuid;
   };
 
-  worker.on("exit", (code, signal) => {
-    object.setOnline(false);
-  });
+  if (cluster.isMaster) {
+    cluster.fork();
 
-  worker.on("online", () => {
-    object.setOnline(true);
-  });
-
-  return object;
-};
-
-if (cluster.isMaster) {
-  console.log(`Primary Process`, process.pid, "is now running!");
-
-  let socket = io(process.env.MASTER_SERVER ?? "", {
-    auth: {
-      id: process.env.NODE_ID,
-      secret: process.env.NODE_SECRET,
-    },
-    autoConnect: true,
-    reconnection: true,
-  });
-
-  const startApiWorker = (
-    id,
-    port
-  ): Promise<ReturnType<typeof createInstanceObject>> => {
-    return new Promise((res) => {
-      const fork = cluster.fork({
-        id,
-        port,
-        purpose: WorkerPurpose.API_SERVER,
-      });
-      fork.on("online", () => {
-        const instance = createInstanceObject(fork, { id, port });
-        activeInstances.set(instance.id, instance);
-        res(instance);
-      });
+    cluster.on("disconnect", (worker) => {
+      cluster.fork();
     });
-  };
-
-  // Connection error with master process
-  socket.on("connect_error", (err) => {
-    console.log(err instanceof Error);
-    console.log(err.message);
-
-    setTimeout(() => socket.connect(), 500);
-  });
-
-  // Get the Node Instance Data
-  socket.on("node_instance", console.log);
-
-  // Master Request an index of the workers
-  socket.on("fetchWorkers", async (cb) =>
-    cb(await activeInstances.map((v) => v.toJson()))
-  );
-
-  // Start An API Worker
-  socket.on("startApiWorker", async ({ id, port }, cb) => {
-    startApiWorker(id, port).then((instance) => {
-      cb(instance.toJson());
-    });
-  });
-} else {
-  if (WorkerPurpose.API_SERVER == process.env.purpose) {
+  } else {
     config();
+
+    const coreClientUUID = randomUUID();
     const api = manifestation.createServer(apiManifest, {});
-    const port = process.env.port;
+    const port = process.env.CORE_PORT;
+    const client = await createRedisConnection();
+
+    beginMasterLifeCycle(client, coreClientUUID);
 
     api.listen(port, () => {
       console.log(
@@ -145,6 +103,4 @@ if (cluster.isMaster) {
   }
 }
 
-export type NodeStatusObject = ReturnType<
-  ReturnType<typeof createInstanceObject>["toJson"]
->;
+main();

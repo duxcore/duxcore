@@ -22,8 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-master-core:
-    name: deploy-master-core
+  deploy-core:
+    name: deploy-core
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,12 +31,12 @@ jobs:
       - name: Run Deployment Script
         uses: duxcore/deploy@dev
         with:
-          service-id: ${{ secrets.CORE_MASTER_SERVICE_ID }}
-          service-secret: ${{ secrets.CORE_MASTER_SERVICE_SECRET }}
+          service-id: ${{ secrets.CORE_SERVICE_ID }}
+          service-secret: ${{ secrets.CORE_SERVICE_SECRET }}
           deployment-url: ${{ secrets.DEPLOYMENT_URL }}
           api-bearer: ${{ secrets.API_BEARER }}
           api-secret: ${{ secrets.API_SECRET }}
-          config: core/.master-deployment.json
+          config: core/.deployment.json
           branch: dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

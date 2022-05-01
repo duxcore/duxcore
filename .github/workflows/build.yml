@@ -5,32 +5,92 @@ on:
     types: [ready_for_review, assigned, opened, synchronize, reopened]
 
 jobs:
+  #
+  # Cache yarn dependencies by hashing
+  # the yarn.lock file. This allows for
+  # much faster installs.
+  #
+  install-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: |
+            **/node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn
+
+      - name: Install Dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile
+
   build-core:
     runs-on: ubuntu-latest
+    needs: install-cache
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
         with:
           node-version: 16
-      - run: cd core
-      - run: yarn workspace core install
+      - uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: |
+            **/node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn
       - run: yarn workspace core build
+
   build-website:
     runs-on: ubuntu-latest
+    needs: install-cache
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
         with:
           node-version: 16
-      - run: yarn workspace website install
+      - uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: |
+            **/node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn
       - run: yarn workspace website build
+
   build-dashboard:
     runs-on: ubuntu-latest
+    needs: install-cache
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
         with:
           node-version: 16
-      - run: yarn workspace dashboard install
+      - uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: |
+            **/node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn
       - run: yarn workspace wrapper build
       - run: yarn workspace dashboard build

@@ -1,7 +1,0 @@
-{
-  "image": "node:16",
-  "Cmd": ["bash", "-c", "apt update -y; apt upgrade -y; apt update -y; apt install git -y; git clone https://github.com/duxcore/duxcore duxcore; cd duxcore; yarn install; cd core; yarn build; yarn master:start"],
-  "exposedPorts": {
-      "49758": "49758"
-  }
-}

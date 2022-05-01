@@ -32,7 +32,8 @@
     "eslint": "^7.26.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "typescript": "^4.6.3"
   },
   "config": {
     "commitizen": {
@@ -50,12 +51,13 @@
     "*.js": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
   },
-  "resolutions": {
-    "typescript": "4.3.2"
-  },
   "dependencies": {
-    "@hcaptcha/react-hcaptcha": "^0.3.6",
-    "@prisma/client": "^2.25.0",
-    "trixi": "^1.1.1"
-  }
+    "next": "^12.0.2",
+    "typescript": "^4.6.3"
+  },
+  "resolutions": {
+    "@types/react": "17.0.2",
+    "next": "12.0.2"
+  },
+  "packageManager": "yarn@3.2.0"
 }
