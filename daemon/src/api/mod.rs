@@ -1,4 +1,5 @@
-mod docker_create;
+mod docker_container;
+mod docker_image;
 
 use rocket::fairing;
 use serde_json::{json, Value};
@@ -20,7 +21,7 @@ pub fn fairing() -> impl fairing::Fairing {
     fairing::AdHoc::on_ignite("HTTP API", |rocket| async {
         rocket.register("/", rocket::catchers![unauthorized]).mount(
             format!("/api/{}", API_VERSION),
-            rocket::routes![docker_create::remote, docker_create::raw],
+            rocket::routes![docker_container::create, docker_image::create_raw],
         )
     })
 }
