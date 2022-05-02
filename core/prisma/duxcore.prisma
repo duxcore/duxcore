@@ -14,14 +14,6 @@ enum UserRole {
   USER
 }
 
-model Node {
-  id      String   @id @default(uuid())
-  index   Int      @default(autoincrement())
-  created DateTime @default(now())
-  name    String
-  secret  String
-}
-
 model User {
   id            String              @id @default(uuid())
   index         Int                 @default(autoincrement())

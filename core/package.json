@@ -5,7 +5,6 @@
     "build": "prisma generate && tsc",
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node lib/src/index",
-    "tool:createNode": "ts-node src/tools/createNode.ts",
     "tool:generateKeys": "ts-node scripts/generateKeys.ts",
     "master:dev": "nodemon --exec ts-node src/master.ts",
     "master:start": "node lib/src/master",
