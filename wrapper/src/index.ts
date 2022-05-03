@@ -1,21 +1,28 @@
-import { API_BASEURL, AUTH_TOKEN_KEY, INTENDED_PATH_KEY, isProd, REFRESH_EXCLUDE_LIST, REFRESH_TOKEN_KEY } from './util/constants';
-import axiosInstance, { setAxiosHeader } from './lib/axiosInstance';
-import { CreateWrapperOptions } from './types/options';
-import { createUserController } from './lib/api/user';
-import { useTokenStore } from './lib/useTokenStore';
-import { isServer } from './util/isServer';
-import { createServiceCollectionsController } from './lib/api/serviceCollections';
+import {
+  API_BASEURL,
+  AUTH_TOKEN_KEY,
+  INTENDED_PATH_KEY,
+  isProd,
+  REFRESH_EXCLUDE_LIST,
+  REFRESH_TOKEN_KEY,
+} from "./util/constants";
+import axiosInstance, { setAxiosHeader } from "./lib/axiosInstance";
+import { CreateWrapperOptions } from "./types/options";
+import { createUserController } from "./lib/api/user";
+import { useTokenStore } from "./lib/useTokenStore";
+import { isServer } from "./util/isServer";
+import { createProjectController } from "./lib/api/projects";
 
 export const createWrapper = (options: CreateWrapperOptions) => {
   return {
     api: {
       user: createUserController(),
-      serviceCollections: createServiceCollectionsController(),
+      projects: createProjectController(),
     },
 
     axios: {
       instance: axiosInstance,
-      setHeader: setAxiosHeader
+      setHeader: setAxiosHeader,
     },
 
     useTokenStore,
@@ -29,12 +36,12 @@ export const createWrapper = (options: CreateWrapperOptions) => {
 
       AUTH_TOKEN_KEY,
       REFRESH_TOKEN_KEY,
-      INTENDED_PATH_KEY
-    }
-  }
-}
+      INTENDED_PATH_KEY,
+    },
+  };
+};
 
-export type { TokenPair, NewUser, User, UserEdit } from './types/user'
-export type { CreateWrapperOptions } from './types/options'
-export type { APIError } from './types/api'
-export type { Collection } from './types/serviceCollections'
+export type { TokenPair, NewUser, User, UserEdit } from "./types/user";
+export type { CreateWrapperOptions } from "./types/options";
+export type { APIError } from "./types/api";
+export type { Project } from "./types/projects";

@@ -1,11 +1,11 @@
 import { manifestation } from "@duxcore/manifestation";
 import { authorizeRequest } from "../../middleware/authorizeRequest";
 import { baseServicesRoutes } from "./base";
-import { collectionsRouter } from "./collections";
+import { projectsRouter } from "./projects";
 
 export const servicesRouter = manifestation.newRouter({
   route: "/services",
   middleware: [authorizeRequest],
-  routers: [collectionsRouter],
+  routers: [projectsRouter],
   routes: [...baseServicesRoutes],
-})
+});

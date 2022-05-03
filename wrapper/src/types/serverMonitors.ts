@@ -2,10 +2,10 @@ export interface ServerMonitor {
   id: string;
   name: string;
   creatorId: string;
-  collectionId: string;
+  projectId: string;
 }
 
 export interface NewServerMonitor {
   name: string;
-  collectionId: string;
+  projectId: string;
 }

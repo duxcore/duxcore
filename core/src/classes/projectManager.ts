@@ -1,13 +1,12 @@
 import Collection from "@discordjs/collection";
-import { ServiceCollection } from "@prisma/client";
+import { Project } from "@prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import ServerMonitorManager from "./ServerMonitorManager";
 
-export default class ServiceCollectionManager {
+export default class ProjectManager {
+  private _rawData: Project;
 
-  private _rawData: ServiceCollection;
-
-  constructor(rawData: ServiceCollection) {
+  constructor(rawData: Project) {
     this._rawData = rawData;
   }
 
@@ -19,13 +18,20 @@ export default class ServiceCollectionManager {
     return (async () => {
       const monitorCollection = new Collection<string, ServerMonitorManager>();
 
-      (await prismaInstance.serverMonitoringService.findMany({
-        where: {
-          collectionId: this.id
-        }
-      })).map(srvMonitor => monitorCollection.set(srvMonitor.id, new ServerMonitorManager(srvMonitor)));
+      (
+        await prismaInstance.serverMonitoringService.findMany({
+          where: {
+            projectId: this.id,
+          },
+        })
+      ).map((srvMonitor) =>
+        monitorCollection.set(
+          srvMonitor.id,
+          new ServerMonitorManager(srvMonitor)
+        )
+      );
 
-      return  monitorCollection;
+      return monitorCollection;
     })();
   }
 
@@ -36,8 +42,7 @@ export default class ServiceCollectionManager {
       creator: this._rawData.creatorId,
       created: this._rawData.created,
       lastUpdated: this._rawData.upatedAt,
-      monitors: await (await this.monitors).map(monitor => monitor.toJson())
-    }
+      monitors: await (await this.monitors).map((monitor) => monitor.toJson()),
+    };
   }
-
 }

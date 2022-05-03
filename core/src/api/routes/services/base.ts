@@ -1,6 +1,5 @@
 import { manifestation } from "@duxcore/manifestation";
 import { fetchTokenData } from "../../../helpers/fetchTokenData";
-import { serviceCollection } from "../../../lib/serviceCollections";
+import { projects } from "../../../lib/projects";
 
-export const baseServicesRoutes = [
-]
+export const baseServicesRoutes = [];
