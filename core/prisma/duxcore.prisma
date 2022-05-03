@@ -30,7 +30,7 @@ model User {
   meta          Json                @default("{}")
 
   UserEmailResetTokens    UserEmailResetTokens[]
-  ServiceCollection       ServiceCollection[]
+  Projects                Project[]
   ServerMonitoringService ServerMonitoringService[]
 }
 
@@ -71,7 +71,7 @@ model UserEmailResetTokens {
   userId  String
 }
 
-model ServiceCollection {
+model Project {
   id        String   @id @default(uuid())
   index     Int      @default(autoincrement())
   name      String
@@ -88,8 +88,8 @@ model ServerMonitoringService {
   index  Int    @default(autoincrement())
   secret String @default(uuid())
 
-  collection   ServiceCollection @relation(references: [id], fields: [collectionId])
-  collectionId String
+  project   Project @relation(references: [id], fields: [projectId])
+  projectId String
 
   name                  String
   creator               User                 @relation(references: [id], fields: [creatorId])

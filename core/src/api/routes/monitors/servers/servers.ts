@@ -3,7 +3,7 @@ import { apiError, errorConstructor } from "../../../../helpers/apiError";
 import { fetchTokenData } from "../../../../helpers/fetchTokenData";
 import { sendApiErrors } from "../../../../helpers/sendApiErrors";
 import { monitoring } from "../../../../lib/monitoring";
-import { serviceCollection } from "../../../../lib/serviceCollections";
+import { projects } from "../../../../lib/projects";
 import { authorizeRequest } from "../../../middleware/authorizeRequest";
 import { monitorRouter } from "../monitors";
 
@@ -16,13 +16,15 @@ export const serverMonitorsRouter = manifestation.newRouter({
       middleware: [authorizeRequest],
       executor: async (req, res) => {
         let tokenData = fetchTokenData(res.locals);
-        let userId = tokenData.userId
+        let userId = tokenData.userId;
 
         return manifestation.sendApiResponse(res, {
           status: 200,
-          data: (await monitoring.server.fetchUserMonitors(userId)).map(m => m.toJson()),
+          data: (await monitoring.server.fetchUserMonitors(userId)).map((m) =>
+            m.toJson()
+          ),
           message: "Successfully fetched server monitors!",
-          successful: true
+          successful: true,
         });
       },
     }),
@@ -37,28 +39,29 @@ export const serverMonitorsRouter = manifestation.newRouter({
         let errors = apiError.createErrorStack();
 
         req.body.name ?? errors.append(errorConstructor.missingValue("name"));
-        req.body.collectionId ?? errors.append(errorConstructor.missingValue("collectionId"));
+        req.body.projectId ??
+          errors.append(errorConstructor.missingValue("projectId"));
 
-        const collection = await serviceCollection.fetch(req.body.collectionId);
+        const project = await projects.fetch(req.body.projectId);
 
-        if (!collection) errors.append("invalidServiceCollectionId");
+        if (!project) errors.append("invalidProjectId");
 
         if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
 
-        let newCollection = await monitoring.server.create({
+        let newProject = await monitoring.server.create({
           name: req.body.name,
           creator: userId,
-          collection: req.body.collectionId
+          project: req.body.projectId,
         });
 
         return manifestation.sendApiResponse(res, {
           status: 201,
-          data: newCollection.toJson(),
+          data: newProject.toJson(),
           message: "Successfully created new monitor",
-          successful: true
-        })
-      }
-    })
+          successful: true,
+        });
+      },
+    }),
   ],
-  routers: []
-})
+  routers: [],
+});

@@ -1,12 +1,12 @@
 import { manifestation } from "@duxcore/manifestation";
-import ServiceCollectionManager from "../../../classes/ServiceCollectionManager";
+import ProjectManager from "../../../classes/projectManager";
 import { apiError, errorConstructor } from "../../../helpers/apiError";
 import { fetchTokenData } from "../../../helpers/fetchTokenData";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";
-import { serviceCollection } from "../../../lib/serviceCollections";
+import { projects } from "../../../lib/projects";
 
-export const collectionsRouter = manifestation.newRouter({
-  route: "/collections",
+export const projectsRouter = manifestation.newRouter({
+  route: "/projects",
   middleware: [],
   routes: [
     manifestation.newRoute({
@@ -17,11 +17,15 @@ export const collectionsRouter = manifestation.newRouter({
 
         return manifestation.sendApiResponse(res, {
           status: 200,
-          message: "Successfully fetched service collections!",
-          data: await Promise.all((await serviceCollection.fetchAllByUser(tokenData.userId)).map(async s => await s.toJson())),
-          successful: true
-        })
-      }
+          message: "Successfully fetched projects!",
+          data: await Promise.all(
+            (
+              await projects.fetchAllByUser(tokenData.userId)
+            ).map(async (s) => await s.toJson())
+          ),
+          successful: true,
+        });
+      },
     }),
     manifestation.newRoute({
       route: "/",
@@ -29,42 +33,47 @@ export const collectionsRouter = manifestation.newRouter({
       executor: async (req, res) => {
         let tokenData = fetchTokenData(res.locals);
         let errors = apiError.createErrorStack();
-        let newCollection: ServiceCollectionManager | null = null;
+        let newProject: ProjectManager | null = null;
 
         req.body.name ?? errors.append(errorConstructor.missingValue("name"));
 
-        if (errors.stack.length === 0) newCollection = await serviceCollection.create(req.body.name as string, tokenData.userId);
+        if (errors.stack.length === 0)
+          newProject = await projects.create(
+            req.body.name as string,
+            tokenData.userId
+          );
         if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
 
         return manifestation.sendApiResponse(res, {
           status: 200,
-          message: "Successfully created new collection!",
-          data: newCollection?.toJson(),
-          successful: true
-        })
-      }
+          message: "Successfully created new project!",
+          data: newProject?.toJson(),
+          successful: true,
+        });
+      },
     }),
     manifestation.newRoute({
-      route: "/:collection",
+      route: "/:project",
       method: "get",
       executor: async (req, res) => {
         let tokenData = fetchTokenData(res.locals);
-        let collectionId = req.params.collection;
+        let projectId = req.params.project;
         let errors = apiError.createErrorStack();
 
-        const collection = await serviceCollection.fetch(collectionId);
+        const project = await projects.fetch(projectId);
 
-        if (!collection) errors.append("invalidServiceCollectionId");
-        if (!(await serviceCollection.checkUserPermission(tokenData.userId, collectionId))) errors.append("collectionNoAccess");
+        if (!project) errors.append("invalidProjectId");
+        if (!(await projects.checkUserPermission(tokenData.userId, projectId)))
+          errors.append("projectNoAccess");
 
         if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
         return manifestation.sendApiResponse(res, {
           status: 200,
-          message: "Successfully fetched collection!",
-          data: collection?.toJson(),
-          successful: true
-        })
-      }
-    })
-  ]
-})
+          message: "Successfully fetched project!",
+          data: project?.toJson(),
+          successful: true,
+        });
+      },
+    }),
+  ],
+});

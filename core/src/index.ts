@@ -3,11 +3,8 @@ import { apiManifest } from "./api/manifest";
 import { config } from "dotenv";
 import cluster, { Worker } from "cluster";
 import process from "process";
-import io from "socket.io-client";
-import Collection from "@discordjs/collection";
 import { createClient, RedisClientType } from "redis";
 import { randomUUID } from "crypto";
-import PgBoss from "pg-boss";
 
 config();
 
