@@ -1,4 +1,4 @@
-import  from "@discordjs/collection";
+import Collection from "@discordjs/collection";
 import { prismaInstance } from "../../prisma/instance";
 import ProjectManager from "../classes/projectManager";
 
