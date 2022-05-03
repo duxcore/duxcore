@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{env, collections::HashMap};
 
 use crate::corekey::CoreAuthorization;
 use bollard::{container, image};
@@ -6,6 +6,7 @@ use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
 use serde_json::{json, Value};
+use tokio::fs;
 
 fn yes() -> bool {
     true
@@ -14,9 +15,10 @@ fn yes() -> bool {
 #[derive(Deserialize)]
 pub struct RawParams {
     image: String,
+    bind_dir: String,
 
     // unix
-    cmd: Vec<String>,
+    cmd: Option<Vec<String>>,
     shell: Option<Vec<String>>,
     user: Option<String>,
     working_dir: Option<String>,
@@ -33,31 +35,13 @@ pub struct RawParams {
     network_disabled: Option<bool>,
 }
 
-impl Into<container::Config<String>> for RawParams {
-    fn into(self) -> container::Config<String> {
-        container::Config {
-            image: Some(self.image),
-            cmd: Some(self.cmd),
-            shell: self.shell,
-            user: self.user,
-            working_dir: self.working_dir,
-            open_stdin: Some(self.open_stdin),
-            tty: Some(self.tty),
-            hostname: self.hostname,
-            exposed_ports: self.exposed_ports,
-            network_disabled: self.network_disabled,
-            ..Default::default()
-        }
-    }
-}
-
 #[derive(Deserialize)]
 #[serde(tag = "type", content = "params", rename_all = "snake_case")]
 pub enum CreateConfig {
     Raw(RawParams),
 }
 
-#[rocket::post("/docker/container", data = "<config>")]
+#[rocket::post("/service", data = "<config>")]
 pub async fn create(
     _auth: CoreAuthorization,
     config: Json<CreateConfig>,
@@ -85,14 +69,40 @@ pub async fn create(
 
             rocket::info_!("Pulled image {}", raw.image);
 
+            let id: u64 = rand::random();
+            let path = env::current_dir()
+                .unwrap()
+                .join("binds")
+                .join(id.to_string());
+
+            fs::create_dir(&path).await.unwrap();
+
             let container = docker
-                .create_container::<&str, String>(None, raw.into())
+                .create_container(
+                    Some(container::CreateContainerOptions {
+                        name: id.to_string(),
+                    }),
+                    container::Config {
+                        image: Some(raw.image),
+                        cmd: raw.cmd,
+                        shell: raw.shell,
+                        user: raw.user,
+                        working_dir: raw.working_dir,
+                        open_stdin: Some(raw.open_stdin),
+                        tty: Some(raw.tty),
+                        hostname: raw.hostname,
+                        network_disabled: raw.network_disabled,
+                        exposed_ports: raw.exposed_ports.map(|x|
+                            x.into_iter().map(|it| (it, HashMap::new())).collect()),
+                        ..Default::default()
+                    },
+                )
                 .await
                 .unwrap();
 
             rocket::info_!("Created container {:?}", container);
 
-            json!({ "container_id": container.id, })
+            json!({ "container_id": id })
         }
     }
 }

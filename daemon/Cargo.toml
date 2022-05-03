@@ -13,14 +13,16 @@ base64 = "0"
 thiserror = "1"
 serde_json = "1"
 log = "0"
+rand = "0"
+async-trait = "0"
 
 rocket = { version = "0.5.0-rc.1", features = ["json"] }
+hyper = "0"
+hyper-tls = "0"
 
 tokio-tungstenite = "0"
 tungstenite = "0"
 
 libunftp = "0"
-unftp-sbe-fs = "0"
 
-hyper = "0"
 bollard = "0"

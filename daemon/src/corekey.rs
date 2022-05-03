@@ -37,7 +37,7 @@ pub enum CoreAuthError {
 
 pub struct CoreAuthorization;
 
-#[rocket::async_trait]
+#[async_trait::async_trait]
 impl<'r> request::FromRequest<'r> for CoreAuthorization {
     type Error = CoreAuthError;
 
