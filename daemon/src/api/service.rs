@@ -1,7 +1,10 @@
-use std::{env, collections::HashMap};
+use std::env;
 
 use crate::corekey::CoreAuthorization;
-use bollard::{container, image};
+use bollard::{
+    container, image,
+    models::{HostConfig, PortMap},
+};
 use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
@@ -31,7 +34,7 @@ pub struct RawParams {
 
     // networking
     hostname: Option<String>,
-    exposed_ports: Option<HashMap<String, HashMap<(), ()>>>,
+    port_map: Option<PortMap>,
     network_disabled: Option<bool>,
 }
 
@@ -92,8 +95,15 @@ pub async fn create(
                         tty: Some(raw.tty),
                         hostname: raw.hostname,
                         network_disabled: raw.network_disabled,
-                        exposed_ports: raw.exposed_ports.map(|x|
-                            x.into_iter().map(|it| (it, HashMap::new())).collect()),
+                        host_config: Some(HostConfig {
+                            binds: Some(vec![format!(
+                                "{}:/{}",
+                                path.to_str().unwrap(),
+                                raw.bind_dir
+                            )]),
+                            port_bindings: raw.port_map,
+                            ..Default::default()
+                        }),
                         ..Default::default()
                     },
                 )
