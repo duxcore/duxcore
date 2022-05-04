@@ -13,4 +13,3 @@ pub async fn run(addr: &str) -> Result<(), libunftp::ServerError> {
 
     server.listen(addr).await
 }
-
