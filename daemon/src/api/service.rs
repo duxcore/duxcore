@@ -20,19 +20,16 @@ pub struct RawParams {
     image: String,
     bind_dir: String,
 
-    // unix
     cmd: Option<Vec<String>>,
     shell: Option<Vec<String>>,
     user: Option<String>,
     working_dir: Option<String>,
 
-    // stdio
     #[serde(default = "yes")]
     open_stdin: bool,
     #[serde(default = "yes")]
     tty: bool,
 
-    // networking
     hostname: Option<String>,
     port_map: Option<PortMap>,
     network_disabled: Option<bool>,
