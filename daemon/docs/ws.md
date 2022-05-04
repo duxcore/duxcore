@@ -11,7 +11,7 @@ message of the following structure:
 ```ts
 type Init = {
   corekey: string; // same as the X-Duxcore-CoreKey header
-  command: CommandAttach;
+  command: CommandAttach | CommandStats;
 };
 ```
 
@@ -28,3 +28,15 @@ The attach command starts the specified service and connects you with a tty of
 the container. The messages are sent in binary blobs, because not all commands
 may output valid UTF-8 data. Use the [`attach-example.js`](./attach-example.js)
 script as reference client implementation.
+
+## Stats
+
+```ts
+type CommandStats = {
+  type: "stats";
+  data: string; // service id
+};
+```
+
+Basically redirects everything from the `docker state` command. See the
+[`stats-example.js`](./stats-example.js) example.

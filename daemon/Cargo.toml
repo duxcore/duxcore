@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 tokio-util = "0"
-tokio = { version = "1", features = ["fs", "net"] }
+tokio = { version = "1", features = ["fs", "net", "time"] }
 serde = "1"
 bytes = "1"
 futures = "0"

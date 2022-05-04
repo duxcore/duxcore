@@ -38,6 +38,7 @@ struct Init {
 #[serde(tag = "type", content = "data", rename_all = "snake_case")]
 enum InitCommand {
     Attach(String),
+    Stats(String),
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -86,7 +87,7 @@ async fn attach(ws: Ws, docker: bollard::Docker, container: String) -> Result<()
 
     let write_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
         try {
-            while let Ok(Some(entry)) = attachment.output.try_next().await {
+            while let Some(entry) = attachment.output.try_next().await? {
                 write
                     .send(tungstenite::Message::Binary(entry.into_bytes().to_vec()))
                     .await?;
@@ -96,11 +97,55 @@ async fn attach(ws: Ws, docker: bollard::Docker, container: String) -> Result<()
 
     let read_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
         try {
-            while let Ok(Some(entry)) = read.try_next().await {
+            while let Some(entry) = read.try_next().await? {
                 match entry {
                     tungstenite::Message::Binary(data) => {
                         attachment.input.write_all(&data).await?;
                     }
+                    tungstenite::Message::Close(_) => {
+                        log::info!("WebSocket closed");
+
+                        return Ok(());
+                    }
+                    _ => {}
+                }
+            }
+        }
+    });
+
+    tokio::select! {
+        x = write_task => x.unwrap(),
+        x = read_task => x.unwrap(),
+    }
+}
+
+async fn stats(ws: Ws, docker: bollard::Docker, container: String) -> Result<(), Error> {
+    let (mut write, mut read) = ws.split();
+
+    let write_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
+        try {
+            let mut stream = docker.stats(
+                &container,
+                Some(container::StatsOptions {
+                    stream: true,
+                    ..Default::default()
+                }),
+            );
+
+            while let Some(entry) = stream.try_next().await? {
+                write
+                    .send(tungstenite::Message::Text(
+                        serde_json::to_string(&entry).unwrap(),
+                    ))
+                    .await?;
+            }
+        }
+    });
+
+    let read_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
+        try {
+            while let Some(entry) = read.try_next().await? {
+                match entry {
                     tungstenite::Message::Close(_) => {
                         log::info!("WebSocket closed");
 
@@ -140,5 +185,6 @@ async fn accept_connection(
 
     match init.command {
         InitCommand::Attach(container) => attach(ws, docker, container).await,
+        InitCommand::Stats(container) => stats(ws, docker, container).await,
     }
 }
