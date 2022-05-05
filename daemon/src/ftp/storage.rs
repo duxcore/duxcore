@@ -59,7 +59,7 @@ impl BindStorage {
 
     fn inner_to_abs(&self, user: &BindUser, inner: impl AsRef<path::Path>) -> path::PathBuf {
         // remove all .. from the path
-        let clean_path: path::PathBuf = inner.as_ref().into_iter().filter(|x| *x != "..").collect();
+        let clean_path: path::PathBuf = inner.as_ref().iter().filter(|x| *x != "..").collect();
 
         self.root
             .join(user.0.to_string())

@@ -7,8 +7,8 @@ pub struct HttpClient(
     >,
 );
 
-impl HttpClient {
-    pub fn new() -> Self {
+impl Default for HttpClient {
+    fn default() -> Self {
         HttpClient(
             hyper::Client::builder()
                 .build(hyper_tls::HttpsConnector::new())

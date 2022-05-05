@@ -23,7 +23,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             rocket::build()
                 .manage(docker)
                 .manage(corekey)
-                .manage(client::HttpClient::new())
+                .manage(client::HttpClient::default())
                 .attach(api::fairing())
                 .launch()
                 .await
