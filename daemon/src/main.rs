@@ -4,6 +4,7 @@ pub mod api;
 pub mod corekey;
 pub mod ftp;
 pub mod util;
+pub mod client;
 pub mod websocket;
 
 use std::error::Error;
@@ -22,6 +23,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             rocket::build()
                 .manage(docker)
                 .manage(corekey)
+                .manage(client::HttpClient::new())
                 .attach(api::fairing())
                 .launch()
                 .await

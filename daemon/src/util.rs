@@ -31,3 +31,12 @@ where
 
     task.await
 }
+
+// Option<Result> to Result<Option>
+pub fn ortoro<T, E>(x: Option<Result<T, E>>) -> Result<Option<T>, E> {
+    if let Some(x) = x {
+        x.map(|x| Some(x))
+    } else {
+        Ok(None)
+    }
+}

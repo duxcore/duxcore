@@ -23,6 +23,7 @@ type RawConfig = {
   params: {
     image: string;
     bind_dir: string;
+    bind_contents?: string; // url to a .tar.gz archive
 
     // unix
     cmd?: string[];

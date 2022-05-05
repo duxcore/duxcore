@@ -2,6 +2,7 @@ use std::env;
 
 use super::error::Error;
 use crate::corekey::CoreAuthorization;
+use crate::util;
 use bollard::{
     container, image,
     models::{HostConfig, PortMap},
@@ -20,6 +21,7 @@ fn yes() -> bool {
 pub struct RawParams {
     image: String,
     bind_dir: String,
+    bind_contents: Option<String>,
 
     cmd: Option<Vec<String>>,
     shell: Option<Vec<String>>,
@@ -47,6 +49,7 @@ pub async fn create(
     _auth: CoreAuthorization,
     config: Json<CreateConfig>,
     docker: &rocket::State<bollard::Docker>,
+    http: &rocket::State<crate::client::HttpClient>,
 ) -> Result<Value, Error> {
     match config.0 {
         CreateConfig::Raw(raw) => {
@@ -62,7 +65,7 @@ pub async fn create(
                 None,
             );
 
-            while let Some(Ok(x)) = image_stream.next().await {
+            while let Some(x) = util::ortoro(image_stream.next().await)? {
                 if let (Some(status), Some(progress)) = (&x.status, &x.progress) {
                     rocket::info_!("{} {}", status, progress);
                 }
@@ -74,6 +77,33 @@ pub async fn create(
             let path = env::current_dir().unwrap().join("binds").join(&id);
 
             fs::create_dir(&path).await?;
+
+            if let Some(url) = raw.bind_contents {
+                rocket::info_!("Downloading {}", url);
+
+                let response = http
+                    .0
+                    .get(hyper::Uri::try_from(&url)?)
+                    .await
+                    .map_err(|x| Error::Other(Box::new(x)))?;
+
+                let decoder = async_compression::tokio::bufread::GzipDecoder::new(
+                    tokio_util::io::StreamReader::new(response.into_body().map(|result| {
+                        result.map_err(|_| {
+                            std::io::Error::new(std::io::ErrorKind::Other, "Hyper error")
+                        })
+                    })),
+                );
+
+                rocket::info_!("Unpacking {}", url);
+
+                let mut archive = tokio_tar::Archive::new(decoder);
+                let mut entries = archive.entries()?;
+
+                while let Some(mut file) = util::ortoro(entries.next().await)? {
+                    file.unpack_in(&path).await?;
+                }
+            }
 
             let container = docker
                 .create_container(
