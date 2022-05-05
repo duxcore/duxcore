@@ -1,3 +1,4 @@
+use super::error::Error;
 use crate::corekey::CoreAuthorization;
 use crate::util;
 use bollard::{image, models};
@@ -9,7 +10,7 @@ pub async fn create_raw(
     _auth: CoreAuthorization,
     image_data: rocket::Data<'_>,
     docker: &rocket::State<bollard::Docker>,
-) -> Value {
+) -> Result<Value, Error> {
     // keeping `image_data`'s lifetime with some parallel magic
     // can't just use `Body::wrap_stream` because it wants the stream to be `'static`
 
@@ -30,12 +31,11 @@ pub async fn create_raw(
             .try_collect()
     })
     .await
-    .unwrap()
-    .unwrap();
+    .unwrap()?;
 
     let image_id = image[0].status.as_ref();
 
     rocket::info_!("Created container image {:?}", image);
 
-    json!({ "image_id": image_id })
+    Ok(json!({ "image_id": image_id }))
 }

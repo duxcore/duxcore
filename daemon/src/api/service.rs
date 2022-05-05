@@ -1,5 +1,6 @@
 use std::env;
 
+use super::error::Error;
 use crate::corekey::CoreAuthorization;
 use bollard::{
     container, image,
@@ -46,7 +47,7 @@ pub async fn create(
     _auth: CoreAuthorization,
     config: Json<CreateConfig>,
     docker: &rocket::State<bollard::Docker>,
-) -> Value {
+) -> Result<Value, Error> {
     match config.0 {
         CreateConfig::Raw(raw) => {
             rocket::info_!("Creating raw container");
@@ -72,7 +73,7 @@ pub async fn create(
             let id = rand::random::<u64>().to_string();
             let path = env::current_dir().unwrap().join("binds").join(&id);
 
-            fs::create_dir(&path).await.unwrap();
+            fs::create_dir(&path).await?;
 
             let container = docker
                 .create_container(
@@ -99,12 +100,11 @@ pub async fn create(
                         ..Default::default()
                     },
                 )
-                .await
-                .unwrap();
+                .await?;
 
             rocket::info_!("Created container {:?}", container);
 
-            json!({ "container_id": id })
+            Ok(json!({ "container_id": id }))
         }
     }
 }
@@ -124,12 +124,13 @@ pub async fn ctl(
     command: Json<CtlCommand>,
     id: &str,
     docker: &rocket::State<bollard::Docker>,
-) {
+) -> Result<(), Error> {
     match command.0 {
-        CtlCommand::Start => docker.start_container::<&str>(id, None).await,
-        CtlCommand::Stop => docker.stop_container(id, None).await,
-        CtlCommand::Restart => docker.restart_container(id, None).await,
-        CtlCommand::Kill => docker.kill_container::<&str>(id, None).await,
-    }
-    .unwrap()
+        CtlCommand::Start => docker.start_container::<&str>(id, None).await?,
+        CtlCommand::Stop => docker.stop_container(id, None).await?,
+        CtlCommand::Restart => docker.restart_container(id, None).await?,
+        CtlCommand::Kill => docker.kill_container::<&str>(id, None).await?,
+    };
+
+    Ok(())
 }

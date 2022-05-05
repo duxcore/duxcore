@@ -1,6 +1,8 @@
 mod docker_image;
 mod service;
 
+mod error;
+
 use rocket::fairing;
 use serde_json::{json, Value};
 
