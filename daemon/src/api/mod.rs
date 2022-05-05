@@ -4,7 +4,7 @@ mod service;
 use rocket::fairing;
 use serde_json::{json, Value};
 
-const API_VERSION: &str = "v1";
+const PREFIX: &str = "/api/v1";
 
 #[rocket::catch(401)]
 fn unauthorized() -> Value {
@@ -19,9 +19,15 @@ fn unauthorized() -> Value {
 
 pub fn fairing() -> impl fairing::Fairing {
     fairing::AdHoc::on_ignite("HTTP API", |rocket| async {
-        rocket.register("/", rocket::catchers![unauthorized]).mount(
-            format!("/api/{}", API_VERSION),
-            rocket::routes![service::create, docker_image::create_raw],
-        )
+        rocket
+            .register("/", rocket::catchers![unauthorized])
+            .mount(
+                format!("{}/service", PREFIX),
+                rocket::routes![service::create, service::ctl],
+            )
+            .mount(
+                format!("{}/docker/image", PREFIX),
+                rocket::routes![docker_image::create_raw],
+            )
     })
 }

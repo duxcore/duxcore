@@ -13,7 +13,7 @@ local binary version of it is loaded from the file `corekey.bin` on startup.
 
 Creates a service (without starting it).
 
-### Body
+### Request
 
 ```ts
 type Body = RawConfig;
@@ -47,10 +47,31 @@ type HostMapEntry = {
 };
 ```
 
+### Response
+
+```ts
+type Body = {
+  container_id: string;
+};
+```
+
+## `POST /service/<id>/ctl`
+
+Performs various operations on a service, much like the `systemctl` command in
+systemd.
+
+### Request
+
+```ts
+type Body = {
+  op: "start" | "stop" | "restart" | "kill";
+};
+```
+
 ## `POST /docker/image`
 
 Imports a Docker image from a raw .tar archive containing the root filesystem.
 
-### Body
+### Request
 
 A binary .tar archive

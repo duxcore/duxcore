@@ -41,7 +41,7 @@ pub enum CreateConfig {
     Raw(RawParams),
 }
 
-#[rocket::post("/service", data = "<config>")]
+#[rocket::post("/", data = "<config>")]
 pub async fn create(
     _auth: CoreAuthorization,
     config: Json<CreateConfig>,
@@ -69,19 +69,14 @@ pub async fn create(
 
             rocket::info_!("Pulled image {}", raw.image);
 
-            let id: u64 = rand::random();
-            let path = env::current_dir()
-                .unwrap()
-                .join("binds")
-                .join(id.to_string());
+            let id = rand::random::<u64>().to_string();
+            let path = env::current_dir().unwrap().join("binds").join(&id);
 
             fs::create_dir(&path).await.unwrap();
 
             let container = docker
                 .create_container(
-                    Some(container::CreateContainerOptions {
-                        name: id.to_string(),
-                    }),
+                    Some(container::CreateContainerOptions { name: &id }),
                     container::Config {
                         image: Some(raw.image),
                         cmd: raw.cmd,
@@ -112,4 +107,29 @@ pub async fn create(
             json!({ "container_id": id })
         }
     }
+}
+
+#[derive(Deserialize)]
+#[serde(tag = "op", rename_all = "snake_case")]
+pub enum CtlCommand {
+    Start,
+    Stop,
+    Restart,
+    Kill,
+}
+
+#[rocket::post("/<id>/ctl", data = "<command>")]
+pub async fn ctl(
+    _auth: CoreAuthorization,
+    command: Json<CtlCommand>,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) {
+    match command.0 {
+        CtlCommand::Start => docker.start_container::<&str>(id, None).await,
+        CtlCommand::Stop => docker.stop_container(id, None).await,
+        CtlCommand::Restart => docker.restart_container(id, None).await,
+        CtlCommand::Kill => docker.kill_container::<&str>(id, None).await,
+    }
+    .unwrap()
 }

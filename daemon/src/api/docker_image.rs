@@ -4,7 +4,7 @@ use bollard::{image, models};
 use futures::TryStreamExt;
 use serde_json::{json, Value};
 
-#[rocket::post("/docker/image", data = "<image_data>")]
+#[rocket::post("/", data = "<image_data>")]
 pub async fn create_raw(
     _auth: CoreAuthorization,
     image_data: rocket::Data<'_>,
