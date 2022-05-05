@@ -1,10 +1,10 @@
 #![feature(try_blocks)]
 
 pub mod api;
+pub mod client;
 pub mod corekey;
 pub mod ftp;
 pub mod util;
-pub mod client;
 pub mod websocket;
 
 use std::error::Error;
