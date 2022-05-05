@@ -4,7 +4,8 @@ A program that turns anything into a datacenter.
 
 ## Requirements
 
-- Docker
+- [Docker](https://docker.com)
+- [Rust nightly](https://rustup.rs/)
 
 ## Testing
 
