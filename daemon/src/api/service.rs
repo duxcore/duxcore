@@ -36,6 +36,9 @@ pub struct RawParams {
     hostname: Option<String>,
     port_map: Option<PortMap>,
     network_disabled: Option<bool>,
+
+    max_cpu: Option<u64>,
+    max_ram: Option<u64>,
 }
 
 #[derive(Deserialize)]
@@ -119,6 +122,8 @@ pub async fn create(
                         hostname: raw.hostname,
                         network_disabled: raw.network_disabled,
                         host_config: Some(HostConfig {
+                            memory: raw.max_ram.map(|x| x as i64),
+                            cpu_quota: raw.max_cpu.map(|x| x as i64),
                             binds: Some(vec![format!(
                                 "{}:/{}",
                                 path.to_str().unwrap(),

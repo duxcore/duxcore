@@ -39,6 +39,10 @@ type RawConfig = {
     hostname?: string;
     port_map?: Record<`${string}/${string}`, HostMapEntry>;
     network_disabled?: boolean;
+
+    // hardware
+    max_cpu?: number; // max length of a cpu period in microsecs
+    max_ram?: number; // in bytes
   };
 };
 
