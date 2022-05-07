@@ -6,7 +6,7 @@ mod error;
 use rocket::fairing;
 use serde_json::{json, Value};
 
-const PREFIX: &str = "/api/v1";
+const PREFIX: &str = "/v1";
 
 #[rocket::catch(401)]
 fn unauthorized() -> Value {
