@@ -10,7 +10,6 @@ use bollard::{
 use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
-use serde_json::{json, Value};
 use tokio::fs;
 
 fn yes() -> bool {
@@ -19,6 +18,7 @@ fn yes() -> bool {
 
 #[derive(Deserialize)]
 pub struct RawParams {
+    id: String,
     image: String,
     bind_dir: String,
     bind_contents: Option<String>,
@@ -27,6 +27,7 @@ pub struct RawParams {
     shell: Option<Vec<String>>,
     user: Option<String>,
     working_dir: Option<String>,
+    env: Option<Vec<String>>,
 
     #[serde(default = "yes")]
     open_stdin: bool,
@@ -53,10 +54,10 @@ pub async fn create(
     config: Json<CreateConfig>,
     docker: &rocket::State<bollard::Docker>,
     http: &rocket::State<crate::client::HttpClient>,
-) -> Result<Value, Error> {
+) -> Result<(), Error> {
     match config.0 {
         CreateConfig::Raw(raw) => {
-            rocket::info_!("Creating raw container");
+            rocket::info_!("Creating raw container with id {}", raw.id);
             rocket::info_!("Pulling image {}", raw.image);
 
             let mut image_stream = docker.create_image(
@@ -76,8 +77,7 @@ pub async fn create(
 
             rocket::info_!("Pulled image {}", raw.image);
 
-            let id = rand::random::<u64>().to_string();
-            let path = env::current_dir().unwrap().join("binds").join(&id);
+            let path = env::current_dir().unwrap().join("binds").join(&raw.id);
 
             fs::create_dir(&path).await?;
 
@@ -110,7 +110,7 @@ pub async fn create(
 
             let container = docker
                 .create_container(
-                    Some(container::CreateContainerOptions { name: &id }),
+                    Some(container::CreateContainerOptions { name: &raw.id }),
                     container::Config {
                         image: Some(raw.image),
                         cmd: raw.cmd,
@@ -121,6 +121,7 @@ pub async fn create(
                         tty: Some(raw.tty),
                         hostname: raw.hostname,
                         network_disabled: raw.network_disabled,
+                        env: raw.env,
                         host_config: Some(HostConfig {
                             memory: raw.max_ram.map(|x| x as i64),
                             cpu_quota: raw.max_cpu.map(|x| x as i64),
@@ -139,7 +140,7 @@ pub async fn create(
 
             rocket::info_!("Created container {:?}", container);
 
-            Ok(json!({ "container_id": id }))
+            Ok(())
         }
     }
 }

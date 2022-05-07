@@ -21,10 +21,6 @@ impl auth::Authenticator<BindUser> for DuxcoreAuthenticator {
         username: &str,
         _creds: &auth::Credentials,
     ) -> Result<BindUser, auth::AuthenticationError> {
-        Ok(BindUser(
-            username
-                .parse()
-                .map_err(|_| auth::AuthenticationError::BadUser)?,
-        ))
+        Ok(BindUser(username.into()))
     }
 }

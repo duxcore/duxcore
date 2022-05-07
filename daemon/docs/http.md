@@ -21,6 +21,7 @@ type Body = RawConfig;
 type RawConfig = {
   type: "raw";
   params: {
+    id: string; // id in the core's system
     image: string;
     bind_dir: string;
     bind_contents?: string; // url to a .tar.gz archive
@@ -30,6 +31,7 @@ type RawConfig = {
     shell?: string[];
     user?: string;
     working_dir?: string;
+    env?: string[]; // example: VAR1=value1. no equals sign unsets the variable
 
     // stdio
     open_stdin?: boolean; // default = true
@@ -49,14 +51,6 @@ type RawConfig = {
 type HostMapEntry = {
   HostIp?: string;
   HostPort: string;
-};
-```
-
-### Response
-
-```ts
-type Body = {
-  container_id: string;
 };
 ```
 

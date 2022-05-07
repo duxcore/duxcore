@@ -2,7 +2,7 @@ use libunftp::auth;
 use std::fmt;
 
 #[derive(Debug)]
-pub struct BindUser(pub u64);
+pub struct BindUser(pub String);
 
 impl fmt::Display for BindUser {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

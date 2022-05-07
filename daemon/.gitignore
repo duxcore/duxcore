@@ -1,3 +1,4 @@
-target
-corekey.bin
-binds
+/target
+/corekey.bin
+/binds/*
+.gitkeep
