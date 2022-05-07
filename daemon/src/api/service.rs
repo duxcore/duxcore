@@ -27,6 +27,7 @@ pub struct RawParams {
     shell: Option<Vec<String>>,
     user: Option<String>,
     working_dir: Option<String>,
+    env: Option<Vec<String>>,
 
     #[serde(default = "yes")]
     open_stdin: bool,
@@ -120,6 +121,7 @@ pub async fn create(
                         tty: Some(raw.tty),
                         hostname: raw.hostname,
                         network_disabled: raw.network_disabled,
+                        env: raw.env,
                         host_config: Some(HostConfig {
                             memory: raw.max_ram.map(|x| x as i64),
                             cpu_quota: raw.max_cpu.map(|x| x as i64),

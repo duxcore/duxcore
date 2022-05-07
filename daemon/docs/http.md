@@ -31,6 +31,7 @@ type RawConfig = {
     shell?: string[];
     user?: string;
     working_dir?: string;
+    env?: string[]; // example: VAR1=value1. no equals sign unsets the variable
 
     // stdio
     open_stdin?: boolean; // default = true
