@@ -21,6 +21,7 @@ type Body = RawConfig;
 type RawConfig = {
   type: "raw";
   params: {
+    id: string; // id in the core's system
     image: string;
     bind_dir: string;
     bind_contents?: string; // url to a .tar.gz archive
@@ -49,14 +50,6 @@ type RawConfig = {
 type HostMapEntry = {
   HostIp?: string;
   HostPort: string;
-};
-```
-
-### Response
-
-```ts
-type Body = {
-  container_id: string;
 };
 ```
 
