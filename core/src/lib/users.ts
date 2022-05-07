@@ -22,11 +22,10 @@ interface NewUserData {
   emailVerified?: boolean;
 }
 
-
 export const users = {
   async fetch(id: string): Promise<UserManager | null> {
     let rawUser = await prismaInstance.user.findFirst({
-      where: { id }
+      where: { id },
     });
 
     if (rawUser == null) return null;
@@ -34,7 +33,7 @@ export const users = {
   },
 
   async create(data: NewUserData) {
-    const user = (await prismaInstance.user.create({
+    const user = await prismaInstance.user.create({
       data: {
         email: data.email,
         password: data.password,
@@ -47,54 +46,75 @@ export const users = {
         meta_tags: {
           create: {
             isStaff: data.isStaff,
-            emailVerified: data.emailVerified
-          }
-        }
-      }
-    }));
+            emailVerified: data.emailVerified,
+          },
+        },
+      },
+    });
 
     return new UserManager(user);
   },
 
   async login(email: string, password: string, ip: string) {
     let passwordValid = false;
-    const emailExists = (await prismaInstance.user.count({
-      where: {
-        email
-      }
-    })) == 1;
+    const emailExists =
+      (await prismaInstance.user.count({
+        where: {
+          email,
+        },
+      })) == 1;
 
-    if (emailExists) passwordValid = await Password.validate(password, (await prismaInstance.user.findFirst({
-      where: {
-        email
-      }
-    }))?.password as string);
+    if (emailExists)
+      passwordValid = await Password.validate(
+        password,
+        (
+          await prismaInstance.user.findFirst({
+            where: {
+              email,
+            },
+          })
+        )?.password as string
+      );
 
-    if (emailExists) await prismaInstance.userLoginAttempts.create({
-      data: {
-        userId: (await prismaInstance.user.findFirst({ where: { email } }))?.id as string,
-        ip,
-        accepted: passwordValid,
-        denialReason: (() => {
-          if (!emailExists) return "Unknown User";
-          if (!passwordValid) return "Invalid Password";
-          return undefined;
-        })()
-      }
-    }).catch(e => { throw e; })
+    if (emailExists)
+      await prismaInstance.userLoginAttempts
+        .create({
+          data: {
+            userId: (
+              await prismaInstance.user.findFirst({ where: { email } })
+            )?.id as string,
+            ip,
+            accepted: passwordValid,
+            denialReason: (() => {
+              if (!emailExists) return "Unknown User";
+              if (!passwordValid) return "Invalid Password";
+              return undefined;
+            })(),
+          },
+        })
+        .catch((e) => {
+          throw e;
+        });
 
     return {
-      authorization: passwordValid ? await authorizationToken.generateTokenPair({
-        userId: (await prismaInstance.user.findFirst({ where: { email } }))?.id as string
-      }) : null,
+      authorization: passwordValid
+        ? await authorizationToken.generateTokenPair({
+            userId: (
+              await prismaInstance.user.findFirst({ where: { email } })
+            )?.id as string,
+          })
+        : null,
       emailExists,
       passwordValid,
-      userId: (await prismaInstance.user.findFirst({
-        where: {
-          email
-        }
-      }))?.id ?? null
-    }
+      userId:
+        (
+          await prismaInstance.user.findFirst({
+            where: {
+              email,
+            },
+          })
+        )?.id ?? null,
+    };
   },
 
   async generateEmailResetToken(userId: string, newEmail: string) {
@@ -108,28 +128,37 @@ export const users = {
     let resetToken = await prismaInstance.userEmailResetTokens.create({
       data: {
         userId,
-        email: encryptedEmail
-      }
+        email: encryptedEmail,
+      },
     });
 
     let resetUrl = `${env.dashUrl}/reset-email?token=${resetToken.token}&email=${encryptedEmail}`;
     let emailTemplate = emailResetConfirmation({
-      confirmationUrl: resetUrl
+      confirmationUrl: resetUrl,
     });
 
-    await sendEmail([newEmail], emailTemplate, "Confirm your new email address!");
+    await sendEmail(
+      [newEmail],
+      emailTemplate,
+      "Confirm your new email address!"
+    );
     return;
   },
 
-  async validateEmailResetToken(token: string, encryptedEmail: string, password: string) {
+  async validateEmailResetToken(
+    token: string,
+    encryptedEmail: string,
+    password: string
+  ) {
     let tokenData = await prismaInstance.userEmailResetTokens.findFirst({
       where: {
-        token: token
-      }
+        token: token,
+      },
     });
 
     if (!tokenData) throw errorManifest.invalidEmailResetToken;
-    if (tokenData.email !== encryptedEmail) throw errorManifest.invalidEmailTokenMatch;
+    if (tokenData.email !== encryptedEmail)
+      throw errorManifest.invalidEmailTokenMatch;
 
     let newEmail = cryptr.decrypt(encryptedEmail);
     let oldEmail;
@@ -137,30 +166,28 @@ export const users = {
 
     oldEmail = user?.email;
 
-    if (!user) return errorManifest.unknownUser
-    if (!user?.validatePassowrd(password)) throw errorManifest.invalidPassword
+    if (!user) return errorManifest.unknownUser;
+    if (!user?.validatePassowrd(password)) throw errorManifest.invalidPassword;
 
     await user.updateEmail(newEmail);
-    await sendEmail([
-      oldEmail,
-      newEmail
-    ],
+    await sendEmail(
+      [oldEmail, newEmail],
       emailResetComplete({}),
       "Your email address has been reset successfully!"
     );
     await prismaInstance.userEmailResetTokens.delete({
       where: {
-        id: tokenData.id
-      }
-    })
+        id: tokenData.id,
+      },
+    });
     return;
   },
 
   async emailExists(email: string) {
     let test = await prismaInstance.user.findFirst({
       where: {
-        email
-      }
+        email,
+      },
     });
 
     if (!test) return false;
@@ -169,5 +196,5 @@ export const users = {
 
   async count(): Promise<number> {
     return await prismaInstance.user.count();
-  }
-}
+  },
+};

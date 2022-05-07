@@ -8,10 +8,13 @@ generator client {
 }
 
 enum UserRole {
-  SUPER_ADMINISTRATOR
   ADMINISTRATOR
-  MODERATOR
   USER
+}
+
+enum NodeJSPkgManager {
+  YARN
+  NPM
 }
 
 model User {
@@ -32,6 +35,7 @@ model User {
   UserEmailResetTokens    UserEmailResetTokens[]
   Projects                Project[]
   ServerMonitoringService ServerMonitoringService[]
+  NodeJsAppService        NodeJsAppService[]
 }
 
 model UserMetaTags {
@@ -71,6 +75,18 @@ model UserEmailResetTokens {
   userId  String
 }
 
+model Daemon {
+  id      String   @id @default(uuid())
+  name    String
+  created DateTime @default(now())
+  host    String
+  port    String
+
+  secret String
+
+  NodeJsAppService NodeJsAppService[]
+}
+
 model Project {
   id        String   @id @default(uuid())
   index     Int      @default(autoincrement())
@@ -81,6 +97,30 @@ model Project {
   upatedAt  DateTime @updatedAt
 
   ServerMonitoringService ServerMonitoringService[]
+  NodeJsAppService        NodeJsAppService[]
+}
+
+model NodeJsAppService {
+  id   String @id @default(uuid())
+  name String
+
+  project   Project @relation(references: [id], fields: [projectId])
+  projectId String
+
+  pkgManager NodeJSPkgManager @default(NPM)
+
+  startCommand   String
+  buildCommand   String
+  installCommand String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner   User   @relation(references: [id], fields: [ownerId])
+  ownerId String
+
+  daemon   Daemon @relation(references: [id], fields: [daemonId])
+  daemonId String
 }
 
 model ServerMonitoringService {
