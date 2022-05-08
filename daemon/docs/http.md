@@ -74,3 +74,11 @@ Imports a Docker image from a raw .tar archive containing the root filesystem.
 ### Request
 
 A binary .tar archive
+
+### Response
+
+```ts
+type Body = {
+  image_id: string;
+};
+```
