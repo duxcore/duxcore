@@ -1,4 +1,5 @@
 import { Daemon } from "@prisma/client";
+import DaemonServerManager from "./DaemonServerManager";
 
 export default class DaemonManager {
   private _raw: Daemon;
@@ -10,6 +11,8 @@ export default class DaemonManager {
 
   public readonly host: string;
   public readonly port: string;
+  public readonly wsPort: string;
+  public readonly secure: boolean;
 
   constructor(raw: Daemon) {
     this._raw = raw;
@@ -21,8 +24,14 @@ export default class DaemonManager {
 
     this.host = raw.host;
     this.port = raw.port;
+    this.wsPort = raw.wsPort;
 
     this.secret = raw.secret;
+    this.secure = raw.secure;
+  }
+
+  public get server(): DaemonServerManager {
+    return new DaemonServerManager(this);
   }
 
   public toJson() {
@@ -31,6 +40,8 @@ export default class DaemonManager {
       name: this.name,
       host: this.host,
       port: this.port,
+      wsPort: this.wsPort,
+      secure: this.secure,
     };
   }
 }

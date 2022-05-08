@@ -5,6 +5,7 @@ import cluster, { Worker } from "cluster";
 import process from "process";
 import { createClient, RedisClientType } from "redis";
 import { randomUUID } from "crypto";
+import { daemons } from "./lib/daemons";
 
 config();
 

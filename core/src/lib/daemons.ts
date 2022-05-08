@@ -5,6 +5,8 @@ export interface NewDaemonData {
   name: string;
   host: string;
   port: number;
+  wsPort: string;
+  secure: boolean;
   secret: string;
 }
 
@@ -21,6 +23,8 @@ export const daemons = {
     name,
     host,
     port,
+    wsPort,
+    secure,
     secret,
   }: NewDaemonData): Promise<DaemonManager> {
     const newDaemon = await prismaInstance.daemon
@@ -29,6 +33,8 @@ export const daemons = {
           name,
           host,
           port: port.toString(),
+          wsPort,
+          secure,
           secret,
         },
       })

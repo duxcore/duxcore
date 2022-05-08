@@ -124,4 +124,8 @@ export const errorManifest = {
     code: "PROJECT_ACCESS_DENIED",
     message: "You do not have permission to view or modify this project...",
   },
+  invalidDaemonId: {
+    code: "INVALID_DAEMON_ID",
+    message: "The daemon id provided is not valid...",
+  },
 };

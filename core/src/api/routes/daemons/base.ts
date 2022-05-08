@@ -16,6 +16,8 @@ export const apiDaemonBaseRoutes = [
         name: string;
         host: string;
         port: number | string;
+        secure: boolean;
+        wsPort: string | number;
         secret: string;
       }>(req.body, {
         name: {
@@ -27,6 +29,14 @@ export const apiDaemonBaseRoutes = [
         },
         port: {
           onMissing: () => errors.append(errorConstructor.missingValue("port")),
+        },
+        wsPort: {
+          onMissing: () =>
+            errors.append(errorConstructor.missingValue("wsPort")),
+        },
+        secure: {
+          onMissing: () =>
+            errors.append(errorConstructor.missingValue("secure")),
         },
         secret: {
           onMissing: () =>
@@ -40,6 +50,8 @@ export const apiDaemonBaseRoutes = [
             name: req.body.name,
             host: req.body.host,
             port: req.body.port,
+            wsPort: req.body.wsPort,
+            secure: req.body.secure,
             secret: req.body.secret,
           })
           .then((res) => {
@@ -58,6 +70,37 @@ export const apiDaemonBaseRoutes = [
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Seccussfully created daemon.",
+        data: responseData,
+        successful: true,
+      });
+    },
+  }),
+  manifestation.newRoute({
+    route: "/:id",
+    method: "get",
+    executor: async (req, res) => {
+      let errors = apiError.createErrorStack();
+      let responseData;
+
+      await dataValidator<{ id: string }>(req.params as any, {
+        id: {
+          validator: async (v) => {
+            let daemonData = await daemons.fetch(v);
+
+            if (!daemonData) return "invalidDaemonId";
+            responseData = daemonData.toJson();
+            return true;
+          },
+          onFail: (err) => {
+            errors.append(err);
+          },
+        },
+      });
+
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Seccussfully fetched daemond.",
         data: responseData,
         successful: true,
       });

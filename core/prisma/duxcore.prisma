@@ -79,9 +79,11 @@ model Daemon {
   id      String   @id @default(uuid())
   name    String
   created DateTime @default(now())
-  host    String
-  port    String
 
+  host   String
+  port   String
+  wsPort String  @default("8001")
+  secure Boolean
   secret String
 
   NodeJsAppService NodeJsAppService[]
