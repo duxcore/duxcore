@@ -170,3 +170,24 @@ pub async fn ctl(
 
     Ok(())
 }
+
+#[rocket::get("/<id>/stats")]
+pub async fn stats(
+    _auth: CoreAuthorization,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) -> Result<Json<container::Stats>, Error> {
+    Ok(Json(
+        docker
+            .stats(
+                id,
+                Some(container::StatsOptions {
+                    one_shot: false,
+                    stream: false,
+                }),
+            )
+            .next()
+            .await
+            .unwrap()?,
+    ))
+}
