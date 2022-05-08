@@ -12,10 +12,6 @@ use rocket::serde::json::Json;
 use serde::*;
 use tokio::fs;
 
-fn yes() -> bool {
-    true
-}
-
 #[derive(Deserialize)]
 pub struct RawParams {
     id: String,
@@ -29,9 +25,9 @@ pub struct RawParams {
     working_dir: Option<String>,
     env: Option<Vec<String>>,
 
-    #[serde(default = "yes")]
+    #[serde(default = "util::yes")]
     open_stdin: bool,
-    #[serde(default = "yes")]
+    #[serde(default = "util::yes")]
     tty: bool,
 
     hostname: Option<String>,

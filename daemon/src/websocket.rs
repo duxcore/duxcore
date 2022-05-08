@@ -1,4 +1,4 @@
-use crate::corekey;
+use crate::{corekey, util};
 use bollard::container;
 use futures::{SinkExt, StreamExt, TryStreamExt};
 use std::sync::Arc;
@@ -37,7 +37,11 @@ struct Init {
 #[derive(serde::Deserialize)]
 #[serde(tag = "type", content = "data", rename_all = "snake_case")]
 enum InitCommand {
-    Attach(String),
+    Attach {
+        service_id: String,
+        #[serde(default = "util::no")]
+        logs: bool,
+    },
     Stats(String),
 }
 
@@ -63,11 +67,12 @@ enum Error {
 
 type Ws = tokio_tungstenite::WebSocketStream<net::TcpStream>;
 
-async fn attach(ws: Ws, docker: bollard::Docker, container: String) -> Result<(), Error> {
-    log::info!("Starting container {}", container);
-
-    docker.start_container::<&str>(&container, None).await.ok();
-
+async fn attach(
+    ws: Ws,
+    docker: bollard::Docker,
+    container: String,
+    logs: bool,
+) -> Result<(), Error> {
     log::info!("Attaching to container {}", container);
 
     let mut attachment = docker
@@ -78,6 +83,7 @@ async fn attach(ws: Ws, docker: bollard::Docker, container: String) -> Result<()
                 stdout: Some(true),
                 stderr: Some(true),
                 stream: Some(true),
+                logs: Some(logs),
                 ..Default::default()
             }),
         )
@@ -184,7 +190,7 @@ async fn accept_connection(
     }?;
 
     match init.command {
-        InitCommand::Attach(container) => attach(ws, docker, container).await,
+        InitCommand::Attach { service_id, logs } => attach(ws, docker, service_id, logs).await,
         InitCommand::Stats(container) => stats(ws, docker, container).await,
     }
 }

@@ -20,14 +20,17 @@ type Init = {
 ```ts
 type CommandAttach = {
   type: "attach";
-  data: string; // service id
+  data: {
+    service_id: number;
+    logs?: boolean; // default = false
+  };
 };
 ```
 
-The attach command starts the specified service and connects you with a tty of
-the container. The messages are sent in binary blobs, because not all commands
-may output valid UTF-8 data. Use the [`attach-example.js`](./attach-example.js)
-script as reference client implementation.
+The attach command connects you with a tty of the specified container. The
+messages are sent in binary blobs, because not all commands may output valid
+UTF-8 data. Use the [`attach-example.js`](./attach-example.js) script as
+reference client implementation.
 
 ## Stats
 

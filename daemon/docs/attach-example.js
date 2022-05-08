@@ -17,7 +17,10 @@ ws.onopen = async () => {
   sendjson({
     corekey: corekey,
     type: "attach",
-    data: container,
+    data: {
+      service_id: container,
+      logs: true,
+    },
   });
 };
 
