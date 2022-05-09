@@ -29,7 +29,8 @@ pub fn fairing() -> impl fairing::Fairing {
                     service::create,
                     service::ctl,
                     service::stats,
-                    service::delete
+                    service::delete,
+                    service::info,
                 ],
             )
             .mount(

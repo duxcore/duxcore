@@ -219,6 +219,14 @@ Deletes a service and its bind directory.
 
 _None_
 
+## `GET /service/<id>`
+
+Fetches container information.
+
+### Response
+
+Same as [ContainerInspect](https://docs.docker.com/engine/api/v1.41/#operation/ContainerInspect)'s response.
+
 ## `POST /docker/image`
 
 Imports a Docker image from a raw .tar archive containing the root filesystem.

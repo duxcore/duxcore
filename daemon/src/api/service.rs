@@ -6,6 +6,7 @@ use crate::util;
 use bollard::{
     container, image,
     models::{HostConfig, PortMap},
+    service,
 };
 use futures::StreamExt;
 use rocket::serde::json::Json;
@@ -202,4 +203,13 @@ pub async fn delete(
     fs::remove_dir_all(bind_dir(id)).await?; // delete the bind dir
 
     Ok(())
+}
+
+#[rocket::get("/<id>")]
+pub async fn info(
+    _auth: CoreAuthorization,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) -> Result<Json<service::ContainerInspectResponse>, Error> {
+    Ok(Json(docker.inspect_container(id, None).await?))
 }
