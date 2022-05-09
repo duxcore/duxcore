@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, path};
 
 use super::error::Error;
 use crate::corekey::CoreAuthorization;
@@ -11,6 +11,10 @@ use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
 use tokio::fs;
+
+fn bind_dir(id: &str) -> path::PathBuf {
+    env::current_dir().unwrap().join("binds").join(id)
+}
 
 #[derive(Deserialize)]
 pub struct RawParams {
@@ -73,7 +77,7 @@ pub async fn create(
 
             rocket::info_!("Pulled image {}", raw.image);
 
-            let path = env::current_dir().unwrap().join("binds").join(&raw.id);
+            let path = bind_dir(&raw.id);
 
             fs::create_dir(&path).await?;
 
@@ -186,4 +190,16 @@ pub async fn stats(
             .await
             .unwrap()?,
     ))
+}
+
+#[rocket::delete("/<id>")]
+pub async fn delete(
+    _auth: CoreAuthorization,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) -> Result<(), Error> {
+    docker.remove_container(id, None).await?;
+    fs::remove_dir_all(bind_dir(id)).await?; // delete the bind dir
+
+    Ok(())
 }

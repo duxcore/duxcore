@@ -25,7 +25,12 @@ pub fn fairing() -> impl fairing::Fairing {
             .register("/", rocket::catchers![unauthorized])
             .mount(
                 format!("{}/service", PREFIX),
-                rocket::routes![service::create, service::ctl, service::stats],
+                rocket::routes![
+                    service::create,
+                    service::ctl,
+                    service::stats,
+                    service::delete
+                ],
             )
             .mount(
                 format!("{}/docker/image", PREFIX),

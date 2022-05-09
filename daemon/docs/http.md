@@ -203,6 +203,10 @@ Outputs the resource usage statistics of the service.
 }
 ```
 
+## `DELETE /service/<id>`
+
+Deletes a service and its bind directory.
+
 ## `POST /docker/image`
 
 Imports a Docker image from a raw .tar archive containing the root filesystem.
