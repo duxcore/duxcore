@@ -40,3 +40,13 @@ pub fn ortoro<T, E>(x: Option<Result<T, E>>) -> Result<Option<T>, E> {
         Ok(None)
     }
 }
+
+/// For `#[serde(default)]`
+pub fn yes() -> bool {
+    true
+}
+
+/// For `#[serde(default)]`
+pub fn no() -> bool {
+    false
+}

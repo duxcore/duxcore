@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, path};
 
 use super::error::Error;
 use crate::corekey::CoreAuthorization;
@@ -6,14 +6,15 @@ use crate::util;
 use bollard::{
     container, image,
     models::{HostConfig, PortMap},
+    service,
 };
 use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
 use tokio::fs;
 
-fn yes() -> bool {
-    true
+fn bind_dir(id: &str) -> path::PathBuf {
+    env::current_dir().unwrap().join("binds").join(id)
 }
 
 #[derive(Deserialize)]
@@ -29,9 +30,9 @@ pub struct RawParams {
     working_dir: Option<String>,
     env: Option<Vec<String>>,
 
-    #[serde(default = "yes")]
+    #[serde(default = "util::yes")]
     open_stdin: bool,
-    #[serde(default = "yes")]
+    #[serde(default = "util::yes")]
     tty: bool,
 
     hostname: Option<String>,
@@ -77,7 +78,7 @@ pub async fn create(
 
             rocket::info_!("Pulled image {}", raw.image);
 
-            let path = env::current_dir().unwrap().join("binds").join(&raw.id);
+            let path = bind_dir(&raw.id);
 
             fs::create_dir(&path).await?;
 
@@ -169,4 +170,46 @@ pub async fn ctl(
     };
 
     Ok(())
+}
+
+#[rocket::get("/<id>/stats")]
+pub async fn stats(
+    _auth: CoreAuthorization,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) -> Result<Json<container::Stats>, Error> {
+    Ok(Json(
+        docker
+            .stats(
+                id,
+                Some(container::StatsOptions {
+                    one_shot: false,
+                    stream: false,
+                }),
+            )
+            .next()
+            .await
+            .unwrap()?,
+    ))
+}
+
+#[rocket::delete("/<id>")]
+pub async fn delete(
+    _auth: CoreAuthorization,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) -> Result<(), Error> {
+    docker.remove_container(id, None).await?;
+    fs::remove_dir_all(bind_dir(id)).await?; // delete the bind dir
+
+    Ok(())
+}
+
+#[rocket::get("/<id>")]
+pub async fn info(
+    _auth: CoreAuthorization,
+    id: &str,
+    docker: &rocket::State<bollard::Docker>,
+) -> Result<Json<service::ContainerInspectResponse>, Error> {
+    Ok(Json(docker.inspect_container(id, None).await?))
 }
