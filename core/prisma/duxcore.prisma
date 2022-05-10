@@ -75,6 +75,15 @@ model UserEmailResetTokens {
   userId  String
 }
 
+model DaemonRegion {
+  id   String @id @default(uuid())
+  name String
+  code String
+
+  created DateTime @default(now())
+  Daemon  Daemon[]
+}
+
 model Daemon {
   id      String   @id @default(uuid())
   name    String
@@ -85,6 +94,9 @@ model Daemon {
   wsPort String  @default("8001")
   secure Boolean
   secret String
+
+  region   DaemonRegion @relation(references: [id], fields: [regionId])
+  regionId String
 
   NodeJsAppService NodeJsAppService[]
 }

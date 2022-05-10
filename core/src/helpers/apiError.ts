@@ -128,4 +128,12 @@ export const errorManifest = {
     code: "INVALID_DAEMON_ID",
     message: "The daemon id provided is not valid...",
   },
+  unknownDaemonRegion: {
+    code: "UNKNOWN_DAEMON_REGION",
+    message: "The daemon region id provided cannot be found.",
+  },
+  regionCodeUnavailable: {
+    code: "REGION_CODE_UNAVAILABLE",
+    message: "The region provided already exists as a region.",
+  },
 };

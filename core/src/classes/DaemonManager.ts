@@ -1,4 +1,6 @@
 import { Daemon } from "@prisma/client";
+import { daemonRegions } from "../lib/daemonRegions";
+import DaemonRegionManager from "./DaemonRegionManager";
 import DaemonServerManager from "./DaemonServerManager";
 
 export default class DaemonManager {
@@ -13,6 +15,7 @@ export default class DaemonManager {
   public readonly port: string;
   public readonly wsPort: string;
   public readonly secure: boolean;
+  public readonly region: Promise<DaemonRegionManager>;
 
   constructor(raw: Daemon) {
     this._raw = raw;
@@ -28,13 +31,16 @@ export default class DaemonManager {
 
     this.secret = raw.secret;
     this.secure = raw.secure;
+    this.region = daemonRegions.fetch(
+      raw.regionId
+    ) as Promise<DaemonRegionManager>;
   }
 
   public get server(): DaemonServerManager {
     return new DaemonServerManager(this);
   }
 
-  public toJson() {
+  public async toJson() {
     return {
       id: this.id,
       name: this.name,
@@ -42,6 +48,7 @@ export default class DaemonManager {
       port: this.port,
       wsPort: this.wsPort,
       secure: this.secure,
+      region: (await this.region).toJson(),
     };
   }
 }

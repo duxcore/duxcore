@@ -1,6 +1,7 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiError, errorConstructor } from "../../../helpers/apiError";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";
+import { daemonRegions } from "../../../lib/daemonRegions";
 import { daemons } from "../../../lib/daemons";
 import { dataValidator } from "../../../util/dataValidator";
 
@@ -19,6 +20,7 @@ export const apiDaemonBaseRoutes = [
         secure: boolean;
         wsPort: string | number;
         secret: string;
+        region: string;
       }>(req.body, {
         name: {
           validators: [],
@@ -42,6 +44,16 @@ export const apiDaemonBaseRoutes = [
           onMissing: () =>
             errors.append(errorConstructor.missingValue("secret")),
         },
+        region: {
+          validator: async (v) => {
+            return await daemonRegions.exists(v);
+          },
+          onFail: async (v) => {
+            return errors.append("unknownDaemonRegion");
+          },
+          onMissing: () =>
+            errors.append(errorConstructor.missingValue("region")),
+        },
       });
 
       if (errors.stack.length === 0)
@@ -53,6 +65,7 @@ export const apiDaemonBaseRoutes = [
             wsPort: req.body.wsPort,
             secure: req.body.secure,
             secret: req.body.secret,
+            regionId: req.body.region,
           })
           .then((res) => {
             responseData = res.toJson();
@@ -70,7 +83,7 @@ export const apiDaemonBaseRoutes = [
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Seccussfully created daemon.",
-        data: responseData,
+        data: await responseData,
         successful: true,
       });
     },
@@ -100,8 +113,8 @@ export const apiDaemonBaseRoutes = [
       if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
       return manifestation.sendApiResponse(res, {
         status: 200,
-        message: "Seccussfully fetched daemond.",
-        data: responseData,
+        message: "Successfully fetched daemond.",
+        data: await responseData,
         successful: true,
       });
     },

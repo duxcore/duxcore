@@ -8,6 +8,7 @@ export interface NewDaemonData {
   wsPort: string;
   secure: boolean;
   secret: string;
+  regionId: string;
 }
 
 export const daemons = {
@@ -26,6 +27,7 @@ export const daemons = {
     wsPort,
     secure,
     secret,
+    regionId,
   }: NewDaemonData): Promise<DaemonManager> {
     const newDaemon = await prismaInstance.daemon
       .create({
@@ -36,6 +38,7 @@ export const daemons = {
           wsPort,
           secure,
           secret,
+          regionId,
         },
       })
       .catch((err) => {
