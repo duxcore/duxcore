@@ -6,7 +6,7 @@ const jwtPrivateKey = fs.readFileSync(
   `${__dirname}/${__filename.endsWith(".js") ? "../" : ""}../../jwt.key`
 );
 const tokenDuration =
-  process.env.NODE_EVE == "development" ? 60 * 60 * 6 : 60 * 5;
+  process.env.NODE_ENV == "development" ? 60 * 60 * 6 : 60 * 5;
 
 export interface AuthTokenPayload {
   userId: string;

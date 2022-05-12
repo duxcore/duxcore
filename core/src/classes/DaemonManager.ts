@@ -6,6 +6,7 @@ import DaemonServerManager from "./DaemonServerManager";
 export default class DaemonManager {
   private _raw: Daemon;
   public readonly id: string;
+  public readonly code: string;
   public readonly name: string;
 
   public readonly created: Date;
@@ -15,7 +16,13 @@ export default class DaemonManager {
   public readonly port: string;
   public readonly wsPort: string;
   public readonly secure: boolean;
+
   public readonly region: Promise<DaemonRegionManager>;
+  public readonly regionDiscriminator: string;
+
+  public readonly cpuCeil: number;
+  public readonly memCeil: number;
+  public readonly diskCeil: number;
 
   constructor(raw: Daemon) {
     this._raw = raw;
@@ -28,6 +35,13 @@ export default class DaemonManager {
     this.host = raw.host;
     this.port = raw.port;
     this.wsPort = raw.wsPort;
+
+    this.cpuCeil = raw.cpuCeil;
+    this.memCeil = raw.memCeil;
+    this.diskCeil = raw.diskCeil;
+
+    this.regionDiscriminator = raw.regionDiscriminator;
+    this.code = raw.code;
 
     this.secret = raw.secret;
     this.secure = raw.secure;
@@ -43,12 +57,21 @@ export default class DaemonManager {
   public async toJson() {
     return {
       id: this.id,
+      code: this.code,
       name: this.name,
       host: this.host,
       port: this.port,
       wsPort: this.wsPort,
       secure: this.secure,
-      region: (await this.region).toJson(),
+      resourceCeil: {
+        cpu: this.cpuCeil,
+        memory: this.memCeil,
+        disk: this.diskCeil,
+      },
+      region: {
+        discriminator: this.regionDiscriminator,
+        regionData: (await this.region).toJson(),
+      },
     };
   }
 }

@@ -58,6 +58,17 @@ export const errorConstructor = {
       message: `Value '${value}' is required for this query.`,
     };
   },
+  invalidValueType: (
+    value: string,
+    wrongType: string,
+    correctType: string
+  ): ApiError => {
+    return {
+      code: "INVALID_VALUE_TYPE",
+      value: value,
+      message: `Value ${value} was expecting '${correctType}', but got '${wrongType}' `,
+    };
+  },
   invalidEmail: (email: string): ApiError => {
     return {
       code: "INVALID_EMAIL_ADDRESS",
@@ -70,6 +81,13 @@ export const errorConstructor = {
       code: "INVALID_USER_MODIFIER",
       value: modifier,
       message: "This is anot a valid user modifier...",
+    };
+  },
+  unexpectedValue: (value: string): ApiError => {
+    return {
+      code: "UNEXPECTED_VALUE",
+      value,
+      message: `The value '${value}' was not expected and is not a valid value for this object.`,
     };
   },
 };
@@ -125,8 +143,8 @@ export const errorManifest = {
     message: "You do not have permission to view or modify this project...",
   },
   invalidDaemonId: {
-    code: "INVALID_DAEMON_ID",
-    message: "The daemon id provided is not valid...",
+    code: "UNKNOWN_DAEMON",
+    message: "The daemon you are searching for does not exist.",
   },
   unknownDaemonRegion: {
     code: "UNKNOWN_DAEMON_REGION",
@@ -135,5 +153,13 @@ export const errorManifest = {
   regionCodeUnavailable: {
     code: "REGION_CODE_UNAVAILABLE",
     message: "The region provided already exists as a region.",
+  },
+  regionDiscriminatorInUse: {
+    code: "REGION_DISCRIMINATOR_IN_USE",
+    message: "This region discriminator is alredy in use.",
+  },
+  emptyRequestObject: {
+    code: "EMPTY_REQUEST_OBJECT",
+    message: "The request object is either missing or empty.",
   },
 };

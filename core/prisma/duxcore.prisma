@@ -17,6 +17,16 @@ enum NodeJSPkgManager {
   NPM
 }
 
+enum ServiceStatus {
+  ONLINE
+  OFFLINE
+  UNKNOWN
+  INSTALLING
+  BUILDING
+  SUSPENDED
+  SETTING_UP
+}
+
 model User {
   id            String              @id @default(uuid())
   index         Int                 @default(autoincrement())
@@ -86,6 +96,7 @@ model DaemonRegion {
 
 model Daemon {
   id      String   @id @default(uuid())
+  code    String // <region code>-<region-discriminator>
   name    String
   created DateTime @default(now())
 
@@ -95,8 +106,13 @@ model Daemon {
   secure Boolean
   secret String
 
-  region   DaemonRegion @relation(references: [id], fields: [regionId])
-  regionId String
+  cpuCeil  Float @default(16.0)
+  memCeil  Float @default(16384)
+  diskCeil Float @default(120)
+
+  region              DaemonRegion @relation(references: [id], fields: [regionId])
+  regionId            String
+  regionDiscriminator String       @unique
 
   NodeJsAppService NodeJsAppService[]
 }
@@ -115,17 +131,24 @@ model Project {
 }
 
 model NodeJsAppService {
-  id   String @id @default(uuid())
-  name String
+  id     String        @id @default(uuid())
+  name   String
+  status ServiceStatus @default(UNKNOWN)
 
   project   Project @relation(references: [id], fields: [projectId])
   projectId String
 
-  pkgManager NodeJSPkgManager @default(NPM)
-
   startCommand   String
   buildCommand   String
   installCommand String
+
+  buildOnStart        Boolean @default(false)
+  installOnEveryStart Boolean @default(false)
+  restartOnCrash      Boolean @default(false)
+
+  cpu    Float @default(0.5)
+  memory Float @default(512)
+  disk   Float @default(10)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

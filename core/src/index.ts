@@ -1,11 +1,11 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiManifest } from "./api/manifest";
 import { config } from "dotenv";
-import cluster, { Worker } from "cluster";
+import cluster from "cluster";
 import process from "process";
-import { createClient, RedisClientType } from "redis";
+import { createClient } from "redis";
 import { randomUUID } from "crypto";
-import { daemons } from "./lib/daemons";
+import { client } from "websocket";
 
 config();
 
@@ -45,7 +45,6 @@ export default async function main() {
           EX: 8,
         });
       else clearInterval(refreshMasterInterval);
-      console.log("Refreshed Master Key");
     }, 7000);
   };
   const beginMasterLifeCycle = async (
@@ -64,7 +63,8 @@ export default async function main() {
       }, Math.floor(Math.random() * 30000));
     }
 
-    console.log(await client.get(currentMasterDBKey));
+    console.log(`Self ID: ${uuid}`);
+    console.log(`Current Master: ${await client.get(currentMasterDBKey)}`);
   };
   const isMaster = async (
     client: Awaited<ReturnType<typeof createRedisConnection>>,

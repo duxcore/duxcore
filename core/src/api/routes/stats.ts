@@ -8,7 +8,6 @@ export const apiStats = manifestation.newRoute({
   method: "get",
   executor: async (req, res) => {
     const data = {
-      node_id: process.env.id,
       users: {
         totalCount: await users.count(),
       },
