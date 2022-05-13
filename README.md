@@ -2,7 +2,7 @@
     <img src="assets/duxcore-icon.png?sanitize=true#gh-dark-mode-only" alt="dark"></img>
     <img src="assets/light.png?sanitize=true#gh-light-mode-only" alt="light"></img>
     <br>
-    <img src="assets/duxcore-text.png"></img>
+    <img src="assets/duxcore-text.png?sanitize=true#gh-dark-mode-only"></img>
   <br><br>
   <a href="https://discord.gg/dTGJ5Bchnq">
     <img src="https://img.shields.io/discord/844279877503025182?label=Discord&logo=discord&logoColor=white&style=for-the-badge" />
