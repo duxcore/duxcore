@@ -1,6 +1,7 @@
 <p align=center>
   <a href="https://duxcore.co/">
-    <img src="assets/duxcore-icon.png"></img><br>
+    <img src="assets/duxcore-icon.png?sanitize=true#gh-dark-mode-only"></img><br>
+    <img src="assets/light.png?sanitize=true#gh-light-mode-only"></img><br>
     <img src="assets/duxcore-text.png"></img>
   </a>
   <br><br>
