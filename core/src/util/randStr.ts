@@ -1,11 +1,20 @@
+const chars = Buffer.from(
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+);
+
+const numChars = chars.length;
+
+/**
+ * randStr - generate a random string of a given length
+ * @param {number} length
+ * @returns {string}
+ */
 export default function randStr(length: number): string {
-	let result: string[] = [];
-	let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	let charsLength = chars.length;
+  const result = Buffer.alloc(length);
 
-	for (let i = 0; i < length; i++) {
-		result.push(chars.charAt(Math.floor(Math.random() * charsLength)));
-	}
+  for (let i = 0; i < length; ++i) {
+    result[i] = chars[Math.floor(numChars * Math.random())];
+  }
 
-	return result.join('');
+  return String(result);
 }
