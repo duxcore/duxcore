@@ -46,6 +46,7 @@ model User {
   Projects                Project[]
   ServerMonitoringService ServerMonitoringService[]
   NodeJsAppService        NodeJsAppService[]
+  Service                 Service[]
 }
 
 model UserMetaTags {
@@ -130,8 +131,22 @@ model Project {
   NodeJsAppService        NodeJsAppService[]
 }
 
+model Service {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner   User   @relation(references: [id], fields: [ownerId])
+  ownerId String
+
+  NodeJsAppService NodeJsAppService?
+}
+
 model NodeJsAppService {
-  id     String        @id @default(uuid())
+  id      String  @id
+  service Service @relation(fields: [id], references: [id])
+
   name   String
   status ServiceStatus @default(UNKNOWN)
 
@@ -153,11 +168,10 @@ model NodeJsAppService {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  owner   User   @relation(references: [id], fields: [ownerId])
-  ownerId String
-
-  daemon   Daemon @relation(references: [id], fields: [daemonId])
+  daemon   Daemon  @relation(references: [id], fields: [daemonId])
   daemonId String
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String?
 }
 
 model ServerMonitoringService {

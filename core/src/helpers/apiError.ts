@@ -90,6 +90,10 @@ export const errorConstructor = {
       message: `The value '${value}' was not expected and is not a valid value for this object.`,
     };
   },
+  internalServerError: (er: Error | string): ApiError => ({
+    code: "INTERNAL_SERVER_ERROR",
+    message: er.toString(),
+  }),
 };
 
 export const errorManifest = {
