@@ -18,20 +18,14 @@ export const SidebarButton: React.FC<SidebarButtonProps> = ({
   return (
     <Link href={href} passHref={true}>
       <a
-        className={`${className} flex gap-0.5 md:gap-0 justify-center align-middle flex-col items-center text-xs py-1 flex-1 md:flex-grow-0 md:w-auto transition-all hover:bg-gray-900 relative ${
+        className={`${className} flex gap-0.5 md:gap-0 flex-row py-1 px-2 rounded flex-1 md:flex-grow-0 md:w-auto transition-all hover:bg-gray-800 relative ${
           selected
-            ? "font-semibold bg-opacity-80 bg-gray-900"
+            ? "font-semibold bg-opacity-80 !bg-gray-700"
             : "opacity-95 text-opacity-20"
         }`}
       >
-        <div
-          className={`absolute h-0.25 w-full md:w-0.25 rounded-r-full md:h-full bottom-0 md:left-0 transition-all ${
-            selected ? "bg-accent" : "bg-none"
-          }`}
-          role="separator"
-        ></div>
         <span className="text-3xl">{icon}</span>
-        <span>{children}</span>
+        <span className="text-2xl ml-2">{children}</span>
       </a>
     </Link>
   );

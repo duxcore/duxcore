@@ -2,15 +2,11 @@
 import React from "react";
 import { useAuth } from "../../modules/auth/useAuth";
 import { useRouter } from "next/router";
-import {
-  IoCartOutline,
-  IoCloudOutline,
-  IoDocumentTextOutline,
-} from "react-icons/io5";
 import { AccountDrop } from "./AccountDrop";
 import Link from "next/link";
 import { SidebarButton } from "./SidebarButton";
 import styles from "../../styles/layout.module.css";
+import { ShoppingCart, FolderCopy, BarChart, Support } from "@mui/icons-material";
 interface SidebarProps {}
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
@@ -18,11 +14,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const router = useRouter();
 
   const navLinks = [
-    { name: "Overview", icon: <IoCloudOutline />, path: "/" },
-    { name: "Marketplace", icon: <IoCartOutline />, path: "/marketplace" },
+    { name: "Dashboard", icon: <FolderCopy />, path: "/" },
+    { name: "Marketplace", icon: <ShoppingCart />, path: "/marketplace" },
     {
-      name: "Billing",
-      icon: <IoDocumentTextOutline />,
+      name: "Statistics",
+      icon: <BarChart />,
       path: "/profile/billing",
     },
     {
@@ -35,23 +31,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         />
       ),
       path: "/profile",
-      className: "flex md:hidden",
+      className: "",
+    },
+    {
+      name: "Support",
+      icon: <Support />,
+      path: "/support",
     },
   ];
 
   return (
     <aside
-      className={`w-full h-full bg-black border-t md:border-r border-gray-800 border-solid sticky top-0 flex justify-around md:grid ${styles.sidebar}`}
+      className={`bg-gray-900 w-full h-full border-t md:border-r border-gray-800 border-solid sticky top-0 flex justify-around md:grid ${styles.sidebar}`}
       style={{
         gridArea: "sidebar",
       }}
     >
       <Link href={"/"} passHref={true}>
         <a className="h-full w-full p-2 hidden md:block">
-          <img src="/logo.svg" alt="Duxcore" className="h-full w-full" />
+          <div className="float-center">
+            <img src="/logo.svg" alt="Duxcore" className="h-full float-left" />
+            <span className="px-2 text-3xl bold leading-normal">Duxcore</span>
+          </div>
         </a>
       </Link>
-      <nav className="flex md:flex-col flex-1 justify-center gap-1">
+      <nav className="flex md:flex-col flex-1 gap-1 mt-4">
         {/* <SidebarButton icon={<IoCloud />}>Overview</SidebarButton>
          */}
         {navLinks.map((link, i) => {
