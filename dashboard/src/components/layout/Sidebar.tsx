@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   return (
     <aside
-      className={`bg-gray-900 w-full h-full border-t md:border-r border-gray-800 border-solid sticky top-0 flex justify-around md:grid ${styles.sidebar}`}
+      className={`bg-gray-900 w-full h-full md:border-r border-gray-800 border-solid sticky top-0 flex justify-around md:grid ${styles.sidebar}`}
       style={{
         gridArea: "sidebar",
       }}
@@ -51,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         <a className="h-full w-full p-2 hidden md:block">
           <div className="float-center">
             <img src="/logo.svg" alt="Duxcore" className="h-full float-left" />
-            <span className="px-2 text-3xl bold leading-normal">Duxcore</span>
+            <span className="px-2 text-3xl font-bold leading-normal">Duxcore</span>
           </div>
         </a>
       </Link>

@@ -34,12 +34,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
       <LayoutContext.Provider value={{ searchResults, setSearchResults }}>
         <main
           id="maincontent"
-          className={`w-full p-0 bg-gray-900 grid h-screen ${styles.layout}`}
+          className={`w-full p-0 bg-black grid h-screen ${styles.layout}`}
         >
           <Head>
             <title>{`Duxcore ${title ? `| ${title}` : ""} `}</title>
           </Head>
-          <Header/>
+          <Header title={title}/>
           <Sidebar/>
           <article
             style={{ gridArea: "content" }}

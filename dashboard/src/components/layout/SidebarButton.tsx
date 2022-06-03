@@ -24,8 +24,8 @@ export const SidebarButton: React.FC<SidebarButtonProps> = ({
             : "opacity-95 text-opacity-20"
         }`}
       >
-        <span className="text-3xl">{icon}</span>
-        <span className="text-2xl ml-2">{children}</span>
+        <span className="text-3xl w-4">{icon}</span>
+        <span className="mt-[0.25rem] text-2xl ml-2">{children}</span>
       </a>
     </Link>
   );
