@@ -1,56 +1,68 @@
 import { User } from ".prisma/client";
-import Twig from "twig";
 import { prismaInstance } from "../../prisma/instance";
-import { transport } from "../util/mailer";
 import Password from "./Password";
-import mjml2html from 'mjml'
 
 export default class UserManager {
-
   private _raw: User;
 
   constructor(raw: User) {
     this._raw = raw;
   }
 
-  get id(): string { return this._raw.id; }
-  get email(): string { return this._raw.email; }
-  get password(): string | null { return this._raw.password }
+  get id(): string {
+    return this._raw.id;
+  }
+  get email(): string {
+    return this._raw.email;
+  }
+  get password(): string | null {
+    return this._raw.password;
+  }
 
-  get created(): Date { return this._raw.created }
+  get created(): Date {
+    return this._raw.created;
+  }
 
-  get firstName(): string { return this._raw.firstName; }
-  get lastName(): string { return this._raw.lastName; }
+  get firstName(): string {
+    return this._raw.firstName;
+  }
+  get lastName(): string {
+    return this._raw.lastName;
+  }
+
+  get isAdministrator(): boolean {
+    return this._raw.role == "ADMINISTRATOR";
+  }
 
   /**
    * Revoke All User Refresh Tokens
-   * 
+   *
    * This method will revoke all refresh tokens under this specific user.
    * Once revoked, they will no longer be capible of using an existing refresh
    * token to generate a new authentication token, thus requiring them to login
    * again.
-   * 
+   *
    * @returns - User Object
    */
   async revokeAllRefreshTokens() {
     await prismaInstance.userRefreshToken.deleteMany({
       where: {
-        userId: this.id
-      }
+        userId: this.id,
+      },
     });
     return;
   }
 
   /**
    * Update User Email Address.
-   * 
+   *
    * @param email - The new email you'd like to apply to this user.
    * @returns - Updated user Object
    */
   async updateEmail(email: string): Promise<this> {
     await prismaInstance.user.update({
       data: { email },
-      where: { id: this.id }
+      where: { id: this.id },
     });
 
     this._raw.email = email;
@@ -59,7 +71,7 @@ export default class UserManager {
 
   /**
    * Update User Password
-   * 
+   *
    * @param password - The new password to be applied to user (raw text)
    * @returns - Updated User Object
    */
@@ -68,11 +80,11 @@ export default class UserManager {
 
     await prismaInstance.user.update({
       data: {
-        password: newHash
+        password: newHash,
       },
       where: {
-        id: this.id
-      }
+        id: this.id,
+      },
     });
 
     this._raw.password = newHash;
@@ -81,10 +93,10 @@ export default class UserManager {
 
   /**
    * Validate User Password
-   * 
+   *
    * This method will simply take an input string and check to see if it matches
    * the users password.
-   * 
+   *
    * @param password - The password you'd like to validate
    * @returns - Weather the password is valid or not.
    */
@@ -102,7 +114,7 @@ export default class UserManager {
       email: this.email,
       created: this.created,
       firstName: this.firstName,
-      lastName: this.lastName
-    }
+      lastName: this.lastName,
+    };
   }
 }

@@ -8,10 +8,23 @@ generator client {
 }
 
 enum UserRole {
-  SUPER_ADMINISTRATOR
   ADMINISTRATOR
-  MODERATOR
   USER
+}
+
+enum NodeJSPkgManager {
+  YARN
+  NPM
+}
+
+enum ServiceStatus {
+  ONLINE
+  OFFLINE
+  UNKNOWN
+  INSTALLING
+  BUILDING
+  SUSPENDED
+  SETTING_UP
 }
 
 model User {
@@ -32,6 +45,8 @@ model User {
   UserEmailResetTokens    UserEmailResetTokens[]
   Projects                Project[]
   ServerMonitoringService ServerMonitoringService[]
+  NodeJsAppService        NodeJsAppService[]
+  Service                 Service[]
 }
 
 model UserMetaTags {
@@ -71,6 +86,38 @@ model UserEmailResetTokens {
   userId  String
 }
 
+model DaemonRegion {
+  id   String @id @default(uuid())
+  name String
+  code String
+
+  created DateTime @default(now())
+  Daemon  Daemon[]
+}
+
+model Daemon {
+  id      String   @id @default(uuid())
+  code    String // <region code>-<region-discriminator>
+  name    String
+  created DateTime @default(now())
+
+  host   String
+  port   String
+  wsPort String  @default("8001")
+  secure Boolean
+  secret String
+
+  cpuCeil  Float @default(16.0)
+  memCeil  Float @default(16384)
+  diskCeil Float @default(120)
+
+  region              DaemonRegion @relation(references: [id], fields: [regionId])
+  regionId            String
+  regionDiscriminator String       @unique
+
+  NodeJsAppService NodeJsAppService[]
+}
+
 model Project {
   id        String   @id @default(uuid())
   index     Int      @default(autoincrement())
@@ -81,6 +128,50 @@ model Project {
   upatedAt  DateTime @updatedAt
 
   ServerMonitoringService ServerMonitoringService[]
+  NodeJsAppService        NodeJsAppService[]
+}
+
+model Service {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner   User   @relation(references: [id], fields: [ownerId])
+  ownerId String
+
+  NodeJsAppService NodeJsAppService?
+}
+
+model NodeJsAppService {
+  id      String  @id
+  service Service @relation(fields: [id], references: [id])
+
+  name   String
+  status ServiceStatus @default(UNKNOWN)
+
+  project   Project @relation(references: [id], fields: [projectId])
+  projectId String
+
+  startCommand   String
+  buildCommand   String
+  installCommand String
+
+  buildOnStart        Boolean @default(false)
+  installOnEveryStart Boolean @default(false)
+  restartOnCrash      Boolean @default(false)
+
+  cpu    Float @default(0.5)
+  memory Float @default(512)
+  disk   Float @default(10)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  daemon   Daemon  @relation(references: [id], fields: [daemonId])
+  daemonId String
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String?
 }
 
 model ServerMonitoringService {

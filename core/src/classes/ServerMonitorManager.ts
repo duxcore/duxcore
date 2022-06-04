@@ -1,7 +1,7 @@
 import { ServerMonitoringService } from "@prisma/client";
 import { projects } from "../lib/projects";
 import { users } from "../lib/users";
-import ProjectManager from "./projectManager";
+import ProjectManager from "./ProjectManager";
 import UserManager from "./UserManager";
 
 export default class ServerMonitorManager {
