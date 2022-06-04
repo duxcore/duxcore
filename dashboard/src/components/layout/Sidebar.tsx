@@ -31,7 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         />
       ),
       path: "/profile",
-      className: "",
+      className: "!mt-0",
     },
     {
       name: "Support",
@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   return (
     <aside
-      className={`bg-gray-900 w-full h-full md:border-r border-gray-800 border-solid sticky top-0 flex justify-around md:grid ${styles.sidebar}`}
+      className={`bg-duxdark-700 w-full h-full md:border-r border-duxdark-800 border-solid sticky top-0 flex justify-around md:grid ${styles.sidebar}`}
       style={{
         gridArea: "sidebar",
       }}
