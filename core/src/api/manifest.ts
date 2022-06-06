@@ -8,7 +8,6 @@ import { authRoutes } from "./routes/auth";
 import { resetEmail } from "./routes/resetEmail";
 import { servicesRouter } from "./routes/services/services";
 import { usersRouter } from "./routes/users/users";
-import { monitorRouter } from "./routes/monitors/monitors";
 import { daemonRoutes } from "./routes/daemons/daemons";
 import { projectsRouter } from "./routes/projects/projects";
 
@@ -19,13 +18,7 @@ export const apiManifest = manifestation.newManifest({
       version: 1,
       middleware: [apiLimiter, cors()],
       routes: [teapot, apiStats, ...authRoutes, resetEmail],
-      routers: [
-        servicesRouter,
-        usersRouter,
-        monitorRouter,
-        daemonRoutes,
-        projectsRouter,
-      ],
+      routers: [servicesRouter, usersRouter, daemonRoutes, projectsRouter],
     },
   ],
 });
