@@ -1,6 +1,6 @@
 import Collection from "@discordjs/collection";
 import { prismaInstance } from "../../prisma/instance";
-import ProjectManager from "../classes/projectManager";
+import ProjectManager from "../classes/ProjectManager";
 
 export const projects = {
   async create(name: string, creatorId: string): Promise<ProjectManager> {

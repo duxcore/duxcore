@@ -8,10 +8,27 @@ generator client {
 }
 
 enum UserRole {
-  SUPER_ADMINISTRATOR
   ADMINISTRATOR
-  MODERATOR
   USER
+}
+
+enum NodeJSPkgManager {
+  YARN
+  NPM
+}
+
+enum ServiceStatus {
+  ONLINE
+  OFFLINE
+  UNKNOWN
+  INSTALLING
+  BUILDING
+  SUSPENDED
+  SETTING_UP
+}
+
+enum ServiceType {
+  NodeJsAppService
 }
 
 model User {
@@ -32,6 +49,7 @@ model User {
   UserEmailResetTokens    UserEmailResetTokens[]
   Projects                Project[]
   ServerMonitoringService ServerMonitoringService[]
+  Service                 Service[]
 }
 
 model UserMetaTags {
@@ -71,6 +89,38 @@ model UserEmailResetTokens {
   userId  String
 }
 
+model DaemonRegion {
+  id   String @id @default(uuid())
+  name String
+  code String
+
+  created DateTime @default(now())
+  Daemon  Daemon[]
+}
+
+model Daemon {
+  id      String   @id @default(uuid())
+  code    String // <region code>-<region-discriminator>
+  name    String
+  created DateTime @default(now())
+
+  host   String
+  port   String
+  wsPort String  @default("8001")
+  secure Boolean
+  secret String
+
+  cpuCeil  Float @default(16.0)
+  memCeil  Float @default(16384)
+  diskCeil Float @default(120)
+
+  region              DaemonRegion @relation(references: [id], fields: [regionId])
+  regionId            String
+  regionDiscriminator String       @unique
+
+  NodeJsAppService NodeJsAppService[]
+}
+
 model Project {
   id        String   @id @default(uuid())
   index     Int      @default(autoincrement())
@@ -80,16 +130,55 @@ model Project {
   created   DateTime @default(now())
   upatedAt  DateTime @updatedAt
 
-  ServerMonitoringService ServerMonitoringService[]
+  Service Service[]
 }
 
-model ServerMonitoringService {
-  id     String @id @default(uuid())
-  index  Int    @default(autoincrement())
-  secret String @default(uuid())
+model Service {
+  id   String      @id @default(uuid())
+  type ServiceType
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner   User   @relation(references: [id], fields: [ownerId])
+  ownerId String
 
   project   Project @relation(references: [id], fields: [projectId])
   projectId String
+
+  NodeJsAppService        NodeJsAppService?
+  ServerMonitoringService ServerMonitoringService?
+}
+
+model NodeJsAppService {
+  id      String  @id
+  service Service @relation(fields: [id], references: [id])
+
+  name   String
+  status ServiceStatus @default(UNKNOWN)
+
+  startCommand   String
+  buildCommand   String
+  installCommand String
+
+  buildOnStart        Boolean @default(false)
+  installOnEveryStart Boolean @default(false)
+  restartOnCrash      Boolean @default(false)
+
+  cpu    Float @default(0.5)
+  memory Float @default(512)
+  disk   Float @default(10)
+
+  daemon   Daemon @relation(references: [id], fields: [daemonId])
+  daemonId String
+}
+
+model ServerMonitoringService {
+  id      String  @id
+  service Service @relation(fields: [id], references: [id])
+
+  index  Int    @default(autoincrement())
+  secret String @default(uuid())
 
   name                  String
   creator               User                 @relation(references: [id], fields: [creatorId])
