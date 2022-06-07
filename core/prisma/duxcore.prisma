@@ -29,6 +29,7 @@ enum ServiceStatus {
 
 enum ServiceType {
   NodeJsAppService
+  ServerMonitoringService
 }
 
 model User {

@@ -25,6 +25,8 @@ export const projectBaseRoutes = [
           })
           .catch((e) => errors.append(errorConstructor.internalServerError(e)));
 
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Successfully fetched projects!",
