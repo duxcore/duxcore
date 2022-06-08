@@ -24,9 +24,9 @@ export const ProjectsArray: React.FC<ProjectsArrayProps> = ({
             className="grid gap-1"
             style={{ gridTemplateColumns: "repeat(auto-fill, minmax(20rem, 1fr))" }}
           >
-            {project.monitors.map((monitor) => (
+            {project.services.map((service) => (
               <>
-                <ProjectBox data={monitor} />
+                <ProjectBox data={service} />
               </>
             ))}
           </div>
