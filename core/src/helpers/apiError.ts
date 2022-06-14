@@ -166,4 +166,12 @@ export const errorManifest = {
     code: "EMPTY_REQUEST_OBJECT",
     message: "The request object is either missing or empty.",
   },
+  unknownService: {
+    code: "UNKNOWN_SERVICE_ID",
+    message: "The service you are trying to fetch doesn't exist.",
+  },
+  serviceNoAccess: {
+    code: "SERVICE_NO_ACCESS",
+    message: "The do not have permission to view this service.",
+  },
 };

@@ -11,6 +11,7 @@ export default class ServiceManager<ST> {
   public readonly id: string;
   public readonly created: Date;
   public readonly type: string;
+  public readonly name: string;
 
   constructor(
     raw: Service & {
@@ -26,8 +27,8 @@ export default class ServiceManager<ST> {
     this._raw = raw;
 
     this.id = raw.id;
-
     this.created = raw.createdAt;
+    this.name = raw.name;
 
     this.type = serviceType;
     this.project = processedData.project;

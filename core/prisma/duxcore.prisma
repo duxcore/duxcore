@@ -137,6 +137,7 @@ model Project {
 model Service {
   id   String      @id @default(uuid())
   type ServiceType
+  name String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -155,7 +156,6 @@ model NodeJsAppService {
   id      String  @id
   service Service @relation(fields: [id], references: [id])
 
-  name   String
   status ServiceStatus @default(UNKNOWN)
 
   startCommand   String
@@ -181,7 +181,6 @@ model ServerMonitoringService {
   index  Int    @default(autoincrement())
   secret String @default(uuid())
 
-  name                  String
   creator               User                 @relation(references: [id], fields: [creatorId])
   creatorId             String
   MonitoringDynamicData MonitorDynamicData[]

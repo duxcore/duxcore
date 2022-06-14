@@ -7,6 +7,11 @@ import UserManager from "../classes/UserManager";
 import { projects } from "./projects";
 import { users } from "./users";
 
+export interface CreateServiceData {
+  name: string;
+  type: ServiceType;
+}
+
 export const services = {
   async fetch<ST extends ServiceType>(id: string, includedServiceType: ST) {
     let fetchedData = await prismaInstance.service.findFirst({
@@ -56,5 +61,35 @@ export const services = {
     );
 
     return foundServices;
+  },
+
+  async checkUserPermission(user: string, serviceId: string) {
+    const userProjects = await this.fetchAllByUser(user);
+
+    return userProjects.has(serviceId);
+  },
+
+  async create(
+    data: CreateServiceData,
+    ownerId: string,
+    projectId: string
+  ): Promise<ServiceManager<any>> {
+    const service = await prismaInstance.service.create({
+      include: {
+        owner: true,
+        project: true,
+      },
+      data: {
+        name: data.name,
+        type: data.type,
+        ownerId: ownerId,
+        projectId: projectId,
+      },
+    });
+
+    return new ServiceManager(service, data.type, {
+      owner: new UserManager(service.owner),
+      project: new ProjectManager(service.project),
+    });
   },
 };
