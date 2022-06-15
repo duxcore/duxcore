@@ -1,10 +1,10 @@
-import { Project } from "wrapper";
+import { Service } from "wrapper";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
 interface ProjectBoxProps {
-  data: Project;
+  data: Service;
 }
 
 export const ProjectBox: React.FC<ProjectBoxProps> = ({
@@ -13,19 +13,21 @@ export const ProjectBox: React.FC<ProjectBoxProps> = ({
 }) => {
   const { replace, push } = useRouter();
 
+  function typeToString(type: number): string {
+    switch (type) {
+      case 0: return "Node.js App"
+      default: return "Unknown Service"
+    }
+  }
+
   return (
     <Link href={`/project/${data.id}`} passHref={true}>
     <a
-      className="flex-none p-1 text-left truncate transition border border-gray-700 rounded-5 hover:border-white"
+      className="bg-duxdark-800 flex-none p-2 pb-8 text-left truncate transition border border-duxdark-900 rounded-5 hover:border-white"
     >
-      <h4>{data.name}</h4>
-      <p
-        className="text-gray-600"
-        style={{
-          fontSize: "8px",
-        }}
-      >
-        {data.id}
+      <h4 className="text-xl font-bold"><span style={{color: "lightgreen"}}>•</span> {typeToString(data.type)}</h4>
+      <p className="text-gray-600 text-sm">
+        &nbsp; &nbsp; {data.id}
       </p>
     </a>
     </Link>

@@ -18,7 +18,7 @@
   .layout {
     grid-template:
       "sidebar header header header header" 5rem
-      "sidebar content content content content" / 5rem;
+      "sidebar content content content content" / 20rem; /* controls sidebar width in desktop view */
   }
 
 }

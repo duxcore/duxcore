@@ -1,4 +1,4 @@
-import { ServerMonitor } from "./serverMonitors";
+import { Service } from "./service";
 
 export interface NewProject {
   name: string;
@@ -10,5 +10,5 @@ export interface Project {
   creator: string;
   created: string;
   lastUpdated: string;
-  monitors: ServerMonitor[];
+  services: Service[];
 }
