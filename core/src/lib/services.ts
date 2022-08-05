@@ -3,6 +3,7 @@ import { ServiceType, Service } from "@prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import ProjectManager from "../classes/ProjectManager";
 import ServiceManager from "../classes/ServiceManager";
+import ServiceTypeManager from "../classes/ServiceTypeManager";
 import UserManager from "../classes/UserManager";
 import { projects } from "./projects";
 import { users } from "./users";
@@ -13,6 +14,37 @@ export interface CreateServiceData {
 }
 
 export const services = {
+  types: {
+    async fetch(id: number, includeServices = false) {
+      let fetchedData = await prismaInstance.serviceType.findFirst({
+        where: { id },
+        include: {featureServiceType: true, services: includeServices}
+      });
+
+      if (!fetchedData) return null;
+
+      return new ServiceTypeManager(fetchedData);
+    },
+
+    async fetchAll(featureServiceType = false, services = false) {
+      let data = await prismaInstance.serviceType.findMany({
+        include: {featureServiceType, services}
+      });
+      return data.map(st => new ServiceTypeManager(st));
+    },
+
+    async create(name: string) {
+      const newServiceType = await prismaInstance.serviceType.create({
+        data: {
+          name
+        }
+      });
+
+      return new ServiceTypeManager(newServiceType);
+    }
+  }
+
+  /*
   async fetch<ST extends ServiceType>(id: string, includedServiceType: ST) {
     let fetchedData = await prismaInstance.service.findFirst({
       where: { id },
@@ -92,4 +124,5 @@ export const services = {
       project: new ProjectManager(service.project),
     });
   },
+  */
 };

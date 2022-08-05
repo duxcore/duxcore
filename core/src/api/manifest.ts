@@ -18,7 +18,7 @@ export const apiManifest = manifestation.newManifest({
       version: 1,
       middleware: [apiLimiter, cors()],
       routes: [teapot, apiStats, ...authRoutes, resetEmail],
-      routers: [servicesRouter, usersRouter, daemonRoutes, projectsRouter],
+      routers: [/*servicesRouter, */usersRouter, daemonRoutes, projectsRouter],
     },
   ],
 });

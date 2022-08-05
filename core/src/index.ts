@@ -77,7 +77,7 @@ export default async function main() {
     cluster.fork();
 
     cluster.on("disconnect", (worker) => {
-      cluster.fork();
+      cluster.fork(); 
     });
   } else {
     config();
