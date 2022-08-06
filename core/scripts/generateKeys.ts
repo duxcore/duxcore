@@ -6,7 +6,7 @@ export default function main() {
    * Generate the JWT Private Key
    *
    * This private key is responsible for encrypting the JSON Web Tokens so that they can be
-   * secured once they have been distrobuted.
+   * secured once they have been distributed.
    */
   generateKeyPair(
     "rsa",
