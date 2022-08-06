@@ -37,7 +37,8 @@ export const services = {
       const newServiceType = await prismaInstance.serviceType.create({
         data: {
           name
-        }
+        },
+        include: {featureServiceType: true}
       });
 
       return new ServiceTypeManager(newServiceType);
