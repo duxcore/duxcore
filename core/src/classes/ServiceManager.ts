@@ -17,7 +17,7 @@ export default class ServiceManager<ST> {
 
   constructor(
     raw: Service & {
-      Project: Project;
+      project: Project;
       owner: User;
       type: ModifiedServiceTypeInstance;
     }
@@ -29,7 +29,7 @@ export default class ServiceManager<ST> {
     this.name = raw.name;
 
     this.type = new ServiceTypeManager(raw.type);
-    this.project = new ProjectManager(raw.Project);
+    this.project = new ProjectManager(raw.project);
     this.owner = new UserManager(raw.owner);
   }
 

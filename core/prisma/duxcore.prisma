@@ -43,8 +43,8 @@ model User {
   meta          Json                @default("{}")
 
   UserEmailResetTokens UserEmailResetTokens[]
-  Projects             Project[]
-  Service              Service[]
+  projects             Project[]
+  services              Service[]
 }
 
 model UserMetaTags {
@@ -90,7 +90,7 @@ model DaemonRegion {
   code String
 
   created DateTime @default(now())
-  Daemon  Daemon[]
+  daemons  Daemon[]
 }
 
 model Daemon {
@@ -113,7 +113,7 @@ model Daemon {
   regionId            String
   regionDiscriminator String       @unique
 
-  Service Service[]
+  services Service[]
 }
 
 model Project {
@@ -125,7 +125,7 @@ model Project {
   created   DateTime @default(now())
   upatedAt  DateTime @updatedAt
 
-  Service Service[]
+  services Service[]
 }
 
 model Service {
@@ -146,10 +146,10 @@ model Service {
   memory Decimal?
   disk   Decimal?
 
-  Daemon   Daemon? @relation(fields: [daemonId], references: [id])
+  daemon   Daemon? @relation(fields: [daemonId], references: [id])
   daemonId String?
 
-  Project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
   projectId String
 }
 

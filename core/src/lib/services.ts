@@ -87,7 +87,7 @@ export const services = {
   async fetch(id: string) {
     let data = await prismaInstance.service.findFirst({
       where: { id },
-      include: {Project: true, owner: true, type: {
+      include: {project: true, owner: true, type: {
         include: {
           features: true,
           services: true
@@ -102,7 +102,7 @@ export const services = {
 
   async fetchAll() {
     let data = await prismaInstance.service.findMany({
-      include: { Project: true, owner: true, type: {
+      include: { project: true, owner: true, type: {
         include: {
           features: true,
           services: true
@@ -116,7 +116,7 @@ export const services = {
   async fetchAllByUser(id: string) {
     let data = await prismaInstance.service.findMany({
       where: { ownerId: id },
-      include: { Project: true, owner: true, type: {
+      include: { project: true, owner: true, type: {
         include: {
           features: true,
           services: true
@@ -144,7 +144,7 @@ export const services = {
     const service = await prismaInstance.service.create({
       include: {
         owner: true,
-        Project: true,
+        project: true,
         type: {
           include: {
             features: true,
