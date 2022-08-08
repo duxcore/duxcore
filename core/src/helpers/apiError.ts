@@ -174,4 +174,8 @@ export const errorManifest = {
     code: "SERVICE_NO_ACCESS",
     message: "The do not have permission to view this service.",
   },
+  unknownServiceType: {
+    code: "UNKNOWN_SERVICE_TYPE_ID",
+    message: "The service type you are trying use doesn't exist."
+  }
 };

@@ -1,5 +1,6 @@
-import { Project, Service, User } from "@prisma/client";
+import { Project, Service, ServiceType, User } from "@prisma/client";
 import ProjectManager from "./ProjectManager";
+import ServiceTypeManager, { ModifiedServiceTypeInstance } from "./ServiceTypeManager";
 import UserManager from "./UserManager";
 
 export default class ServiceManager<ST> {
@@ -10,18 +11,15 @@ export default class ServiceManager<ST> {
 
   public readonly id: string;
   public readonly created: Date;
-  public readonly type: string;
+
+  public readonly type: ServiceTypeManager;
   public readonly name: string;
 
   constructor(
     raw: Service & {
-      project: Project;
+      Project: Project;
       owner: User;
-    },
-    serviceType: string,
-    processedData: {
-      owner: UserManager;
-      project: ProjectManager;
+      type: ModifiedServiceTypeInstance;
     }
   ) {
     this._raw = raw;
@@ -30,18 +28,19 @@ export default class ServiceManager<ST> {
     this.created = raw.createdAt;
     this.name = raw.name;
 
-    this.type = serviceType;
-    this.project = processedData.project;
-    this.owner = processedData.owner;
+    this.type = new ServiceTypeManager(raw.type);
+    this.project = new ProjectManager(raw.Project);
+    this.owner = new UserManager(raw.owner);
   }
 
-  async toJson() {
+  toJson() {
     return {
       id: this.id,
-      type: this.type,
+      name: this.name,
       created: this.created,
+      type: this.type.toJson(),
       owner: this.owner.toJson(),
-      project: await this.project.toJson(),
+      project: this.project.toJson(),
     };
   }
 }

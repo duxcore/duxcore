@@ -1,24 +1,31 @@
-import Collection from "@discordjs/collection";
-import { ServiceType, Service } from "@prisma/client";
+import { ServiceType } from "@prisma/client";
 import { prismaInstance } from "../../prisma/instance";
-import ProjectManager from "../classes/ProjectManager";
+import ServiceFeatureManager from "../classes/ServiceFeatureManager";
 import ServiceManager from "../classes/ServiceManager";
 import ServiceTypeManager from "../classes/ServiceTypeManager";
-import UserManager from "../classes/UserManager";
-import { projects } from "./projects";
-import { users } from "./users";
+
 
 export interface CreateServiceData {
   name: string;
-  type: ServiceType;
+  type: string;
+  project: string;
+}
+
+export interface CreateFeatureData {
+  name: string;
+  description: string;
+
+  requiresValue: boolean;
+  defaultValue?: string;
+  valueType?: string;
 }
 
 export const services = {
   types: {
-    async fetch(id: number, includeServices = false) {
+    async fetch(id: string, includeServices = false) {
       let fetchedData = await prismaInstance.serviceType.findFirst({
         where: { id },
-        include: {featureServiceType: true, services: includeServices}
+        include: {features: true, services: includeServices}
       });
 
       if (!fetchedData) return null;
@@ -26,9 +33,9 @@ export const services = {
       return new ServiceTypeManager(fetchedData);
     },
 
-    async fetchAll(featureServiceType = false, services = false) {
+    async fetchAll(features = false, services = false) {
       let data = await prismaInstance.serviceType.findMany({
-        include: {featureServiceType, services}
+        include: {features, services}
       });
       return data.map(st => new ServiceTypeManager(st));
     },
@@ -38,12 +45,122 @@ export const services = {
         data: {
           name
         },
-        include: {featureServiceType: true}
+        include: {features: true}
       });
 
       return new ServiceTypeManager(newServiceType);
+    },
+
+    async exists(id: string) {
+      return !!(await prismaInstance.serviceType.findUnique({ where: { id } }))
     }
-  }
+  },
+
+  features: {
+    async create(data: CreateFeatureData) {
+      const newFeature = await prismaInstance.serviceFeature.create({
+        data: {...data}
+      });
+
+    },
+
+    async fetch(id: string, includeServiceTypes = false) {
+      let data = await prismaInstance.serviceFeature.findFirst({
+        where: { id },
+        include: { serviceTypes: includeServiceTypes }
+      });
+
+      if (!data) return null;
+
+      return new ServiceFeatureManager(data);
+    },
+
+    async fetchAll(includeServiceTypes = false) {
+      let data = await prismaInstance.serviceFeature.findMany({
+        include: { serviceTypes: includeServiceTypes }
+      });
+
+      return data.map(sf => new ServiceFeatureManager(sf));
+    },
+  },
+
+  async fetch(id: string) {
+    let data = await prismaInstance.service.findFirst({
+      where: { id },
+      include: {Project: true, owner: true, type: {
+        include: {
+          features: true,
+          services: true
+        }
+      }}
+    });
+
+    if (!data) return null;
+
+    return new ServiceManager(data);
+  },
+
+  async fetchAll() {
+    let data = await prismaInstance.service.findMany({
+      include: { Project: true, owner: true, type: {
+        include: {
+          features: true,
+          services: true
+        }
+      } }
+    });
+    
+    return data.map(s => new ServiceManager(s));
+  },
+
+  async fetchAllByUser(id: string) {
+    let data = await prismaInstance.service.findMany({
+      where: { ownerId: id },
+      include: { Project: true, owner: true, type: {
+        include: {
+          features: true,
+          services: true
+        }
+      } }
+    });
+    
+    return data.map(s => new ServiceManager(s));
+  },
+
+  async checkUserPermission(userId: string, serviceId: string) {
+    let service = await prismaInstance.service.findUnique({
+      where: { id: serviceId }
+    });
+
+    if (!service) return false; //redundant
+
+    return service.ownerId === userId;
+  },
+
+  async create(
+    data: CreateServiceData,
+    ownerId: string,
+  ): Promise<ServiceManager<any>> {
+    const service = await prismaInstance.service.create({
+      include: {
+        owner: true,
+        Project: true,
+        type: {
+          include: {
+            features: true,
+          }
+        }
+      },
+      data: {
+        name: data.name,
+        serviceTypeId: data.type,
+        ownerId: ownerId,
+        projectId: data.project,
+      },
+    });
+
+    return new ServiceManager(service);
+  },
 
   /*
   async fetch<ST extends ServiceType>(id: string, includedServiceType: ST) {

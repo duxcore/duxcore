@@ -1,23 +1,29 @@
-import { FeatureServiceType, Service, ServiceType } from "@prisma/client";
+import Collection from "@discordjs/collection";
+import {Service, ServiceFeature, ServiceType } from "@prisma/client";
+import ServiceFeatureManager from "./ServiceFeatureManager";
+
+export type ModifiedServiceTypeInstance = ServiceType & {services?: Service[], features: ServiceFeature[]};
 
 export default class ServiceTypeManager {
   
-  private _raw: ServiceType & {services?: Service[], featureServiceType: FeatureServiceType[]};
+  private _raw: ServiceType & {services?: Service[], features: ServiceFeature[]};
 
-  private id: number;
+  private id: string;
   private name: string;
 
   private services: Service[] | null;
-  private featureServiceType: FeatureServiceType[];
+  private features: Collection<string, ServiceFeatureManager>;
 
-  constructor(data: (ServiceType & {services?: Service[], featureServiceType: FeatureServiceType[]})) {
+  constructor(data: (ServiceType & {services?: Service[], features: ServiceFeature[]})) {
     this._raw = data;
 
     this.id = data.id;
     this.name = data.name;
 
     this.services = data.services ?? null;
-    this.featureServiceType = data.featureServiceType;
+    this.features = new Collection<string, ServiceFeatureManager>();
+    
+    this._raw.features.map(v => this.features.set(v.id, new ServiceFeatureManager(v)))
   }
 
 
@@ -26,7 +32,7 @@ export default class ServiceTypeManager {
       id: this.id,
       name: this.name,
       services: this.services ?? undefined,
-      featureServiceTypes: this.featureServiceType
+      features: this.features.map(v => v.toJson())
     }
   }
 }

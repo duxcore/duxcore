@@ -134,54 +134,41 @@ model Service {
   name  String
 
   type          ServiceType @relation(fields: [serviceTypeId], references: [id])
-  serviceTypeId Int
+  serviceTypeId String
 
-  owner  User   @relation(fields: [userId], references: [id])
-  userId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cpu    Decimal
-  memory Decimal
-  disk   Decimal
+  cpu    Decimal?
+  memory Decimal?
+  disk   Decimal?
 
   Daemon   Daemon? @relation(fields: [daemonId], references: [id])
   daemonId String?
 
-  Project   Project? @relation(fields: [projectId], references: [id])
-  projectId String?
-}
-
-model Feature {
-  id                  Int                  @id @default(autoincrement())
-  name                String
-  values              FeatureValue[]
-  featureServiceTypes FeatureServiceType[]
-}
-
-model FeatureValue {
-  id                  Int                  @id @default(autoincrement())
-  feature             Feature              @relation(fields: [featureId], references: [id])
-  featureId           Int
-  value               String
-  featureServiceTypes FeatureServiceType[]
+  Project   Project @relation(fields: [projectId], references: [id])
+  projectId String
 }
 
 model ServiceType {
-  id                 Int                  @id @default(autoincrement())
-  name               String
-  featureServiceType FeatureServiceType[]
-  services           Service[]
+  id       String           @id @default(uuid())
+  name     String
+  features ServiceFeature[]
+  services Service[]
 }
 
-model FeatureServiceType {
-  feature        Feature      @relation(fields: [featureId], references: [id])
-  featureId      Int
-  featureValue   FeatureValue @relation(fields: [featureValueId], references: [id])
-  featureValueId Int
-  serviceType    ServiceType  @relation(fields: [serviceTypeId], references: [id])
-  serviceTypeId  Int
+model ServiceFeature {
+  id String @id @default(uuid())
 
-  @@id([featureId, featureValueId, serviceTypeId])
+  name        String
+  description String
+
+  serviceTypes ServiceType[]
+
+  requiresValue Boolean
+  defaultValue  String?
+  valueType     String?
 }
