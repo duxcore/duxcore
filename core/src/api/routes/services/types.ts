@@ -31,6 +31,26 @@ export const serviceTypesRouter = manifestation.newRouter({
             successful: true,
           });
       }
-    })
+    }),
+    manifestation.newRoute({
+      route: "/:type",
+      method: "get",
+      executor: async (req, res) => {
+        const errors = apiError.createErrorStack();
+  
+        let type = await services.types.fetch(req.params.type as string);
+  
+        if (!type) errors.append("unknownServiceType");
+        if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+        if (!type) return;
+  
+        return manifestation.sendApiResponse(res, {
+          status: 200,
+          message: "Successfully fetched services!",
+          data: type.toJson(),
+          successful: true,
+        });
+      },
+    }),  
   ]
 });
