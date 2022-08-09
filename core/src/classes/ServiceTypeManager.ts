@@ -23,7 +23,7 @@ export default class ServiceTypeManager {
     this.services = data.services ?? null;
     this.features = new Collection<string, ServiceFeatureManager>();
     
-    this._raw.features.map(v => this.features.set(v.id, new ServiceFeatureManager(v)))
+    if (this._raw.features) this._raw.features.map(v => this.features.set(v.id, new ServiceFeatureManager(v)))
   }
 
 
