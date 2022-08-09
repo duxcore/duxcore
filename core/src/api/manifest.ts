@@ -11,6 +11,7 @@ import { usersRouter } from "./routes/users/users";
 import { daemonRoutes } from "./routes/daemons/daemons";
 import { projectsRouter } from "./routes/projects/projects";
 import { serviceTypesRouter } from "./routes/services/types";
+import { serviceFeaturesRouter } from "./routes/services/features";
 
 export const apiManifest = manifestation.newManifest({
   middleware: [cors(), bodyParser.json()],
@@ -21,6 +22,7 @@ export const apiManifest = manifestation.newManifest({
       routes: [teapot, apiStats, ...authRoutes, resetEmail],
       routers: [
         serviceTypesRouter,
+        serviceFeaturesRouter,
         servicesRouter,
         usersRouter,
         daemonRoutes,

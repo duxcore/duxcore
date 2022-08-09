@@ -40,7 +40,6 @@ export const serviceTypesRouter = manifestation.newRouter({
       method: "post",
       middleware: [authorizeAdministratorRequest],
       executor: async (req, res) => {
-        const tokenData = fetchTokenData(res.locals);
         const errors = apiError.createErrorStack();
         let data;
 
@@ -65,7 +64,7 @@ export const serviceTypesRouter = manifestation.newRouter({
 
         return manifestation.sendApiResponse(res, {
           status: 200,
-          message: "Successfully fetched services!",
+          message: "Successfully created service!",
           data: data.toJson(),
           successful: true,
         });
@@ -85,7 +84,7 @@ export const serviceTypesRouter = manifestation.newRouter({
 
         return manifestation.sendApiResponse(res, {
           status: 200,
-          message: "Successfully fetched services!",
+          message: "Successfully fetched service type!",
           data: type.toJson(),
           successful: true,
         });
