@@ -1,4 +1,3 @@
-import { ServiceType } from "@prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import ServiceFeatureManager from "../classes/ServiceFeatureManager";
 import ServiceManager from "../classes/ServiceManager";
@@ -23,7 +22,7 @@ export interface CreateFeatureData {
 export const services = {
   types: {
     async fetch(id: string, includeServices = false) {
-      let fetchedData = await prismaInstance.serviceType.findFirst({
+      let fetchedData = await prismaInstance.serviceType.findUnique({
         where: { id },
         include: {features: true, services: includeServices}
       });
@@ -66,7 +65,7 @@ export const services = {
     },
 
     async fetch(id: string, includeServiceTypes = false) {
-      let data = await prismaInstance.serviceFeature.findFirst({
+      let data = await prismaInstance.serviceFeature.findUnique({
         where: { id },
         include: { serviceTypes: includeServiceTypes }
       });
@@ -86,7 +85,7 @@ export const services = {
   },
 
   async fetch(id: string) {
-    let data = await prismaInstance.service.findFirst({
+    let data = await prismaInstance.service.findUnique({
       where: { id },
       include: {project: true, owner: true, type: {
         include: {
