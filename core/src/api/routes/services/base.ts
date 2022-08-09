@@ -58,7 +58,7 @@ export const baseServicesRoutes = [
 
       return manifestation.sendApiResponse(res, {
         status: 200,
-        message: "Successfully fetched services!",
+        message: "Successfully fetched service!",
         data: await service.toJson(),
         successful: true,
       });
@@ -82,7 +82,7 @@ export const baseServicesRoutes = [
         },
         type: {
           validator: async (v) => {
-            if (await services.types.exists(v)) return false;
+            if (!(await services.types.exists(v))) return false;
             return true;
           },
           onFail: (reason, v) => errors.append(reason ?? "unknownServiceType"),
