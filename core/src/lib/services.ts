@@ -62,6 +62,7 @@ export const services = {
         data: {...data}
       });
 
+      return new ServiceFeatureManager(newFeature);
     },
 
     async fetch(id: string, includeServiceTypes = false) {
