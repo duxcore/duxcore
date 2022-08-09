@@ -43,8 +43,7 @@ export const baseServicesRoutes = [
       const tokenData = fetchTokenData(res.locals);
       const errors = apiError.createErrorStack();
 
-      let service = await services.fetch(
-        req.params.service as string);
+      let service = await services.fetch(req.params.service as string);
 
       if (!service) errors.append("unknownService");
       if (
@@ -84,7 +83,7 @@ export const baseServicesRoutes = [
         type: {
           validator: async (v) => {
             if (await services.types.exists(v)) return false;
-            return true; 
+            return true;
           },
           onFail: (reason, v) => errors.append(reason ?? "unknownServiceType"),
           onMissing: () => errors.append(errorConstructor.missingValue("type")),
@@ -105,7 +104,13 @@ export const baseServicesRoutes = [
 
       if (errors.stack.length == 0)
         await services
-          .create({name: req.body.name, type: req.body.type, project: req.body.project}, tokenData.userId 
+          .create(
+            {
+              name: req.body.name,
+              type: req.body.type,
+              project: req.body.project,
+            },
+            tokenData.userId
           )
           .then(async (v) => {
             responseData = await v.toJson();

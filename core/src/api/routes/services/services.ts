@@ -6,6 +6,6 @@ import { serviceTypesRouter } from "./types";
 export const servicesRouter = manifestation.newRouter({
   route: "/services",
   middleware: [authorizeRequest],
-  routers: [serviceTypesRouter],
+  routers: [],
   routes: [...baseServicesRoutes],
 });
