@@ -6,10 +6,11 @@ import { sendApiErrors } from "../../../helpers/sendApiErrors";
 import { services, CreateFeatureData } from "../../../lib/services";
 import { dataValidator } from "../../../util/dataValidator";
 import { authorizeAdministratorRequest } from "../../middleware/authorizeAdministrator";
+import { authorizeRequest } from "../../middleware/authorizeRequest";
 
 export const serviceTypesRouter = manifestation.newRouter({
   route: "/services/types",
-  middleware: [],
+  middleware: [authorizeRequest],
   routes: [
     manifestation.newRoute({
       route: "/",
@@ -45,16 +46,39 @@ export const serviceTypesRouter = manifestation.newRouter({
 
         await dataValidator<{
           name: string;
+          features: string[];
         }>(req.body, {
           name: {
-            onMissing: () => errors.append(errorConstructor.missingValue("name")),
+            onMissing: () =>
+              errors.append(errorConstructor.missingValue("name")),
+          },
+          features: {
+            async validator(v) {
+              const features = await Promise.all(
+                v.map(async (f) => {
+                  const fV = await services.features.fetch(f, true);
+
+                  if (!fV) errors.append(errorConstructor.invalidFeatureID(f));
+                  return fV;
+                })
+              );
+
+              req.body.features = features;
+              return true;
+            },
+            onMissing: () =>
+              errors.append(errorConstructor.missingValue("features")),
           },
         });
 
         if (errors.stack.length === 0) {
           try {
-            data = await services.types.create(req.body.name);
+            data = await services.types.create(
+              req.body.name,
+              req.body.features
+            );
           } catch (e) {
+            console.error(e);
             errors.append(errorConstructor.internalServerError(e as Error));
           }
         }

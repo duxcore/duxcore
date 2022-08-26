@@ -4,10 +4,11 @@ import { sendApiErrors } from "../../../helpers/sendApiErrors";
 import { CreateFeatureData, services } from "../../../lib/services";
 import { dataValidator } from "../../../util/dataValidator";
 import { authorizeAdministratorRequest } from "../../middleware/authorizeAdministrator";
+import { authorizeRequest } from "../../middleware/authorizeRequest";
 
 export const serviceFeaturesRouter = manifestation.newRouter({
   route: "/services/features",
-  middleware: [],
+  middleware: [authorizeRequest],
   routes: [
     manifestation.newRoute({
       route: "/",
@@ -30,7 +31,7 @@ export const serviceFeaturesRouter = manifestation.newRouter({
         return manifestation.sendApiResponse(res, {
           status: 200,
           message: "Successfully fetched features!",
-          data: data.map(d => d.toJson()),
+          data: data.map((d) => d.toJson()),
           successful: true,
         });
       },
@@ -41,7 +42,9 @@ export const serviceFeaturesRouter = manifestation.newRouter({
       executor: async (req, res) => {
         const errors = apiError.createErrorStack();
 
-        let feature = await services.features.fetch(req.params.feature as string);
+        let feature = await services.features.fetch(
+          req.params.feature as string
+        );
 
         if (!feature) errors.append("unknownServiceFeature");
         if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
@@ -65,15 +68,25 @@ export const serviceFeaturesRouter = manifestation.newRouter({
 
         await dataValidator<CreateFeatureData>(req.body, {
           name: {
-            onMissing: () => errors.append(errorConstructor.missingValue("name")),
+            onMissing: () =>
+              errors.append(errorConstructor.missingValue("name")),
           },
           description: {
-            onMissing: () => errors.append(errorConstructor.missingValue("description")),
+            onMissing: () =>
+              errors.append(errorConstructor.missingValue("description")),
           },
           requiresValue: {
-            onMissing: () => errors.append(errorConstructor.missingValue("requiresValue")),
+            onMissing: () =>
+              errors.append(errorConstructor.missingValue("requiresValue")),
             validator: (v) => typeof v === "boolean",
-            onFail: () => errors.append(errorConstructor.invalidValueType("requiresValue", typeof req.body.requiresValue, "boolean")),
+            onFail: () =>
+              errors.append(
+                errorConstructor.invalidValueType(
+                  "requiresValue",
+                  typeof req.body.requiresValue,
+                  "boolean"
+                )
+              ),
           },
         });
 

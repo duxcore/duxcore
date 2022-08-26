@@ -1,6 +1,8 @@
 import { Project, Service, ServiceType, User } from "@prisma/client";
 import ProjectManager from "./ProjectManager";
-import ServiceTypeManager, { ModifiedServiceTypeInstance } from "./ServiceTypeManager";
+import ServiceTypeManager, {
+  ModifiedServiceTypeInstance,
+} from "./ServiceTypeManager";
 import UserManager from "./UserManager";
 
 export default class ServiceManager<ST> {
@@ -38,7 +40,7 @@ export default class ServiceManager<ST> {
       id: this.id,
       name: this.name,
       created: this.created,
-      type: this.type.toJson(),
+      type: this.type.toJson(false),
       owner: this.owner.toJson(),
       project: this.project.toJson(),
     };

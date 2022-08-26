@@ -54,12 +54,10 @@ export const baseServicesRoutes = [
 
       if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
 
-      if (!service) return;
-
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Successfully fetched service!",
-        data: await service.toJson(),
+        data: await service?.toJson(),
         successful: true,
       });
     },

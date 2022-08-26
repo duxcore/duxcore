@@ -94,6 +94,11 @@ export const errorConstructor = {
     code: "INTERNAL_SERVER_ERROR",
     message: er.toString(),
   }),
+  invalidFeatureID: (featureId: string): ApiError => ({
+    code: "INVALID_FEATURE_ID",
+    message: `Invalid Feature ID '${featureId}'`,
+    value: featureId,
+  }),
 };
 
 export const errorManifest = {
@@ -176,10 +181,10 @@ export const errorManifest = {
   },
   unknownServiceType: {
     code: "UNKNOWN_SERVICE_TYPE_ID",
-    message: "The service type you are trying to use doesn't exist."
+    message: "The service type you are trying to use doesn't exist.",
   },
   unknownServiceFeature: {
     code: "UNKNOWN_SERVICE_FEATURE_ID",
-    message: "The service feature you are trying to use doesn't exist."
-  }
+    message: "The service feature you are trying to use doesn't exist.",
+  },
 };
