@@ -1,4 +1,5 @@
 import { manifestation } from "@duxcore/manifestation";
+import { Service } from "@prisma/client";
 import { apiError, errorConstructor } from "../../../helpers/apiError";
 import { fetchTokenData } from "../../../helpers/fetchTokenData";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";
@@ -123,6 +124,42 @@ export const baseServicesRoutes = [
         data: responseData,
         successful: true,
       });
+    },
+  }),
+  manifestation.newRoute({
+    route: "/:service",
+    method: "patch",
+    executor: async (req, res) => {
+      let errors = apiError.createErrorStack();
+      let patchData: Partial<Service> = {};
+      let responseData;
+
+      let calledService = await services.fetch(req.params.service);
+      if (!calledService) errors.append("unknownService");
+
+      await dataValidator<{ name: string }>(req.body, {
+        name: {
+          validator(v) {
+            if (typeof v !== "string")
+              return errorConstructor.invalidValueType(v, typeof v, "string");
+
+            patchData.name = v;
+            return true;
+          },
+          onFail: (reason) => errors.append(reason),
+        },
+      });
+
+      if (errors.stack.length == 0)
+        await services
+          .apiPatch(calledService?.id, patchData)
+          .then((d) => (responseData = d))
+          .catch((e) => {
+            console.trace(e);
+            process.env.NODE_ENV == "development"
+              ? errors.append(errorConstructor.internalServerError(e))
+              : errors.append("internalServerError");
+          });
     },
   }),
 ];

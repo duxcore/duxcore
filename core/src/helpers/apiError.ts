@@ -1,6 +1,7 @@
 export type StackConfiguration = keyof typeof errorManifest | ApiError;
 export interface ApiError {
   code: string;
+  status?: number;
   value?: string;
   message: string;
 }
@@ -93,6 +94,7 @@ export const errorConstructor = {
   internalServerError: (er: Error | string): ApiError => ({
     code: "INTERNAL_SERVER_ERROR",
     message: er.toString(),
+    status: 500,
   }),
   invalidFeatureID: (featureId: string): ApiError => ({
     code: "INVALID_FEATURE_ID",
@@ -186,5 +188,10 @@ export const errorManifest = {
   unknownServiceFeature: {
     code: "UNKNOWN_SERVICE_FEATURE_ID",
     message: "The service feature you are trying to use doesn't exist.",
+  },
+  internalServerError: {
+    code: "INTERNAL_SERVER_ERROR",
+    message: "A fatal server error has occured",
+    status: 500,
   },
 };

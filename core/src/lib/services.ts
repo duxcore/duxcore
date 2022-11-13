@@ -1,3 +1,4 @@
+import { Service } from "@prisma/client";
 import { prismaInstance } from "../../prisma/instance";
 import ServiceFeatureManager from "../classes/ServiceFeatureManager";
 import ServiceManager from "../classes/ServiceManager";
@@ -119,6 +120,25 @@ export const services = {
     });
 
     return data.map((s) => new ServiceManager(s));
+  },
+
+  async apiPatch(id, data: Partial<Service>) {
+    let dat = await prismaInstance.service.update({
+      data,
+      where: { id: (await this.fetch(id))?.id },
+      include: {
+        project: true,
+        owner: true,
+        type: {
+          include: {
+            features: true,
+            services: true,
+          },
+        },
+      },
+    });
+
+    return new ServiceManager(dat);
   },
 
   async fetchAllByUser(id: string) {
