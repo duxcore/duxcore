@@ -6,12 +6,9 @@ import { apiStats } from "./routes/stats";
 import bodyParser from "body-parser";
 import { authRoutes } from "./routes/auth";
 import { resetEmail } from "./routes/resetEmail";
-import { servicesRouter } from "./routes/services/services";
 import { usersRouter } from "./routes/users/users";
 import { daemonRoutes } from "./routes/daemons/daemons";
 import { projectsRouter } from "./routes/projects/projects";
-import { serviceTypesRouter } from "./routes/services/types";
-import { serviceFeaturesRouter } from "./routes/services/features";
 
 export const apiManifest = manifestation.newManifest({
   middleware: [cors(), bodyParser.json()],
@@ -21,9 +18,6 @@ export const apiManifest = manifestation.newManifest({
       middleware: [apiLimiter, cors()],
       routes: [teapot, apiStats, ...authRoutes, resetEmail],
       routers: [
-        serviceTypesRouter,
-        serviceFeaturesRouter,
-        servicesRouter,
         usersRouter,
         daemonRoutes,
         projectsRouter,

@@ -44,7 +44,6 @@ model User {
 
   UserEmailResetTokens UserEmailResetTokens[]
   projects             Project[]
-  services              Service[]
 }
 
 model UserMetaTags {
@@ -112,8 +111,6 @@ model Daemon {
   region              DaemonRegion @relation(references: [id], fields: [regionId])
   regionId            String
   regionDiscriminator String       @unique
-
-  services Service[]
 }
 
 model Project {
@@ -124,51 +121,4 @@ model Project {
   creatorId String
   created   DateTime @default(now())
   upatedAt  DateTime @updatedAt
-
-  services Service[]
-}
-
-model Service {
-  id    String @id @default(uuid())
-  index Int    @default(autoincrement())
-  name  String
-
-  type          ServiceType @relation(fields: [serviceTypeId], references: [id])
-  serviceTypeId String
-
-  owner   User   @relation(fields: [ownerId], references: [id])
-  ownerId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  cpu    Decimal?
-  memory Decimal?
-  disk   Decimal?
-
-  daemon   Daemon? @relation(fields: [daemonId], references: [id])
-  daemonId String?
-
-  project   Project @relation(fields: [projectId], references: [id])
-  projectId String
-}
-
-model ServiceType {
-  id       String           @id @default(uuid())
-  name     String
-  features ServiceFeature[]
-  services Service[]
-}
-
-model ServiceFeature {
-  id String @id @default(uuid())
-
-  name        String
-  description String
-
-  serviceTypes ServiceType[]
-
-  requiresValue Boolean
-  defaultValue  String?
-  valueType     String?
 }
