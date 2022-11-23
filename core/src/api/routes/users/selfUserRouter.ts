@@ -1,7 +1,7 @@
 import { manifestation } from "@duxcore/manifestation";
-import { apiError, errorConstructor } from "../../../helpers/apiError";
-import { fetchTokenData } from "../../../helpers/fetchTokenData";
-import { users } from "../../../lib/users";
+import { apiError, errorConstructor } from "../../../modules/apiError";
+import { fetchTokenData } from "../../../modules/fetchTokenData";
+import { users } from "../../../interfaces/users";
 import { authorizeRequest } from "../../middleware/authorizeRequest";
 import validator from "email-validator";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";

@@ -1,14 +1,14 @@
-import { emailResetConfirmation } from "../util/emailTemplates/emailResetConfirmation";
-import { emailResetComplete } from "../util/emailTemplates/emailResetComplete";
-import { errorManifest } from "../helpers/apiError";
+import { emailResetConfirmation } from "../modules/email/emailTemplates/emailResetConfirmation";
+import { emailResetComplete } from "../modules/email/emailTemplates/emailResetComplete";
+import { errorManifest } from "../modules/apiError";
 import { authorizationToken } from "./authorizationTokens";
 import { prismaInstance } from "../../prisma/instance";
-import { sendEmail } from "../util/mailer";
+import { sendEmail } from "../modules/email/mailer";
 import UserManager from "../classes/UserManager";
 import { UserRole } from ".prisma/client";
 import Password from "../classes/Password";
-import { cryptr } from "../util/cryptr";
-import { env } from "../util/env";
+import { cryptr } from "../modules/cryptr";
+import { env } from "../modules/env";
 
 interface NewUserData {
   firstName: string;

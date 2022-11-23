@@ -1,7 +1,7 @@
-import { apiError, errorConstructor } from "../../../helpers/apiError";
+import { apiError, errorConstructor } from "../../../modules/apiError";
 import { manifestation } from "@duxcore/manifestation";
 import Password from "../../../classes/Password";
-import { users } from "../../../lib/users";
+import { users } from "../../../interfaces/users";
 import emailValidator from "email-validator";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";
 import { dataValidator } from "../../../util/dataValidator";

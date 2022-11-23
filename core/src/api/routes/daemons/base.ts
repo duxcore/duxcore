@@ -1,9 +1,9 @@
 import { manifestation } from "@duxcore/manifestation";
 import { Daemon } from "@prisma/client";
-import { apiError, errorConstructor } from "../../../helpers/apiError";
+import { apiError, errorConstructor } from "../../../modules/apiError";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";
-import { daemonRegions } from "../../../lib/daemonRegions";
-import { daemons } from "../../../lib/daemons";
+import { daemonRegions } from "../../../interfaces/daemonRegions";
+import { daemons } from "../../../interfaces/daemons";
 import { dataValidator } from "../../../util/dataValidator";
 import { formatDiscriminator } from "../../../util/formatDiscriminator";
 

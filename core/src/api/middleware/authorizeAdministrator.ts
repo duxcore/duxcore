@@ -1,8 +1,8 @@
 import { manifestation, MiddlewareMethod } from "@duxcore/manifestation";
-import { apiError } from "../../helpers/apiError";
+import { apiError } from "../../modules/apiError";
 import { sendApiErrors } from "../../helpers/sendApiErrors";
-import { authorizationToken } from "../../lib/authorizationTokens";
-import { users } from "../../lib/users";
+import { authorizationToken } from "../../interfaces/authorizationTokens";
+import { users } from "../../interfaces/users";
 
 export const authorizeAdministratorRequest: MiddlewareMethod = async (
   req,

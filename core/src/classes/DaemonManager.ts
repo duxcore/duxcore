@@ -1,5 +1,5 @@
 import { Daemon } from "@prisma/client";
-import { daemonRegions } from "../lib/daemonRegions";
+import { daemonRegions } from "../interfaces/daemonRegions";
 import DaemonRegionManager from "./DaemonRegionManager";
 import DaemonServerManager from "./DaemonServerManager";
 

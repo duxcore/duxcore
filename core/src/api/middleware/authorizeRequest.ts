@@ -1,6 +1,6 @@
 import { manifestation, MiddlewareMethod } from "@duxcore/manifestation";
-import { apiError } from "../../helpers/apiError";
-import { authorizationToken } from "../../lib/authorizationTokens";
+import { apiError } from "../../modules/apiError";
+import { authorizationToken } from "../../interfaces/authorizationTokens";
 
 export const authorizeRequest: MiddlewareMethod = (req, res, next) => {
   let authToken = req.headers.authorization;

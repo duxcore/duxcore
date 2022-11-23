@@ -1,6 +1,6 @@
 import { manifestation } from "@duxcore/manifestation";
-import { projects } from "../../lib/projects";
-import { users } from "../../lib/users";
+import { projects } from "../../interfaces/projects";
+import { users } from "../../interfaces/users";
 
 export const apiStats = manifestation.newRoute({
   route: "/stats",

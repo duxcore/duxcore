@@ -1,9 +1,9 @@
 import { manifestation } from "@duxcore/manifestation";
 import ProjectManager from "../../../classes/ProjectManager";
-import { apiError, errorConstructor } from "../../../helpers/apiError";
-import { fetchTokenData } from "../../../helpers/fetchTokenData";
+import { apiError, errorConstructor } from "../../../modules/apiError";
+import { fetchTokenData } from "../../../modules/fetchTokenData";
 import { sendApiErrors } from "../../../helpers/sendApiErrors";
-import { projects } from "../../../lib/projects";
+import { projects } from "../../../interfaces/projects";
 import { dataValidator } from "../../../util/dataValidator";
 
 export const projectBaseRoutes = [

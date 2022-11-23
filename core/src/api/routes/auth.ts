@@ -1,6 +1,6 @@
 import { manifestation } from "@duxcore/manifestation";
-import { apiError, errorConstructor } from "../../helpers/apiError";
-import { authorizationToken } from "../../lib/authorizationTokens";
+import { apiError, errorConstructor } from "../../modules/apiError";
+import { authorizationToken } from "../../interfaces/authorizationTokens";
 
 export const authRoutes = [
   manifestation.newRoute({
