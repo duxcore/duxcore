@@ -25,6 +25,8 @@ export const projectBaseRoutes = [
           })
           .catch((e) => errors.append(errorConstructor.internalServerError(e)));
 
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Successfully fetched projects!",
@@ -74,7 +76,10 @@ export const projectBaseRoutes = [
       const project = await projects.fetch(projectId);
 
       if (!project) errors.append("invalidProjectId");
-      if (!(await projects.checkUserPermission(tokenData.userId, projectId)))
+      if (
+        !!project &&
+        !(await projects.checkUserPermission(tokenData.userId, projectId))
+      )
         errors.append("projectNoAccess");
 
       if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);

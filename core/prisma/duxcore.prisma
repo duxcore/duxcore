@@ -27,10 +27,6 @@ enum ServiceStatus {
   SETTING_UP
 }
 
-enum ServiceType {
-  NodeJsAppService
-}
-
 model User {
   id            String              @id @default(uuid())
   index         Int                 @default(autoincrement())
@@ -46,10 +42,8 @@ model User {
   refreshTokens UserRefreshToken[]
   meta          Json                @default("{}")
 
-  UserEmailResetTokens    UserEmailResetTokens[]
-  Projects                Project[]
-  ServerMonitoringService ServerMonitoringService[]
-  Service                 Service[]
+  UserEmailResetTokens UserEmailResetTokens[]
+  projects             Project[]
 }
 
 model UserMetaTags {
@@ -95,7 +89,7 @@ model DaemonRegion {
   code String
 
   created DateTime @default(now())
-  Daemon  Daemon[]
+  daemons  Daemon[]
 }
 
 model Daemon {
@@ -117,8 +111,6 @@ model Daemon {
   region              DaemonRegion @relation(references: [id], fields: [regionId])
   regionId            String
   regionDiscriminator String       @unique
-
-  NodeJsAppService NodeJsAppService[]
 }
 
 model Project {
@@ -129,81 +121,4 @@ model Project {
   creatorId String
   created   DateTime @default(now())
   upatedAt  DateTime @updatedAt
-
-  Service Service[]
-}
-
-model Service {
-  id   String      @id @default(uuid())
-  type ServiceType
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  owner   User   @relation(references: [id], fields: [ownerId])
-  ownerId String
-
-  project   Project @relation(references: [id], fields: [projectId])
-  projectId String
-
-  NodeJsAppService        NodeJsAppService?
-  ServerMonitoringService ServerMonitoringService?
-}
-
-model NodeJsAppService {
-  id      String  @id
-  service Service @relation(fields: [id], references: [id])
-
-  name   String
-  status ServiceStatus @default(UNKNOWN)
-
-  startCommand   String
-  buildCommand   String
-  installCommand String
-
-  buildOnStart        Boolean @default(false)
-  installOnEveryStart Boolean @default(false)
-  restartOnCrash      Boolean @default(false)
-
-  cpu    Float @default(0.5)
-  memory Float @default(512)
-  disk   Float @default(10)
-
-  daemon   Daemon @relation(references: [id], fields: [daemonId])
-  daemonId String
-}
-
-model ServerMonitoringService {
-  id      String  @id
-  service Service @relation(fields: [id], references: [id])
-
-  index  Int    @default(autoincrement())
-  secret String @default(uuid())
-
-  name                  String
-  creator               User                 @relation(references: [id], fields: [creatorId])
-  creatorId             String
-  MonitoringDynamicData MonitorDynamicData[]
-  MonitorStaticData     MonitorStaticData?
-}
-
-model MonitorStaticData {
-  id        Int                     @id @default(autoincrement())
-  monitor   ServerMonitoringService @relation(references: [id], fields: [monitorId])
-  monitorId String                  @unique
-
-  ipAddress       String
-  operatingSystem String
-}
-
-model MonitorDynamicData {
-  id Int @id @default(autoincrement())
-
-  monitor   ServerMonitoringService @relation(references: [id], fields: [monitorId])
-  monitorId String
-
-  date      DateTime @default(now())
-  cpuUsage  Int
-  ramUsage  Int
-  diskUsage Int
 }

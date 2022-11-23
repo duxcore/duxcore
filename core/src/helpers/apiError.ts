@@ -1,6 +1,7 @@
 export type StackConfiguration = keyof typeof errorManifest | ApiError;
 export interface ApiError {
   code: string;
+  status?: number;
   value?: string;
   message: string;
 }
@@ -93,6 +94,12 @@ export const errorConstructor = {
   internalServerError: (er: Error | string): ApiError => ({
     code: "INTERNAL_SERVER_ERROR",
     message: er.toString(),
+    status: 500,
+  }),
+  invalidFeatureID: (featureId: string): ApiError => ({
+    code: "INVALID_FEATURE_ID",
+    message: `Invalid Feature ID '${featureId}'`,
+    value: featureId,
   }),
 };
 
@@ -165,5 +172,26 @@ export const errorManifest = {
   emptyRequestObject: {
     code: "EMPTY_REQUEST_OBJECT",
     message: "The request object is either missing or empty.",
+  },
+  unknownService: {
+    code: "UNKNOWN_SERVICE_ID",
+    message: "The service you are trying to fetch doesn't exist.",
+  },
+  serviceNoAccess: {
+    code: "SERVICE_NO_ACCESS",
+    message: "The do not have permission to view this service.",
+  },
+  unknownServiceType: {
+    code: "UNKNOWN_SERVICE_TYPE_ID",
+    message: "The service type you are trying to use doesn't exist.",
+  },
+  unknownServiceFeature: {
+    code: "UNKNOWN_SERVICE_FEATURE_ID",
+    message: "The service feature you are trying to use doesn't exist.",
+  },
+  internalServerError: {
+    code: "INTERNAL_SERVER_ERROR",
+    message: "A fatal server error has occured",
+    status: 500,
   },
 };

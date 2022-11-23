@@ -1,6 +1,4 @@
-import Collection from "@discordjs/collection";
 import { Project } from "@prisma/client";
-import { prismaInstance } from "../../prisma/instance";
 
 export default class ProjectManager {
   private _rawData: Project;
@@ -13,7 +11,7 @@ export default class ProjectManager {
     return this._rawData.id;
   }
 
-  async toJson() {
+  toJson() {
     return {
       id: this._rawData.id,
       name: this._rawData.name,
