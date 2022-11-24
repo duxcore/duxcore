@@ -1,6 +1,6 @@
 import { manifestation, MiddlewareMethod } from "@duxcore/manifestation";
 import { apiError } from "../../modules/apiError";
-import { sendApiErrors } from "../../helpers/sendApiErrors";
+import { sendApiErrors } from "../../modules/sendApiErrors";
 import { authorizationToken } from "../../interfaces/authorizationTokens";
 import { users } from "../../interfaces/users";
 

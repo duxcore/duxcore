@@ -1,11 +1,11 @@
 import { manifestation } from "@duxcore/manifestation";
 import { Daemon } from "@prisma/client";
 import { apiError, errorConstructor } from "../../../modules/apiError";
-import { sendApiErrors } from "../../../helpers/sendApiErrors";
+import { sendApiErrors } from "../../../modules/sendApiErrors";
 import { daemonRegions } from "../../../interfaces/daemonRegions";
 import { daemons } from "../../../interfaces/daemons";
-import { dataValidator } from "../../../util/dataValidator";
-import { formatDiscriminator } from "../../../util/formatDiscriminator";
+import { dataValidator } from "../../../modules/dataValidator";
+import { formatDiscriminator } from "../../../modules/formatDiscriminator";
 
 export const apiDaemonBaseRoutes = [
   manifestation.newRoute({

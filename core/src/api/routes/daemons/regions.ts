@@ -1,8 +1,8 @@
 import { manifestation } from "@duxcore/manifestation";
 import { apiError, errorConstructor } from "../../../modules/apiError";
-import { sendApiErrors } from "../../../helpers/sendApiErrors";
+import { sendApiErrors } from "../../../modules/sendApiErrors";
 import { daemonRegions } from "../../../interfaces/daemonRegions";
-import { dataValidator } from "../../../util/dataValidator";
+import { dataValidator } from "../../../modules/dataValidator";
 
 export const daemonRegionRoutes = manifestation.newRouter({
   route: "/regions",

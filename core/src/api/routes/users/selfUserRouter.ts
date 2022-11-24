@@ -4,7 +4,7 @@ import { fetchTokenData } from "../../../modules/fetchTokenData";
 import { users } from "../../../interfaces/users";
 import { authorizeRequest } from "../../middleware/authorizeRequest";
 import validator from "email-validator";
-import { sendApiErrors } from "../../../helpers/sendApiErrors";
+import { sendApiErrors } from "../../../modules/sendApiErrors";
 import UserManager from "../../../classes/UserManager";
 
 

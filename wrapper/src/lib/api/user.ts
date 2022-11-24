@@ -1,8 +1,8 @@
 import { NewUser, TokenPair, User, UserEdit } from "../../types/user";
-import { API_BASEURL } from "../../util/constants";
+import { API_BASEURL } from "../../modules/constants";
 import axiosInstance, { setAxiosHeader } from "../axiosInstance";
 import type { AxiosError } from "axios";
-import { invalidApiResponseStack } from "../../util/invalidApiResponseStack";
+import { invalidApiResponseStack } from "../../modules/invalidApiResponseStack";
 import { useTokenStore } from "../useTokenStore";
 
 export const createUserController = () => {

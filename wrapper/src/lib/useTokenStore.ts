@@ -1,7 +1,7 @@
 import create from "zustand";
 import { combine } from "zustand/middleware";
-import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../util/constants";
-import { isServer } from "../util/isServer";
+import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../modules/constants";
+import { isServer } from "../modules/isServer";
 
 const getDefaultValues = () => {
   if (!isServer) {

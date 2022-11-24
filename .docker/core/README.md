@@ -1,0 +1,2 @@
+### Quick Note About Docker on Windows
+If you are running this docker image on windows and you are running into file permission issues when running this in wsl, back out to powershell, run this docker container, then move back to wsl and try again.

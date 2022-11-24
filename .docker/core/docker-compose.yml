@@ -2,14 +2,14 @@ version: '3'
 
 services:
   pgsql:
-    image: postgres
+    image: 'postgres:12-alpine'
     restart: unless-stopped
     environment:
       POSTGRES_USER: duxcore
       POSTGRES_PASSWORD: 123web123
       POSTGRES_DB: duxcore
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data/
     ports:
       - 5432:5432
 
