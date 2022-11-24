@@ -5,7 +5,7 @@ import { authorizationToken } from "./authorizationTokens";
 import { prismaInstance } from "../../prisma/instance";
 import { sendEmail } from "../modules/email/mailer";
 import UserManager from "../classes/UserManager";
-import { UserRole } from ".prisma/client";
+import { Prisma, User, UserRole } from "@prisma/client";
 import Password from "../classes/Password";
 import { cryptr } from "../modules/cryptr";
 import { env } from "../modules/env";
@@ -115,6 +115,14 @@ export const users = {
           })
         )?.id ?? null,
     };
+  },
+
+  async apiPatch(id: string, data: Partial<Prisma.UserUpdateInput>) {
+    console.log(data)
+    await prismaInstance.user.update({
+      where: { id },
+      data
+    }).then(console.log)
   },
 
   async generateEmailResetToken(userId: string, newEmail: string) {

@@ -6,6 +6,8 @@ import { authorizeRequest } from "../../middleware/authorizeRequest";
 import validator from "email-validator";
 import { sendApiErrors } from "../../../modules/sendApiErrors";
 import UserManager from "../../../classes/UserManager";
+import { dataValidator } from "../../../modules/dataValidator";
+import { Prisma, User } from "@prisma/client";
 
 
 export const selfUserRouter = manifestation.newRouter({
@@ -37,47 +39,32 @@ export const selfUserRouter = manifestation.newRouter({
     }),
     manifestation.newRoute({
       route: "/",
-      method: "post",
+      method: "patch",
       middleware: [],
       async executor(req, res) {
         let tokenData = fetchTokenData(res.locals);
         let errorStack = apiError.createErrorStack();
-        let modifiers = [
-          "email",
-          "password"
-        ];
 
-        const requestedModifiers = Object.keys(req.body)
-        requestedModifiers.map(m => {
-          if (!modifiers.includes(m))
-            return errorStack.append(errorConstructor.invalidUserModifier(m));
-        });
+        let patchData: Partial<Prisma.UserUpdateInput> = {};
 
-        if (requestedModifiers.length == 0) errorStack.append("missingUserModifiers");
-
-        const processedModifiers = await Promise.all(requestedModifiers.map(async modifier => {
-          if (errorStack.stack.length > 0) return false;
-          if (modifier == "email") {
-            let newEmail = req.body['email'];
-
-            if (!validator.validate(newEmail)) return errorStack.append(errorConstructor.invalidEmail(newEmail));
-
-            return await users.generateEmailResetToken(tokenData['userId'], newEmail)
-              .then(() => true)
-              .catch(err => {
-                let msg = err.message;
-
-                if (msg === "INVALID_USER_ID") return errorStack.append({
-                  code: "INVALID_USER_ID",
-                  message: "The user ID used to change user email is invalid!"
-                });
-
-                if (msg === "EMAIL_EXISTS") return errorStack.append("userEmailExists");
-              });
-          }
-        }));
+        await dataValidator<{
+          email: string;
+        }>(req.body, {
+          email: {
+            validator: async (v) => {
+              if (!validator.validate(v)) return errorStack.append(errorConstructor.invalidEmail(v));
+              if ((await users.emailExists(v))) return errorStack.append("userEmailExists");
+              return true;
+            },
+            onSuccess(value) {
+                patchData.email = value;
+            },
+          },
+        })
 
         if (errorStack.stack.length > 0) return sendApiErrors(res, ...errorStack.stack);
+
+        users.apiPatch(tokenData.userId, patchData);
 
         return manifestation.sendApiResponse(res, manifestation.newApiResponse({
           status: 200,

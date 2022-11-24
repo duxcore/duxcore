@@ -25,7 +25,7 @@ export const dataValidator = async <Datatype = Object>(
   }
 ) => {
   const validatorKeys = Object.keys(validators);
-  const dataKeys = Object.keys(data);
+  const dataKeys = Object.keys(data as any);
 
   if ((!data || dataKeys.length == 0) && options?.emptyData)
     return await options.emptyData();
