@@ -2,7 +2,7 @@ import { manifestation } from "@duxcore/manifestation";
 import { apiError, errorConstructor } from "../../../modules/apiError";
 import { sendApiErrors } from "../../../modules/sendApiErrors";
 import { daemonRegions } from "../../../interfaces/daemonRegions";
-import { dataValidator } from "../../../modules/dataValidator";
+import { z } from "zod"
 
 export const daemonRegionRoutes = manifestation.newRouter({
   route: "/regions",
@@ -14,27 +14,22 @@ export const daemonRegionRoutes = manifestation.newRouter({
         let errors = apiError.createErrorStack();
         let responseData;
 
-        await dataValidator<{
-          code: string;
-          name: string;
-        }>(req.body, {
-          name: {
-            onMissing: () =>
-              errors.append(errorConstructor.missingValue("name")),
-          },
-          code: {
-            validator: async (v) => await daemonRegions.checkCodeAvailable(v),
-            onFail: () => errors.append("regionCodeUnavailable"),
-            onMissing: () =>
-              errors.append(errorConstructor.missingValue("code")),
-          },
-        });
+        let input = z.object({
+          name: z.string(),
+          code: z.string(),
+        }).safeParse(req.body);
+
+        if (!input.success) return sendApiErrors(res, ...input.error.issues);
+
+        let { name, code } = input.data;
+
+        if (!await daemonRegions.checkCodeAvailable(code)) errors.append("regionCodeUnavailable");
 
         if (errors.stack.length === 0)
           responseData = (
             await daemonRegions.create({
-              name: req.body.name,
-              code: req.body.code,
+              name,
+              code,
             })
           ).toJson();
 

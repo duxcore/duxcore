@@ -17,7 +17,7 @@ export const apiDaemonBaseRoutes = [
       let responseData;
 
       let input = z.object({
-        name: z.string().min(1).max(32),
+        name: z.string(),
         host: z.string(),
         port: z.number().min(1).max(65535),
         secure: z.boolean(),
@@ -125,7 +125,7 @@ export const apiDaemonBaseRoutes = [
 
       let input = z.object({
         id: z.string(),
-        name: z.string().min(1).max(32),
+        name: z.string(),
         regionDiscriminator: z.string(),
         port: z.string(),
         wsPort : z.string(),

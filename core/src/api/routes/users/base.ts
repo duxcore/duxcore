@@ -17,8 +17,8 @@ export const apiUserBaseRoutes = [
 
       let input = z.object({
         name: z.object({
-          firstName: z.string().min(1).max(32),
-          lastName: z.string().min(1).max(32),
+          firstName: z.string(),
+          lastName: z.string(),
         }),
         email: z.string().email(),
         password: z.string()

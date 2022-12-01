@@ -45,7 +45,7 @@ export const projectBaseRoutes = [
       let newProject;
 
       let input = z.object({
-        name: z.string().min(1).max(32),
+        name: z.string(),
       }).safeParse(req.body);
 
       if (!input.success)
