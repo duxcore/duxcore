@@ -5,6 +5,7 @@ import { users } from "../../../interfaces/users";
 import emailValidator from "email-validator";
 import { sendApiErrors } from "../../../modules/sendApiErrors";
 import { dataValidator } from "../../../modules/dataValidator";
+import { z } from "zod";
 
 export const apiUserBaseRoutes = [
   manifestation.newRoute({
@@ -14,61 +15,32 @@ export const apiUserBaseRoutes = [
       let errors = apiError.createErrorStack();
       let responseData;
 
-      await dataValidator<{
-        name: {
-          firstName: string;
-          lastName: string;
-        };
-        password: string;
-        email: string;
-      }>(req.body, {
-        name: {
-          validators: [
-            {
-              validator: (v) => !!v.firstName,
-              onFail: (mv) =>
-                errors.append(errorConstructor.missingValue("name.firstName")),
-            },
-            {
-              validator: (v) => !!v.lastName,
-              onFail: (mv) =>
-                errors.append(errorConstructor.missingValue("name.lastName")),
-            },
-          ],
-          validator: (v) => typeof v == "object",
-          onFail: (reason, value) =>
-            errors.append({
-              code: "INVALID_NAME_TYPE",
-              message:
-                "Name must be an instance of an object with a firstName and lastName value.",
-            }),
-          onMissing: () => errors.append(errorConstructor.missingValue("name")),
-        },
-        password: {
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("password")),
-        },
-        email: {
-          validator: async (v) => {
-            if (!emailValidator.validate(v))
-              return errorConstructor.invalidEmail(v);
-            if (await users.emailExists(req.body.email))
-              return "userEmailExists";
-            return true;
-          },
-          onFail: (r) => errors.append(r),
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("email")),
-        },
-      });
+      let input = z.object({
+        name: z.object({
+          firstName: z.string().min(1).max(32),
+          lastName: z.string().min(1).max(32),
+        }),
+        email: z.string().email(),
+        password: z.string()
+      }).safeParse(req.body);
+
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+
+      let { name, email, password } = input.data;
+
+      if (await users.emailExists(email)) {
+        errors.append("userEmailExists");
+        return sendApiErrors(res, ...errors.stack);
+      }
 
       if (errors.stack.length === 0)
         await users
           .create({
-            email: req.body.email,
-            password: Password.hash(req.body.password),
-            firstName: req.body.name.firstName,
-            lastName: req.body.name.lastName,
+            email,
+            password: Password.hash(password),
+            firstName: name.firstName,
+            lastName: name.lastName,
             role: "USER",
           })
           .then((newUser) => {
@@ -97,14 +69,17 @@ export const apiUserBaseRoutes = [
     executor: async (req, res) => {
       let errors = apiError.createErrorStack();
 
-      const email = req.body.email;
-      const password = req.body.password;
-      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      let input = z.object({
+        email: z.string().email(),
+        password: z.string()
+      }).safeParse(req.body);
 
-      if (!req.body.email)
-        errors.append(errorConstructor.missingValue("email"));
-      if (!req.body.email)
-        errors.append(errorConstructor.missingValue("password"));
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+      
+      let { email, password } = input.data;
+
+      const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
       if (!(await users.emailExists(email))) errors.append("unknownUser");
 
