@@ -9,7 +9,6 @@ import UserManager from "../../../classes/UserManager";
 import { dataValidator } from "../../../modules/dataValidator";
 import { Prisma, User } from "@prisma/client";
 
-
 export const selfUserRouter = manifestation.newRouter({
   route: "/@me",
   middleware: [authorizeRequest],
@@ -19,24 +18,28 @@ export const selfUserRouter = manifestation.newRouter({
       method: "get",
       middleware: [],
       executor: async (req, res) => {
-        let tokenData = fetchTokenData(res.locals)
+        let tokenData = fetchTokenData(res.locals);
 
-        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 200,
-          message: "Successfully fetched user profile.",
-          data: await (async () => {
-            (tokenData as any).iat = undefined;
-            const user = await users.fetch(tokenData.userId);
+        return manifestation.sendApiResponse(
+          res,
+          manifestation.newApiResponse({
+            status: 200,
+            message: "Successfully fetched user profile.",
+            data: await (async () => {
+              (tokenData as any).iat = undefined;
+              const user = await users.fetch(tokenData.userId);
 
-            return {
-              raw: tokenData,
-              user: user?.toJson()
-            }
-          })(),
-          successful: true
-        }))
-      }
+              return {
+                raw: tokenData,
+                user: user?.toJson(),
+              };
+            })(),
+            successful: true,
+          })
+        );
+      },
     }),
+
     manifestation.newRoute({
       route: "/",
       method: "patch",
@@ -52,46 +55,58 @@ export const selfUserRouter = manifestation.newRouter({
         }>(req.body, {
           email: {
             validator: async (v) => {
-              if (!validator.validate(v)) return errorStack.append(errorConstructor.invalidEmail(v));
-              if ((await users.emailExists(v))) return errorStack.append("userEmailExists");
+              if (!validator.validate(v))
+                return errorStack.append(errorConstructor.invalidEmail(v));
+              if (await users.emailExists(v))
+                return errorStack.append("userEmailExists");
               return true;
             },
             onSuccess(value) {
-                patchData.email = value;
+              patchData.email = value;
             },
           },
-        })
+        });
 
-        if (errorStack.stack.length > 0) return sendApiErrors(res, ...errorStack.stack);
+        if (errorStack.stack.length > 0)
+          return sendApiErrors(res, ...errorStack.stack);
 
         users.apiPatch(tokenData.userId, patchData);
 
-        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 200,
-          message: "Modifiers executed successfully!",
-          successful: true
-        }))
-      }
+        return manifestation.sendApiResponse(
+          res,
+          manifestation.newApiResponse({
+            status: 200,
+            message: "Modifiers executed successfully!",
+            successful: true,
+          })
+        );
+      },
     }),
     manifestation.newRoute({
-      route: '/updatePassword',
+      route: "/updatePassword",
       method: "post",
       middleware: [],
       executor: async (req, res) => {
         let errors = apiError.createErrorStack();
         let tokenData = fetchTokenData(res.locals);
 
-        let user = ((await users.fetch(tokenData.userId)) ?? errors.append("unknownUser")) as UserManager;
-        let oldPassword = req.body['oldPassword'] ?? errors.append(errorConstructor.missingValue("oldPassword"));
-        let newPassword = req.body['newPassword'] ?? errors.append(errorConstructor.missingValue("newPassword"));
+        let user = ((await users.fetch(tokenData.userId)) ??
+          errors.append("unknownUser")) as UserManager;
+        let oldPassword =
+          req.body["oldPassword"] ??
+          errors.append(errorConstructor.missingValue("oldPassword"));
+        let newPassword =
+          req.body["newPassword"] ??
+          errors.append(errorConstructor.missingValue("newPassword"));
 
-        if (!user.validatePassowrd(oldPassword)) errors.append("invalidPassword");
+        if (!user.validatePassowrd(oldPassword))
+          errors.append("invalidPassword");
 
         if (errors.stack.length === 0) {
-          await user.updatePassword(newPassword).catch(e => {
+          await user.updatePassword(newPassword).catch((e) => {
             return errors.append({
               code: "UPDATE_PASSWORD_FAILURE",
-              message: "Failed to update your password"
+              message: "Failed to update your password",
             });
           });
         }
@@ -101,39 +116,46 @@ export const selfUserRouter = manifestation.newRouter({
         return manifestation.sendApiResponse(res, {
           status: 200,
           message: "Successfully updated user password",
-          successful: true
-        })
-      }
+          successful: true,
+        });
+      },
     }),
     manifestation.newRoute({
       route: "/revokeAllRefreshTokens",
-      method: 'delete',
+      method: "delete",
       middleware: [],
       executor: async (req, res) => {
         let tokenData = fetchTokenData(res.locals);
 
         const user = await users.fetch(tokenData.userId);
 
-        if (!user) return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 404,
-          message: "Unknown user...",
-          data: {
-            errors: apiError.createErrorStack("unknownUser")
-          },
-          successful: false
-        }));
+        if (!user)
+          return manifestation.sendApiResponse(
+            res,
+            manifestation.newApiResponse({
+              status: 404,
+              message: "Unknown user...",
+              data: {
+                errors: apiError.createErrorStack("unknownUser"),
+              },
+              successful: false,
+            })
+          );
 
         await user.revokeAllRefreshTokens();
 
-        return manifestation.sendApiResponse(res, manifestation.newApiResponse({
-          status: 200,
-          message: `Successfully deleted all refresh tokens associated with user ID '${user.id}'`,
-          data: {
-            userId: user.id
-          },
-          successful: true
-        }))
-      }
-    })
+        return manifestation.sendApiResponse(
+          res,
+          manifestation.newApiResponse({
+            status: 200,
+            message: `Successfully deleted all refresh tokens associated with user ID '${user.id}'`,
+            data: {
+              userId: user.id,
+            },
+            successful: true,
+          })
+        );
+      },
+    }),
   ],
-})
+});
