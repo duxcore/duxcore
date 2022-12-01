@@ -6,6 +6,7 @@ import { daemonRegions } from "../../../interfaces/daemonRegions";
 import { daemons } from "../../../interfaces/daemons";
 import { dataValidator } from "../../../modules/dataValidator";
 import { formatDiscriminator } from "../../../modules/formatDiscriminator";
+import { z } from "zod"
 
 export const apiDaemonBaseRoutes = [
   manifestation.newRoute({
@@ -15,136 +16,45 @@ export const apiDaemonBaseRoutes = [
       let errors = apiError.createErrorStack();
       let responseData;
 
-      await dataValidator<{
-        name: string;
-        host: string;
-        port: number | string;
-        secure: boolean;
-        wsPort: string | number;
-        secret: string;
-        region: string;
-        regionDiscriminator: string;
-        resourceCeil: {
-          cpu: number;
-          memory: number;
-          disk: number;
-        };
-      }>(req.body, {
-        name: {
-          validators: [],
-          onMissing: () => errors.append(errorConstructor.missingValue("name")),
-        },
-        host: {
-          onMissing: () => errors.append(errorConstructor.missingValue("host")),
-        },
-        port: {
-          onMissing: () => errors.append(errorConstructor.missingValue("port")),
-        },
-        wsPort: {
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("wsPort")),
-        },
-        secure: {
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("secure")),
-        },
-        secret: {
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("secret")),
-        },
-        region: {
-          validator: async (v) => {
-            return await daemonRegions.exists(v);
-          },
-          onFail: async (v) => {
-            return errors.append("unknownDaemonRegion");
-          },
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("region")),
-        },
-        regionDiscriminator: {
-          validator: async (v) => {
-            if (
-              await daemons.regionDiscriminatorInUse(
-                formatDiscriminator(v),
-                req.body.region
-              )
-            )
-              return "regionDiscriminatorInUse";
+      let input = z.object({
+        name: z.string().min(1).max(32),
+        host: z.string(),
+        port: z.number().min(1).max(65535),
+        secure: z.boolean(),
+        wsPort: z.string(),
+        secret: z.string(),
+        region: z.string(),
+        regionDiscriminator: z.string(),
+        resourceCeil: z.object({
+          cpu: z.number(),
+          memory: z.number(),
+          disk: z.number(),
+        })
+      }).safeParse(req.body);
 
-            req.body.regionDiscriminator = formatDiscriminator(v);
-            return true;
-          },
-          onFail: async (err) => errors.append(err),
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("regionDiscriminator")),
-        },
-        resourceCeil: {
-          validator: async (v) =>
-            await dataValidator(v, {
-              cpu: {
-                validator: (v) => typeof v == "number",
-                onFail: (err, v) =>
-                  errors.append(
-                    errorConstructor.invalidValueType(
-                      "resourceCeil.cpu",
-                      typeof v,
-                      "number"
-                    )
-                  ),
-                onMissing: () =>
-                  errors.append(
-                    errorConstructor.missingValue("resourceCeil.cpu")
-                  ),
-              },
-              memory: {
-                validator: (v) => typeof v == "number",
-                onFail: (err, v) =>
-                  errors.append(
-                    errorConstructor.invalidValueType(
-                      "resourceCeil.memory",
-                      typeof v,
-                      "number"
-                    )
-                  ),
-                onMissing: () =>
-                  errors.append(
-                    errorConstructor.missingValue("resourceCeil.memory")
-                  ),
-              },
-              disk: {
-                validator: (v) => typeof v == "number",
-                onFail: (err, v) =>
-                  errors.append(
-                    errorConstructor.invalidValueType(
-                      "resourceCeil.disk",
-                      typeof v,
-                      "number"
-                    )
-                  ),
-                onMissing: () =>
-                  errors.append(
-                    errorConstructor.missingValue("resourceCeil.disk")
-                  ),
-              },
-            }),
-          onMissing: () =>
-            errors.append(errorConstructor.missingValue("resourceCeil")),
-        },
-      });
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+
+      let { name, host, port, secure, wsPort, secret, region, regionDiscriminator, resourceCeil } = input.data;
+
+      if (!await daemonRegions.exists(region))
+        errors.append("unknownDaemonRegion");
+
+      if (await daemons.regionDiscriminatorInUse(formatDiscriminator(regionDiscriminator), region))
+        errors.append("regionDiscriminatorInUse");
 
       if (errors.stack.length === 0)
         await daemons
           .create({
-            name: req.body.name,
-            host: req.body.host,
-            port: req.body.port,
-            wsPort: req.body.wsPort,
-            secure: req.body.secure,
-            secret: req.body.secret,
-            regionId: req.body.region,
-            regionDiscriminator: req.body.regionDiscriminator,
-            resourceCeil: req.body.resourceCeil,
+            name,
+            host,
+            port,
+            wsPort,
+            secure,
+            secret,
+            regionId: region,
+            regionDiscriminator,
+            resourceCeil,
           })
           .then((res) => {
             responseData = res.toJson();
@@ -174,26 +84,29 @@ export const apiDaemonBaseRoutes = [
       let errors = apiError.createErrorStack();
       let responseData;
 
-      await dataValidator<{ id: string }>(req.params as any, {
-        id: {
-          validator: async (v) => {
-            let daemonData = await daemons.fetch(v);
+      let input = z.object({
+        id: z.string()
+      }).safeParse(req.params);
 
-            if (!daemonData) return "invalidDaemonId";
-            responseData = daemonData.toJson();
-            return true;
-          },
-          onFail: (err) => {
-            errors.append(err);
-          },
-        },
-      });
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+
+      let { id } = input.data;
+
+      if (!await daemons.exists(id))
+        errors.append("invalidDaemonId");
+        
+      let data = await daemons.fetch(id)
+
+      // this should never trigger, it's just for type safety, or ig weird database errors
+      if (!data) errors.append("invalidDaemonId");
 
       if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Successfully fetched daemond.",
-        data: await responseData,
+        data,
         successful: true,
       });
     },
@@ -206,77 +119,36 @@ export const apiDaemonBaseRoutes = [
       let patchData: Partial<Daemon> = {};
       let responseData;
 
-      let calledDaemon = await daemons.fetch(req.params.id);
+      let id = z.string().safeParse(req.params.id);
+
+      if (!id.success) return sendApiErrors(res, ...id.error.issues);
+
+      let input = z.object({
+        id: z.string(),
+        name: z.string().min(1).max(32),
+        regionDiscriminator: z.string(),
+        port: z.string(),
+        wsPort : z.string(),
+        secure: z.boolean(),
+        secret: z.string(),
+      }).partial().safeParse(req.body);
+
+      if (!input.success) return sendApiErrors(res, ...input.error.issues);
+
+      patchData = input.data;
+      let code: string | undefined = undefined;
+
+      let calledDaemon = await daemons.fetch(id.data);
       if (!calledDaemon) errors.append("invalidDaemonId");
 
-      await dataValidator<{
-        name: string;
-        regionDiscriminator: string;
-
-        port: string;
-        wsPort: string;
-        secure: boolean;
-        secret: string;
-      }>(
-        req.body,
-        {
-          name: {
-            onSuccess: (v) => {
-              patchData.name = v;
-              return;
-            },
-          },
-          port: {
-            onSuccess: (v) => {
-              patchData.port = v;
-              return;
-            },
-          },
-          wsPort: {
-            onSuccess: (v) => {
-              patchData.wsPort = v;
-              return;
-            },
-          },
-          secure: {
-            onSuccess: (v) => {
-              patchData.secure = v;
-              return;
-            },
-          },
-          secret: {
-            onSuccess: (v) => {
-              patchData.secret = v;
-              return;
-            },
-          },
-          regionDiscriminator: {
-            validator: async (v) => {
-              if (
-                await daemons.regionDiscriminatorInUse(
-                  formatDiscriminator(v),
-                  (
-                    await calledDaemon?.region
-                  )?.id as string
-                )
-              )
-                return "regionDiscriminatorInUse";
-
-              patchData.regionDiscriminator = formatDiscriminator(v);
-              patchData.code = `${(await calledDaemon?.region)?.code}-${
-                patchData.regionDiscriminator
-              }`;
-              return true;
-            },
-            onFail: (err) => errors.append(err),
-          },
-        },
-        {
-          onUnexpectedValue: (k, v) =>
-            errors.append(errorConstructor.unexpectedValue(k)),
-          emptyData: () => errors.append("emptyRequestObject"),
-        }
-      );
+      if (patchData.regionDiscriminator && await daemons.regionDiscriminatorInUse(
+        formatDiscriminator(patchData.regionDiscriminator),
+        (await calledDaemon?.region)?.id as string
+      )) errors.append("regionDiscriminatorInUse");
+      else if (patchData.regionDiscriminator) {
+        patchData.regionDiscriminator = formatDiscriminator(patchData.regionDiscriminator);
+        code = `${(await calledDaemon?.region)?.code}-${patchData.regionDiscriminator}`
+      }
 
       if (errors.stack.length === 0)
         responseData = await daemons
