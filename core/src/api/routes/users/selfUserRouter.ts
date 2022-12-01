@@ -8,6 +8,7 @@ import { sendApiErrors } from "../../../modules/sendApiErrors";
 import UserManager from "../../../classes/UserManager";
 import { dataValidator } from "../../../modules/dataValidator";
 import { Prisma, User } from "@prisma/client";
+import { z } from 'zod'
 
 export const selfUserRouter = manifestation.newRouter({
   route: "/@me",
@@ -50,25 +51,21 @@ export const selfUserRouter = manifestation.newRouter({
 
         let patchData: Partial<Prisma.UserUpdateInput> = {};
 
-        await dataValidator<{
-          email: string;
-        }>(req.body, {
-          email: {
-            validator: async (v) => {
-              if (!validator.validate(v))
-                return errorStack.append(errorConstructor.invalidEmail(v));
-              if (await users.emailExists(v))
-                return errorStack.append("userEmailExists");
-              return true;
-            },
-            onSuccess(value) {
-              patchData.email = value;
-            },
-          },
-        });
+        let input = z.object({
+          email: z.string().email(),
+        }).safeParse(req.body);
 
-        if (errorStack.stack.length > 0)
+        if (!input.success)
+          return sendApiErrors(res, ...input.error.issues);
+
+        // @todo: replace our error stack with zod's error stack, or at least make it compatible with it
+        if (await users.emailExists(input.data.email)) {
+          errorStack.append("userEmailExists")
           return sendApiErrors(res, ...errorStack.stack);
+        }
+
+        // this can probably be done better, but this is mostly a poc
+        patchData.email = input.data.email;
 
         users.apiPatch(tokenData.userId, patchData);
 
@@ -92,14 +89,18 @@ export const selfUserRouter = manifestation.newRouter({
 
         let user = ((await users.fetch(tokenData.userId)) ??
           errors.append("unknownUser")) as UserManager;
-        let oldPassword =
-          req.body["oldPassword"] ??
-          errors.append(errorConstructor.missingValue("oldPassword"));
-        let newPassword =
-          req.body["newPassword"] ??
-          errors.append(errorConstructor.missingValue("newPassword"));
 
-        if (!user.validatePassowrd(oldPassword))
+        let input = z.object({
+          oldPassword: z.string(),
+          newPassword: z.string(),
+        }).safeParse(req.body);
+
+        if (!input.success)
+          return sendApiErrors(res, ...input.error.issues);
+
+        let { oldPassword, newPassword } = input.data;
+
+        if (!user.validatePassword(oldPassword))
           errors.append("invalidPassword");
 
         if (errors.stack.length === 0) {

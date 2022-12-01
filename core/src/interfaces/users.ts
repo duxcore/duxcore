@@ -175,7 +175,7 @@ export const users = {
     oldEmail = user?.email;
 
     if (!user) return errorManifest.unknownUser;
-    if (!user?.validatePassowrd(password)) throw errorManifest.invalidPassword;
+    if (!user?.validatePassword(password)) throw errorManifest.invalidPassword;
 
     await user.updateEmail(newEmail);
     await sendEmail(

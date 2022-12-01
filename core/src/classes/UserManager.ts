@@ -100,7 +100,7 @@ export default class UserManager {
    * @param password - The password you'd like to validate
    * @returns - Weather the password is valid or not.
    */
-  validatePassowrd(password: string): boolean {
+  validatePassword(password: string): boolean {
     return Password.validate(password, this._raw.password ?? "");
   }
 
