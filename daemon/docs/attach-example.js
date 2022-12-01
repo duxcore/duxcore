@@ -4,7 +4,7 @@ import { encode } from "https://deno.land/std/encoding/base64.ts";
 const corekey = "6zX3eg9/9oxLvOJRq0urOQ2RcGhcpc50zTx4P9gJ0T1wFmWnFs8m6n+WAUojhgs9akVNlrGZjEa0OgWObjGJ0fQnQeT9Uo+kgf5+HaGV";
 const container = Deno.args[0];
 
-const ws = new WebSocket("ws://10.0.0.75:8001");
+const ws = new WebSocket("ws://localhost:8001");
 const encoder = new TextEncoder();
 
 const sendjson = json => ws.send(JSON.stringify(json));
