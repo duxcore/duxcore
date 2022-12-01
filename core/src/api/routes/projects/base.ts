@@ -5,6 +5,7 @@ import { fetchTokenData } from "../../../modules/fetchTokenData";
 import { sendApiErrors } from "../../../modules/sendApiErrors";
 import { projects } from "../../../interfaces/projects";
 import { dataValidator } from "../../../modules/dataValidator";
+import { z } from "zod";
 
 export const projectBaseRoutes = [
   manifestation.newRoute({
@@ -43,15 +44,18 @@ export const projectBaseRoutes = [
       let errors = apiError.createErrorStack();
       let newProject;
 
-      await dataValidator<{ name: string }>(req.body, {
-        name: {
-          onMissing: () => errors.append(errorConstructor.missingValue("name")),
-        },
-      });
+      let input = z.object({
+        name: z.string().min(1).max(32),
+      }).safeParse(req.body);
+
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+
+      let { name } = input.data;
 
       if (errors.stack.length === 0)
         await projects
-          .create(req.body.name, tokenData.userId)
+          .create(name, tokenData.userId)
           .then(async (v) => (newProject = await v.toJson()))
           .catch((e) => errors.append(errorConstructor.internalServerError(e)));
 
@@ -70,7 +74,16 @@ export const projectBaseRoutes = [
     method: "get",
     executor: async (req, res) => {
       let tokenData = fetchTokenData(res.locals);
-      let projectId = req.params.project;
+
+      let input = z.object({
+        project: z.string().uuid(),
+      }).safeParse(req.params);
+
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+
+      let projectId = input.data.project;
+
       let errors = apiError.createErrorStack();
 
       const project = await projects.fetch(projectId);
