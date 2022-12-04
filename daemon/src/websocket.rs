@@ -1,8 +1,12 @@
 use crate::{corekey, util};
 use bollard::container;
-use futures::{SinkExt, StreamExt, TryStreamExt};
+use futures::{
+    stream::{SplitSink, SplitStream},
+    SinkExt, StreamExt, TryStreamExt,
+};
+use std::pin;
 use std::sync::Arc;
-use tokio::{io, io::AsyncWriteExt, net, task};
+use tokio::{io, io::AsyncWriteExt, net};
 
 pub async fn run(corekey: corekey::CoreKey, docker: bollard::Docker, addr: &str) -> io::Result<()> {
     let corekey = Arc::new(corekey);
@@ -89,83 +93,108 @@ async fn attach(
         )
         .await?;
 
-    let (mut write, mut read) = ws.split();
+    let (write, read) = ws.split();
 
-    let write_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
-        try {
-            while let Some(entry) = attachment.output.try_next().await? {
-                write
-                    .send(tungstenite::Message::Binary(entry.into_bytes().to_vec()))
-                    .await?;
-            }
+    // [GIT] revert this commit when try blocks are stable
+
+    async fn do_writing(
+        output: &mut pin::Pin<
+            Box<
+                dyn futures::Stream<Item = Result<container::LogOutput, bollard::errors::Error>>
+                    + Send,
+            >,
+        >,
+        mut write: SplitSink<
+            tokio_tungstenite::WebSocketStream<net::TcpStream>,
+            tungstenite::Message,
+        >,
+    ) -> Result<(), Error> {
+        while let Some(entry) = output.try_next().await? {
+            write
+                .send(tungstenite::Message::Binary(entry.into_bytes().to_vec()))
+                .await?;
         }
-    });
 
-    let read_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
-        try {
-            while let Some(entry) = read.try_next().await? {
-                match entry {
-                    tungstenite::Message::Binary(data) => {
-                        attachment.input.write_all(&data).await?;
-                    }
-                    tungstenite::Message::Close(_) => {
-                        log::info!("WebSocket closed");
+        Ok(())
+    }
 
-                        return Ok(());
-                    }
-                    _ => {}
+    async fn do_reading(
+        input: &mut pin::Pin<Box<dyn io::AsyncWrite + Send>>,
+        mut read: SplitStream<tokio_tungstenite::WebSocketStream<net::TcpStream>>,
+    ) -> Result<(), Error> {
+        while let Some(entry) = read.try_next().await? {
+            match entry {
+                tungstenite::Message::Binary(data) => {
+                    input.write_all(&data).await?;
                 }
+                tungstenite::Message::Close(_) => {
+                    log::info!("WebSocket closed");
+
+                    return Ok(());
+                }
+                _ => {}
             }
         }
-    });
+
+        Ok(())
+    }
 
     tokio::select! {
-        x = write_task => x.unwrap(),
-        x = read_task => x.unwrap(),
+        x = do_writing(&mut attachment.output, write) => x,
+        x = do_reading(&mut attachment.input, read) => x,
     }
 }
 
 async fn stats(ws: Ws, docker: bollard::Docker, container: String) -> Result<(), Error> {
-    let (mut write, mut read) = ws.split();
+    let (write, read) = ws.split();
 
-    let write_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
-        try {
-            let mut stream = docker.stats(
-                &container,
-                Some(container::StatsOptions {
-                    stream: true,
-                    ..Default::default()
-                }),
-            );
+    async fn do_writing(
+        docker: &bollard::Docker,
+        container: &str,
+        mut write: SplitSink<
+            tokio_tungstenite::WebSocketStream<net::TcpStream>,
+            tungstenite::Message,
+        >,
+    ) -> Result<(), Error> {
+        let mut stream = docker.stats(
+            &container,
+            Some(container::StatsOptions {
+                stream: true,
+                ..Default::default()
+            }),
+        );
 
-            while let Some(entry) = stream.try_next().await? {
-                write
-                    .send(tungstenite::Message::Text(
-                        serde_json::to_string(&entry).unwrap(),
-                    ))
-                    .await?;
-            }
+        while let Some(entry) = stream.try_next().await? {
+            write
+                .send(tungstenite::Message::Text(
+                    serde_json::to_string(&entry).unwrap(),
+                ))
+                .await?;
         }
-    });
 
-    let read_task: task::JoinHandle<Result<(), Error>> = tokio::spawn(async move {
-        try {
-            while let Some(entry) = read.try_next().await? {
-                match entry {
-                    tungstenite::Message::Close(_) => {
-                        log::info!("WebSocket closed");
+        Ok(())
+    }
 
-                        return Ok(());
-                    }
-                    _ => {}
+    async fn do_reading(
+        mut read: SplitStream<tokio_tungstenite::WebSocketStream<net::TcpStream>>,
+    ) -> Result<(), Error> {
+        while let Some(entry) = read.try_next().await? {
+            match entry {
+                tungstenite::Message::Close(_) => {
+                    log::info!("WebSocket closed");
+
+                    return Ok(());
                 }
+                _ => {}
             }
         }
-    });
+
+        Ok(())
+    }
 
     tokio::select! {
-        x = write_task => x.unwrap(),
-        x = read_task => x.unwrap(),
+        x = do_writing(&docker, &container, write) => x,
+        x = do_reading(read) => x,
     }
 }
 
