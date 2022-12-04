@@ -92,7 +92,7 @@ export const apiServiceBaseRoutes = [
 
       return manifestation.sendApiResponse(res, {
         status: 200,
-        message: "Seccussfully created daemon.",
+        message: "Successfully created service.",
         data: daemon.toJson(),
         successful: true,
       });
