@@ -55,7 +55,7 @@ export const apiServiceBaseRoutes = [
       let service = await prismaInstance.service.create({
         data: {
           name: input.data.name,
-          project: {
+          project: {  
             connect: {
               id: input.data.project,
             },
@@ -93,7 +93,8 @@ export const apiServiceBaseRoutes = [
       return manifestation.sendApiResponse(res, {
         status: 200,
         message: "Successfully created service.",
-        data: daemon.toJson(),
+        // quick patch because we don't have a service class yet
+        data: service,
         successful: true,
       });
     },
