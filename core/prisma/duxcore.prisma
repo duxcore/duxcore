@@ -111,6 +111,8 @@ model Daemon {
   region              DaemonRegion @relation(references: [id], fields: [regionId])
   regionId            String
   regionDiscriminator String       @unique
+
+  services Service[]
 }
 
 model Project {
@@ -119,6 +121,26 @@ model Project {
   name      String
   creator   User     @relation(references: [id], fields: [creatorId])
   creatorId String
+  services  Service[]
   created   DateTime @default(now())
   upatedAt  DateTime @updatedAt
+}
+
+model Service {
+  id String @id @default(uuid())
+  name String
+  project Project @relation(references: [id], fields: [projectId])
+  projectId String
+  daemon Daemon @relation(references: [id], fields: [daemonId])
+  daemonId String
+
+  params Json
+
+  cpu Float
+  mem Float
+  disk Float
+
+  status ServiceStatus
+  createdAt DateTime @default(now())
+  upatedAt DateTime @updatedAt
 }

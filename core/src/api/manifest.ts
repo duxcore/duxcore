@@ -9,6 +9,7 @@ import { resetEmail } from "./routes/resetEmail";
 import { usersRouter } from "./routes/users/users";
 import { daemonRoutes } from "./routes/daemons/daemons";
 import { projectsRouter } from "./routes/projects/projects";
+import { servicesRouter } from "./routes/services/services";
 
 export const apiManifest = manifestation.newManifest({
   middleware: [cors(), bodyParser.json()],
@@ -21,6 +22,7 @@ export const apiManifest = manifestation.newManifest({
         usersRouter,
         daemonRoutes,
         projectsRouter,
+        servicesRouter,
       ],
     },
   ],
