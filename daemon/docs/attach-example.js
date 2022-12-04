@@ -1,7 +1,7 @@
 import { readLines } from "https://deno.land/std/io/buffer.ts";
 import { encode } from "https://deno.land/std/encoding/base64.ts";
 
-const corekey = "6zX3eg9/9oxLvOJRq0urOQ2RcGhcpc50zTx4P9gJ0T1wFmWnFs8m6n+WAUojhgs9akVNlrGZjEa0OgWObjGJ0fQnQeT9Uo+kgf5+HaGV";
+const corekey = encode(await Deno.readFile("corekey.bin"));
 const container = Deno.args[0];
 
 const ws = new WebSocket("ws://localhost:8001");
