@@ -78,17 +78,24 @@ export const apiServiceBaseRoutes = [
 
       // @todo: rebuild this so we can pass things without having to do this
       // @todo: implement cpu, memory and disk
-      await daemon.server.createService({
-        type: 'raw',
-        params: {
-          id: service.id,
-          image: input.data.params['image'],
-          bind_dir: input.data.params['bind_dir'],
-          port_map: input.data.params['port_map'],
-        },
-      })
-
-      console.log(4)
+      try {
+        await daemon.server.createService({
+          type: 'raw',
+          params: {
+            id: service.id,
+            image: input.data.params['image'],
+            bind_dir: input.data.params['bind_dir'],
+            port_map: input.data.params['port_map'],
+          },
+        })
+      } catch (e) {
+        console.log(e)
+        errors.append({
+          code: 'internalServerError',
+          message: 'Unable to create service on daemon. It may be offline or not responding.',
+        })
+        return sendApiErrors(res, ...errors.stack);
+      }
 
       return manifestation.sendApiResponse(res, {
         status: 200,
