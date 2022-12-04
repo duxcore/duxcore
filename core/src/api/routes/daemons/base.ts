@@ -53,7 +53,7 @@ export const apiDaemonBaseRoutes = [
             secure,
             secret,
             regionId: region,
-            regionDiscriminator,
+            regionDiscriminator: formatDiscriminator(regionDiscriminator),
             resourceCeil,
           })
           .then((res) => {
