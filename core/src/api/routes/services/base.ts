@@ -20,7 +20,12 @@ export const apiServiceBaseRoutes = [
         name: z.string(),
         project: z.string(),
         daemon: z.string(),
-        params: z.any(),
+        // this will probably change over time
+        params: z.object({
+          image: z.string(),
+          bind_dir: z.string(),
+          port_map: z.any(),
+        }),
         cpu: z.number(),
         memory: z.number(),
         disk: z.number(),
