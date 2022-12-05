@@ -2,9 +2,7 @@ import { apiError, errorConstructor } from "../../../modules/apiError";
 import { manifestation } from "@duxcore/manifestation";
 import Password from "../../../classes/Password";
 import { users } from "../../../interfaces/users";
-import emailValidator from "email-validator";
 import { sendApiErrors } from "../../../modules/sendApiErrors";
-import { dataValidator } from "../../../modules/dataValidator";
 import { z } from "zod";
 
 export const apiUserBaseRoutes = [

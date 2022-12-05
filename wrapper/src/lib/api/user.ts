@@ -45,7 +45,7 @@ export const createUserController = () => {
 
     edit(user: UserEdit): Promise<void> {
       return new Promise(async (resolve, reject) => {
-        await axiosInstance.post(`${API_BASEURL}/users/@me`, user)
+        await axiosInstance.patch(`${API_BASEURL}/users/@me`, user)
           .then(() => {
             return resolve();
           }).catch((err: AxiosError) => {

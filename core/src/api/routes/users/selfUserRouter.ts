@@ -53,6 +53,8 @@ export const selfUserRouter = manifestation.newRouter({
 
         let input = z.object({
           email: z.string().email(),
+          firstName: z.string().min(1).max(32),
+          lastName: z.string().min(1).max(32),
         }).safeParse(req.body);
 
         if (!input.success)
@@ -66,6 +68,8 @@ export const selfUserRouter = manifestation.newRouter({
 
         // this can probably be done better, but this is mostly a poc
         patchData.email = input.data.email;
+        patchData.firstName = input.data.firstName;
+        patchData.lastName = input.data.lastName;
 
         users.apiPatch(tokenData.userId, patchData);
 

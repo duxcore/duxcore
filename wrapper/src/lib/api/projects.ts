@@ -9,7 +9,7 @@ export const createProjectController = () => {
     create(project: NewProject): Promise<void> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance
-          .post(`${API_BASEURL}/services/projects`, project)
+          .post(`${API_BASEURL}/projects`, project)
           .then(() => {
             return resolve();
           })
@@ -25,7 +25,7 @@ export const createProjectController = () => {
     list(): Promise<Project[]> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance
-          .get(`${API_BASEURL}/services/projects`)
+          .get(`${API_BASEURL}/projects`)
           .then((res) => {
             return resolve(res.data.data);
           })
@@ -41,7 +41,7 @@ export const createProjectController = () => {
     fetch(id: string): Promise<Project> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance
-          .get(`${API_BASEURL}/services/projects/${id}`)
+          .get(`${API_BASEURL}/projects/${id}`)
           .then((res) => {
             return resolve(res.data.data);
           })
