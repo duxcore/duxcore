@@ -1,8 +1,8 @@
 import { ServerMonitor, NewServerMonitor } from '../../types/serverMonitors'
-import { API_BASEURL } from "../../modules/constants"
+import { API_BASEURL } from "../../util/constants"
 import axiosInstance from "../axiosInstance"
 import type { AxiosError } from "axios"
-import { invalidApiResponseStack } from "../../modules/invalidApiResponseStack"
+import { invalidApiResponseStack } from "../../util/invalidApiResponseStack"
 
 export const createServerMonitorController = () => {
   return {

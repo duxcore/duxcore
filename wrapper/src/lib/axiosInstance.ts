@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { useTokenStore } from "./useTokenStore";
-import { API_BASEURL, REFRESH_EXCLUDE_LIST } from "../modules/constants";
+import { API_BASEURL, REFRESH_EXCLUDE_LIST } from "../util/constants";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASEURL,
