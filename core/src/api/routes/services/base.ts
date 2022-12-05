@@ -90,7 +90,69 @@ export const apiServiceBaseRoutes = [
         status: 200,
         message: "Successfully created service.",
         // quick patch because we don't have a service class yet
-        data: service,
+        data: service.toJson(),
+        successful: true,
+      });
+    },
+  }),
+
+  manifestation.newRoute({
+    route: "/:service/ctl",
+    method: "post",
+    executor: async (req, res) => {
+      let tokenData = fetchTokenData(res.locals);
+
+      let input = z.object({
+        service: z.string().uuid(),
+      }).safeParse(req.params);
+
+      let body = z.object({
+        opCode: z.enum(["start", "stop", "restart", "kill"])
+      }).safeParse(req.body);
+
+      if (!input.success) return sendApiErrors(res, ...input.error.issues);
+      if (!body.success) return sendApiErrors(res, ...body.error.issues);
+
+      let serviceId = input.data.service;
+
+      let errors = apiError.createErrorStack();
+
+      const service = await services.fetch(serviceId);
+
+      if (!service) {
+        errors.append("invalidServiceId");
+        return sendApiErrors(res, ...errors.stack);
+      }
+      if (
+        !!service &&
+        !(await projects.checkUserPermission(tokenData.userId, service.project))
+      )
+        errors.append("projectNoAccess");
+
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
+      let daemon = await daemons.fetch(service.daemon)
+
+      if (!daemon) {
+        errors.append('invalidDaemonId')
+        return sendApiErrors(res, ...errors.stack);
+      }
+
+      try {
+        await daemon.server.ctl(body.data.opCode, service.id);
+      } catch (e) {
+        console.log(e)
+        errors.append({
+          code: 'internalServerError',
+          message: 'Unable to control service on daemon. It may be offline or not responding.',
+        })
+        return sendApiErrors(res, ...errors.stack);
+      }
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Successfully sent op code!",
+        data: await service.toJson(),
         successful: true,
       });
     },

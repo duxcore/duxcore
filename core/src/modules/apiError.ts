@@ -181,6 +181,10 @@ export const errorManifest = {
     code: "SERVICE_NO_ACCESS",
     message: "The do not have permission to view this service.",
   },
+  invalidServiceId: {
+    code: "INVALID_SERVICE_ID",
+    message: "The service id provided is not a valid service id",
+  },
   unknownServiceType: {
     code: "UNKNOWN_SERVICE_TYPE_ID",
     message: "The service type you are trying to use doesn't exist.",
