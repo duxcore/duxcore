@@ -48,7 +48,7 @@ export default class ServiceManager {
   }
   
   get updatedAt(): Date {
-    return this._rawData.upatedAt;
+    return this._rawData.updatedAt;
   }
 
   toJson() {
@@ -63,7 +63,7 @@ export default class ServiceManager {
       disk: this._rawData.disk,
       status: this._rawData.status,
       createdAt: this._rawData.createdAt,
-      updatedAt: this._rawData.upatedAt,
+      updatedAt: this._rawData.updatedAt,
     };
   }
 }

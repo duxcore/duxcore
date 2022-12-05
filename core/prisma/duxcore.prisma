@@ -123,7 +123,7 @@ model Project {
   creatorId String
   services  Service[]
   created   DateTime @default(now())
-  upatedAt  DateTime @updatedAt
+  updatedAt  DateTime @updatedAt
 }
 
 model Service {
@@ -142,5 +142,5 @@ model Service {
 
   status ServiceStatus
   createdAt DateTime @default(now())
-  upatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 }

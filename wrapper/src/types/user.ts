@@ -1,11 +1,6 @@
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  created: Date;
-}
+import type { User as PrismaUser } from '@prisma/client'
 
+export type User = Pick<PrismaUser, 'id' | 'firstName' | 'lastName' | 'email' | 'created'>
 export interface NewUser {
   name: {
     firstName: string;
@@ -15,7 +10,7 @@ export interface NewUser {
   password: string;
 }
 
-export type UserEdit = Pick<User, 'firstName' | 'lastName' | 'email'>;
+export type UserEdit = Pick<PrismaUser, 'firstName' | 'lastName' | 'email'>;
 
 export interface TokenPair {
   authToken: string;

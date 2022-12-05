@@ -17,7 +17,7 @@ export default class ProjectManager {
       name: this._rawData.name,
       creator: this._rawData.creatorId,
       created: this._rawData.created,
-      lastUpdated: this._rawData.upatedAt,
+      lastUpdated: this._rawData.updatedAt,
     };
   }
 }

@@ -1,11 +1,4 @@
-export interface NewProject {
-  name: string;
-}
+import type { Project as PrismaProject } from '@prisma/client'
 
-export interface Project {
-  id: string;
-  name: string;
-  creator: string;
-  created: Date;
-  lastUpdated: Date;
-}
+export type Project = Pick<PrismaProject, 'name' | 'created' | 'id' | 'index'> & { creator: string }
+export type NewProject = Pick<PrismaProject, 'name'>;
