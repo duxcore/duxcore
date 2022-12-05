@@ -1,11 +1,12 @@
 import { manifestation } from "@duxcore/manifestation";
-import { apiError, errorConstructor } from "../../../modules/apiError";
+import { apiError } from "../../../modules/apiError";
 import { sendApiErrors } from "../../../modules/sendApiErrors";
 import { daemons } from "../../../interfaces/daemons";
 import { z } from "zod"
 import { fetchTokenData } from "../../../modules/fetchTokenData";
-import { prismaInstance } from "../../../../prisma/instance";
 import { authorizeAdministratorRequest } from "../../middleware/authorizeAdministrator";
+import { projects } from "../../../interfaces/projects";
+import { services } from "../../../interfaces/services";
 
 export const apiServiceBaseRoutes = [
   manifestation.newRoute({
@@ -42,44 +43,27 @@ export const apiServiceBaseRoutes = [
 
       // TODO: Validate daemon resources
 
-      console.log(1)
+      let canUseProject = await projects.checkUserPermission(tokenData.userId, input.data.project);
 
-      let project = await prismaInstance.project.findUnique({
-        where: {
-          id: input.data.project
-        }
-      });
-
-      if (!project) {
+      if (!canUseProject) {
         errors.append('invalidProjectId')
         return sendApiErrors(res, ...errors.stack);
       }
 
-      console.log(2)
+      let service = await services.create({
+        name: input.data.name,
+        projectId: input.data.project,
+        daemonId: input.data.daemon,
+        params: input.data.params,
+        cpu: input.data.cpu,
+        mem: input.data.memory,
+        disk: input.data.disk,
+      })
 
-      let service = await prismaInstance.service.create({
-        data: {
-          name: input.data.name,
-          project: {  
-            connect: {
-              id: input.data.project,
-            },
-          },
-          daemon: {
-            connect: {
-              id: input.data.daemon,
-            },
-          },
-          // yes, ik this is bad. but we can trust that the params are valid, because they come from a serialized json request
-          params: (input.data.params as any),
-          cpu: input.data.cpu,
-          mem: input.data.memory,
-          disk: input.data.disk,
-          status: 'SETTING_UP',
-        }
-      });
-
-      console.log(3)
+      if (!service) {
+        errors.append('serviceCreationFailed')
+        return sendApiErrors(res, ...errors.stack);
+      }
 
       // @todo: rebuild this so we can pass things without having to do this
       // @todo: implement cpu, memory and disk

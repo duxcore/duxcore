@@ -194,4 +194,8 @@ export const errorManifest = {
     message: "A fatal server error has occured",
     status: 500,
   },
+  serviceCreationFailed: {
+    code: "SERVICE_CREATION_FAILED",
+    message: "Failed to create service."
+  }
 };
