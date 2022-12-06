@@ -8,7 +8,7 @@ import { sendApiErrors } from "../../../modules/sendApiErrors";
 import UserManager from "../../../classes/UserManager";
 import { dataValidator } from "../../../modules/dataValidator";
 import { Prisma, User } from "@prisma/client";
-import { z } from 'zod'
+import { z } from "zod";
 
 export const selfUserRouter = manifestation.newRouter({
   route: "/@me",
@@ -51,18 +51,19 @@ export const selfUserRouter = manifestation.newRouter({
 
         let patchData: Partial<Prisma.UserUpdateInput> = {};
 
-        let input = z.object({
-          email: z.string().email(),
-          firstName: z.string().min(1).max(32),
-          lastName: z.string().min(1).max(32),
-        }).safeParse(req.body);
+        let input = z
+          .object({
+            email: z.string().email(),
+            firstName: z.string().min(1).max(32),
+            lastName: z.string().min(1).max(32),
+          })
+          .safeParse(req.body);
 
-        if (!input.success)
-          return sendApiErrors(res, ...input.error.issues);
+        if (!input.success) return sendApiErrors(res, ...input.error.issues);
 
         // @todo: replace our error stack with zod's error stack, or at least make it compatible with it
         if (await users.emailExists(input.data.email)) {
-          errorStack.append("userEmailExists")
+          errorStack.append("userEmailExists");
           return sendApiErrors(res, ...errorStack.stack);
         }
 
@@ -94,13 +95,14 @@ export const selfUserRouter = manifestation.newRouter({
         let user = ((await users.fetch(tokenData.userId)) ??
           errors.append("unknownUser")) as UserManager;
 
-        let input = z.object({
-          oldPassword: z.string(),
-          newPassword: z.string(),
-        }).safeParse(req.body);
+        let input = z
+          .object({
+            oldPassword: z.string(),
+            newPassword: z.string(),
+          })
+          .safeParse(req.body);
 
-        if (!input.success)
-          return sendApiErrors(res, ...input.error.issues);
+        if (!input.success) return sendApiErrors(res, ...input.error.issues);
 
         let { oldPassword, newPassword } = input.data;
 
