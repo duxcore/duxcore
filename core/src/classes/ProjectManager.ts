@@ -11,6 +11,10 @@ export default class ProjectManager {
     return this._rawData.id;
   }
 
+  get creator(): string {
+    return this._rawData.creatorId;
+  }
+
   toJson() {
     return {
       id: this._rawData.id,
