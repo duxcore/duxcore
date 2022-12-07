@@ -54,6 +54,23 @@ export default class DaemonServerManager {
     };
   }
 
+  public async deleteService(id: string) {
+    return await axios
+      .delete(
+        `http${this.isSecure ? "s" : ""}://${this._daemon.host}:${
+          this._daemon.port
+        }/v1/service/${id}`,
+        {
+          headers: {
+            "X-Duxcore-CoreKey": this._daemon.secret,
+          },
+        }
+      )
+      .then(() => {
+        return;
+      });
+  }
+
   public async ctl(op: "start" | "stop" | "restart" | "kill", id: string) {
     return await axios
       .post(
