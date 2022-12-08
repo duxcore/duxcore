@@ -7,6 +7,7 @@ import { fetchTokenData } from "../../../modules/fetchTokenData";
 import { authorizeAdministratorRequest } from "../../middleware/authorizeAdministrator";
 import { projects } from "../../../interfaces/projects";
 import { services } from "../../../interfaces/services";
+import ServiceManager from "../../../classes/ServiceManager";
 
 export const apiServiceBaseRoutes = [
   manifestation.newRoute({
@@ -91,6 +92,38 @@ export const apiServiceBaseRoutes = [
         message: "Successfully created service.",
         // quick patch because we don't have a service class yet
         data: service.toJson(),
+        successful: true,
+      });
+    },
+  }),
+
+  manifestation.newRoute({
+    route: "/",
+    method: "get",
+    middleware: [authorizeAdministratorRequest],
+    executor: async (req, res) => {
+      let tokenData = fetchTokenData(res.locals);
+
+      let input = z.string().safeParse(tokenData.userId)
+      if (!input.success) return sendApiErrors(res, ...input.error.issues);
+
+      let serviceList: ServiceManager[] = []
+
+      let projectList = await projects.fetchAllByUser(input.data)
+      if (projectList) {
+        for (let project of projectList.values()) {
+          let projectServices = await services.fetchAllByProject(project.id)
+          if (projectServices) {
+            serviceList.push(...projectServices.values())
+          }
+        }
+      }
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Successfully created service.",
+        // quick patch because we don't have a service class yet
+        data: serviceList.map(s => s.toJson()),
         successful: true,
       });
     },
