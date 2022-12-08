@@ -7,10 +7,10 @@ import { PageComponent } from "../../types/PageComponent";
 import { Preloader } from "../../components/PreLoader";
 import Head from "next/head";
 
-interface ViewProjectPageProps {}
+interface ViewProjectPageProps { }
 
 export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
-  ({}) => {
+  ({ }) => {
     const { query, push } = useRouter();
     console.log(query);
     const wrapper = useWrapper();
