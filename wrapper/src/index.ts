@@ -12,12 +12,14 @@ import { createUserController } from "./lib/api/user";
 import { useTokenStore } from "./lib/useTokenStore";
 import { isServer } from "./util/isServer";
 import { createProjectController } from "./lib/api/projects";
+import { createServiceController } from "./lib/api/service";
 
 export const createWrapper = (options: CreateWrapperOptions) => {
   return {
     api: {
       user: createUserController(),
       projects: createProjectController(),
+      services: createServiceController(),
     },
 
     axios: {
