@@ -7,6 +7,8 @@ import { fetchTokenData } from "../../../modules/fetchTokenData";
 import { authorizeAdministratorRequest } from "../../middleware/authorizeAdministrator";
 import { projects } from "../../../interfaces/projects";
 import { services } from "../../../interfaces/services";
+import ServiceManager from "../../../classes/ServiceManager";
+import { authorizeRequest } from "../../middleware/authorizeRequest";
 
 export const apiServiceBaseRoutes = [
   manifestation.newRoute({
@@ -91,6 +93,64 @@ export const apiServiceBaseRoutes = [
         message: "Successfully created service.",
         // quick patch because we don't have a service class yet
         data: service.toJson(),
+        successful: true,
+      });
+    },
+  }),
+
+  manifestation.newRoute({
+    route: "/:service",
+    method: "get",
+    executor: async (req, res) => {
+      const tokenData = fetchTokenData(res.locals);
+      const errors = apiError.createErrorStack();
+
+      const serviceId = req.params.service;
+      if (!(await services.checkUserPermission(tokenData.userId, serviceId))) {
+        errors.append("serviceNoAccess");
+        return sendApiErrors(res, ...errors.stack);
+      }
+
+      const service = await services.fetch(serviceId);
+
+      if (!service) {
+        errors.append("unknownService");
+        return sendApiErrors(res, ...errors.stack);
+      }
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Successfully fetched service.",
+        data: service.toJson(),
+      });
+    },
+  }),
+
+  manifestation.newRoute({
+    route: "/",
+    method: "get",
+    executor: async (req, res) => {
+      let tokenData = fetchTokenData(res.locals);
+
+      let input = z.string().safeParse(tokenData.userId)
+      if (!input.success) return sendApiErrors(res, ...input.error.issues);
+
+      let serviceList: ServiceManager[] = []
+
+      let projectList = await projects.fetchAllByUser(input.data)
+      if (projectList) {
+        for (let project of projectList.values()) {
+          let projectServices = await services.fetchAllByProject(project.id)
+          if (projectServices) {
+            serviceList.push(...projectServices.values())
+          }
+        }
+      }
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Successfully fetched all services.",
+        data: serviceList.map(s => s.toJson()),
         successful: true,
       });
     },
