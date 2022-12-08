@@ -8,6 +8,7 @@ import { authorizeAdministratorRequest } from "../../middleware/authorizeAdminis
 import { projects } from "../../../interfaces/projects";
 import { services } from "../../../interfaces/services";
 import ServiceManager from "../../../classes/ServiceManager";
+import { authorizeRequest } from "../../middleware/authorizeRequest";
 
 export const apiServiceBaseRoutes = [
   manifestation.newRoute({
@@ -100,7 +101,6 @@ export const apiServiceBaseRoutes = [
   manifestation.newRoute({
     route: "/",
     method: "get",
-    middleware: [authorizeAdministratorRequest],
     executor: async (req, res) => {
       let tokenData = fetchTokenData(res.locals);
 
@@ -121,8 +121,7 @@ export const apiServiceBaseRoutes = [
 
       return manifestation.sendApiResponse(res, {
         status: 200,
-        message: "Successfully created service.",
-        // quick patch because we don't have a service class yet
+        message: "Successfully fetched all services.",
         data: serviceList.map(s => s.toJson()),
         successful: true,
       });
