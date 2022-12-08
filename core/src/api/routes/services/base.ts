@@ -99,6 +99,34 @@ export const apiServiceBaseRoutes = [
   }),
 
   manifestation.newRoute({
+    route: "/:service",
+    method: "get",
+    executor: async (req, res) => {
+      const tokenData = fetchTokenData(res.locals);
+      const errors = apiError.createErrorStack();
+
+      const serviceId = req.params.service;
+      if (!(await services.checkUserPermission(tokenData.userId, serviceId))) {
+        errors.append("serviceNoAccess");
+        return sendApiErrors(res, ...errors.stack);
+      }
+
+      const service = await services.fetch(serviceId);
+
+      if (!service) {
+        errors.append("unknownService");
+        return sendApiErrors(res, ...errors.stack);
+      }
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Successfully fetched service.",
+        data: service.toJson(),
+      });
+    },
+  }),
+
+  manifestation.newRoute({
     route: "/",
     method: "get",
     executor: async (req, res) => {
