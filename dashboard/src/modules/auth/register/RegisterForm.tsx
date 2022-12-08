@@ -22,7 +22,7 @@ interface RegisterFormProps {
 export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
   const [schema] = useState(createRegisterSchema());
   const hCaptchaRef = useRef<HCaptcha>(null);
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
   const wrapper = useWrapper();
   const hasToken = !!wrapper.useTokenStore().authToken;
   const [formError, setFormError] = useState("");
@@ -177,6 +177,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ captchaKey }) => {
           );
         }}
       </Formik>
+      <div className="text-gray-500 mt-2">Already have an account? <button className="text-accent underline" onClick={() => push('/login')}>Log In</button></div>
     </ContentBox>
   );
 };

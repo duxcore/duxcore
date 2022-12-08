@@ -14,7 +14,7 @@ export const ProjectBox: React.FC<ProjectBoxProps> = ({
   const { replace, push } = useRouter();
 
   return (
-    <Link href={`/project/${data.id}`} passHref={true}>
+    <Link href={`/projects/${data.id}`} passHref={true}>
     <a
       className="flex-none p-1 text-left truncate transition border border-gray-700 rounded-5 hover:border-white"
     >

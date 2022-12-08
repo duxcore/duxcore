@@ -12,8 +12,9 @@ interface ViewProjectPageProps {}
 export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
   ({}) => {
     const { query, push } = useRouter();
+    console.log(query);
     const wrapper = useWrapper();
-    const projectId = query.project as string;
+    const projectId = query.id as string;
 
     const [projectData, setProjectData] = useState<Project | null>(
       null
