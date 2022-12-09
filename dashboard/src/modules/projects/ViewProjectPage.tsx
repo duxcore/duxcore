@@ -14,7 +14,7 @@ interface ViewProjectPageProps { }
 
 export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
   ({ }) => {
-    const { query, push } = useRouter();
+    const { query, push, back } = useRouter();
     console.log(query);
     const wrapper = useWrapper();
     const projectId = query.id as string;
@@ -52,17 +52,24 @@ export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
           )}
         </Head>
         <Preloader active={isLoading}>
-          <h1 className="pl-1 text-3xl border-l border-gray-700">
-            {projectData?.name}
-          </h1>
-          <p
-            className="text-gray-600"
-          >
-            {projectData?.id}
-          </p>
           <div className="flex flex-col gap-4">
             <div className="flex flex-row-reverse w-full">
-              <Button className="w-fit p-4" onClick={() => push('/services/create')}>Create Service</Button>
+              <div className="flex flex-row-reverse w-full gap-2">
+                <Button className="w-fit p-4" color="outline" onClick={() => {
+                  wrapper.api.projects.delete(projectId).then(back);
+                }}>Delete Project</Button>
+                <Button className="w-fit p-4" onClick={() => push('/services/create')}>Create Service</Button>
+              </div>
+              <div className="w-full">
+                <h1 className="pl-1 text-3xl border-l border-gray-700">
+                  {projectData?.name}
+                </h1>
+                <p
+                  className="text-gray-600"
+                >
+                  {projectData?.id}
+                </p>
+              </div>
             </div>
             <div
               className="grid gap-1"

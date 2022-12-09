@@ -25,7 +25,7 @@ export const ServiceBox: React.FC<ServiceBoxProps> = ({
                 <div className="flex flex-row gap-4 w-full">
                     <h4>{data.name}</h4>
                     <div className="flex flex-row-reverse w-full gap-1">
-                        <ServiceStatus status={data.status} />
+                        <p className="inline-flex text-sm items-center"> <ServiceStatus status={data.status} /></p>
                         <p className="inline-flex text-sm items-center text-gray-300"><FaMemory className="pr-0.25" /> {data.mem} </p>
                         <p className="inline-flex text-sm items-center text-gray-300"><MdOutlineStorage className="pr-0.25" /> {data.disk} </p>
                         <p className="inline-flex text-sm items-center text-gray-300"><HiOutlineChip className="pr-0.25" /> {data.cpu} </p>

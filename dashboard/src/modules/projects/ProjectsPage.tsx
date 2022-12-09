@@ -16,7 +16,14 @@ export const ProjectsPage: PageComponent<ProjectsPageProps> = () => {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex flex-row-reverse w-full">
-                <Button className="w-fit p-4" onClick={() => push('/projects/create')}>Create Project</Button>
+                <div className="flex flex-row-reverse w-full">
+                    <Button className="w-fit p-4" onClick={() => push('/projects/create')}>Create Project</Button>
+                </div>
+                <div className="w-full">
+                    <h1 className="pl-1 text-3xl border-l border-gray-700">
+                        Projects
+                    </h1>
+                </div>
             </div>
             <ProjectsArray />
         </div>
