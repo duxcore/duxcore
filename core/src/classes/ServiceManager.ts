@@ -1,69 +1,55 @@
 import type { Service, Prisma } from "@prisma/client";
+import { daemons } from "../interfaces/daemons";
 
 export default class ServiceManager {
   private _rawData: Service;
 
+  public id: string;
+
+  public name: string;
+  public project: string;
+  public daemon: string;
+  public params: Prisma.JsonValue;
+  public cpu: number;
+  public memory: number;
+  public disk: number;
+  public status: string;
+  public createdAt: Date;
+  public updatedAt: Date;
+
   constructor(rawData: Service) {
     this._rawData = rawData;
+
+    this.id       = this._rawData.id;
+    this.name     = this._rawData.name;
+    this.project  = this._rawData.projectId;
+    this.daemon   = this._rawData.daemonId;
+    this.params   = this._rawData.params;
+    this.cpu      = this._rawData.cpu;
+    this.memory   = this._rawData.mem;
+    this.disk     = this._rawData.disk;
+    this.status   = this._rawData.status
+    this.createdAt= this._rawData.createdAt;
+    this.updatedAt= this._rawData.updatedAt;
   }
 
-  get id(): string {
-    return this._rawData.id;
-  }
-
-  get name(): string {
-    return this._rawData.name;
-  }
-
-  get project(): string {
-    return this._rawData.projectId;
-  }
-
-  get daemon(): string {
-    return this._rawData.daemonId;
-  }
-
-  get params(): Prisma.JsonValue {
-    return this._rawData.params;
-  }
-
-  get cpu(): number {
-    return this._rawData.cpu;
-  }
-
-  get memory(): number {
-    return this._rawData.mem;
-  }
-
-  get disk(): number {
-    return this._rawData.disk;
-  }
-
-  get status(): string {
-    return this._rawData.status;
-  }
-
-  get createdAt(): Date {
-    return this._rawData.createdAt;
-  }
-  
-  get updatedAt(): Date {
-    return this._rawData.updatedAt;
+  async attach(onMessage: (message: Buffer) => {}) {
+    return (await daemons.fetch(this.daemon))?.server.attachToService(this.id, onMessage);
   }
 
   toJson() {
     return {
-      id: this._rawData.id,
-      name: this._rawData.name,
-      project: this._rawData.projectId,
-      daemon: this._rawData.daemonId,
-      params: this._rawData.params,
-      cpu: this._rawData.cpu,
-      memory: this._rawData.mem,
-      disk: this._rawData.disk,
-      status: this._rawData.status,
-      createdAt: this._rawData.createdAt,
-      updatedAt: this._rawData.updatedAt,
+      id: this.id,
+      name: this.name,
+      project: this.project,
+      daemon: this.daemon,
+      params: this.params,
+      cpu: this.cpu,
+      memory: this.memory,
+      disk: this.disk,
+      status: this.status,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 }

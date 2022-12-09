@@ -71,6 +71,7 @@ export const projectBaseRoutes = [
       });
     },
   }),
+
   manifestation.newRoute({
     route: "/:project",
     method: "get",
@@ -102,6 +103,48 @@ export const projectBaseRoutes = [
         status: 200,
         message: "Successfully fetched project!",
         data: await project?.toJson(),
+        successful: true,
+      });
+    },
+  }),
+
+  manifestation.newRoute({
+    route: "/:project",
+    method: "delete",
+    executor: async (req, res) => {
+      let tokenData = fetchTokenData(res.locals);
+
+      let input = z.object({
+        project: z.string().uuid(),
+      }).safeParse(req.params);
+
+      if (!input.success)
+        return sendApiErrors(res, ...input.error.issues);
+
+      let projectId = input.data.project;
+
+      let errors = apiError.createErrorStack();
+
+      const project = await projects.fetch(projectId);
+
+      if (!project) errors.append("invalidProjectId");
+      if (
+        !!project &&
+        !(await projects.checkUserPermission(tokenData.userId, projectId))
+      )
+        errors.append("projectNoAccess");
+
+      if (errors.stack.length > 0) return sendApiErrors(res, ...errors.stack);
+
+      if (((await project?.fetchServices())?.size ?? 0) > 0) {
+        errors.append({code: "projectHasServices", message: "Project has services attached to it!"});
+      }
+
+      await projects.delete(projectId);
+
+      return manifestation.sendApiResponse(res, {
+        status: 200,
+        message: "Successfully fetched project!",
         successful: true,
       });
     },
