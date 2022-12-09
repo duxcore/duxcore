@@ -6,6 +6,9 @@ import { useWrapper } from "../../context/WrapperProvider";
 import { PageComponent } from "../../types/PageComponent";
 import { Preloader } from "../../components/PreLoader";
 import Head from "next/head";
+import { Button } from "../../components/forms/Button";
+import { Service } from "wrapper/lib/types/service";
+import { ServiceBox } from "../../components/Services/ServiceBox";
 
 interface ViewProjectPageProps { }
 
@@ -20,6 +23,7 @@ export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
       null
     );
     const [isLoading, setLoading] = useState(true);
+    const [services, setServices] = useState<Service[]>();
 
     useEffect(() => {
       if (projectId) {
@@ -32,9 +36,10 @@ export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
           .catch((_err) => {
             setLoading(false);
           });
+        wrapper.api.services.fetchAllByProject(projectId).then(setServices);
         if (!projectId) push("/");
       }
-    }, [projectId, push, wrapper.api.projects]);
+    }, [projectId, push, wrapper.api.projects, wrapper.api.services]);
 
     if (!projectData && !isLoading) return <h2>Failed to retrieve Project...</h2>;
     return (
@@ -50,11 +55,24 @@ export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
           <h1 className="pl-1 text-3xl border-l border-gray-700">
             {projectData?.name}
           </h1>
-          <p>
-            {
-              "There is something that is supposed to go here, but I haven't decided yet"
-            }
+          <p
+            className="text-gray-600"
+          >
+            {projectData?.id}
           </p>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row-reverse w-full">
+              <Button className="w-fit p-4" onClick={() => push('/services/create')}>Create Service</Button>
+            </div>
+            <div
+              className="grid gap-1"
+              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(20rem, 1fr))" }}
+            >
+              {services && services.map((service) => (
+                <ServiceBox key={service.id} data={service} />
+              ))}
+            </div>
+          </div>
         </Preloader>
       </>
     );

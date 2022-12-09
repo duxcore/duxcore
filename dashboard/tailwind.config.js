@@ -1,3 +1,4 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
 /* eslint-disable global-require */
 module.exports = {
   darkMode: false,
