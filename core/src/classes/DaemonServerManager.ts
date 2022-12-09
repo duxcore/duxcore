@@ -32,7 +32,7 @@ export default class DaemonServerManager {
       });
   }
 
-  public async attachToService(id: string) {
+  public async attachToService(id: string, onMessage: (msg: Buffer) => void) {
     const ws = new WebSocket(
       `ws${this.isSecure ? "s" : ""}://${this._daemon.host}:${
         this._daemon.wsPort
@@ -50,7 +50,8 @@ export default class DaemonServerManager {
     });
 
     ws.onmessage = (e) => {
-      process.stdout.write(e.data as Buffer);
+      onMessage(e.data as Buffer);
+      console.log(e.data)
     };
   }
 

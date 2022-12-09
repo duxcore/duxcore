@@ -9,6 +9,8 @@ import { projects } from "../../../interfaces/projects";
 import { services } from "../../../interfaces/services";
 import ServiceManager from "../../../classes/ServiceManager";
 import { authorizeRequest } from "../../middleware/authorizeRequest";
+import { authorizationStore } from "../../middleware/authorizationStore";
+import { wsApiUtils } from "../../../modules/websocketApiUtilities";
 
 export const apiServiceBaseRoutes = [
   manifestation.newRoute({
@@ -217,4 +219,14 @@ export const apiServiceBaseRoutes = [
       });
     },
   }),
+  manifestation.newWebsocketRoute({
+    route: "/:service/console",
+    middleware: [/* authorizationStore */],
+    executor: async (ws, req) => {
+//      const authStore = wsApiUtils.extractAuthorizationStore(req);
+
+//      await wsApiUtils.validateUserToken(ws, authStore);
+      (await services.fetch(req.params.service))?.attach(async (msg) => ws.send(msg))
+    }  
+  })
 ];
