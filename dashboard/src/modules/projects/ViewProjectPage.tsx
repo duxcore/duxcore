@@ -55,7 +55,7 @@ export const ViewProjectPage: PageComponent<ViewProjectPageProps> =
           <div className="flex flex-col gap-4">
             <div className="flex flex-row-reverse w-full">
               <div className="flex flex-row-reverse w-full gap-2">
-                <Button className="w-fit p-4" color="outline" onClick={() => {
+                <Button className="w-fit p-4" disabled={services && services.length !== 0} title={services && services.length !== 0 ? "This project can not be deleted as it has services attached to it" : ""} color="outline" onClick={() => {
                   wrapper.api.projects.delete(projectId).then(back);
                 }}>Delete Project</Button>
                 <Button className="w-fit p-4" onClick={() => push('/services/create')}>Create Service</Button>
