@@ -34,6 +34,34 @@ export const createServiceController = () => {
       });
     },
 
+    fetch(id: string): Promise<Service> {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance.get(`${API_BASEURL}/services/${id}`)
+          .then(res => {
+            let data = res.data.data;
+
+            return resolve({
+              id: data.id,
+              name: data.name,
+              projectId: data.project,
+              daemonId: data.daemon,
+              params: data.params,
+              cpu: data.cpu,
+              mem: data.memory,
+              disk: data.disk,
+              status: data.status,
+              createdAt: new Date(data.createdAt),
+              updatedAt: new Date(data.updatedAt),
+            });
+          }).catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response?.data);
+          })
+      });
+    },
+
     fetchAllByUser(userId: string): Promise<Service[]> {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/services`)
