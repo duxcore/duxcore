@@ -223,7 +223,8 @@ export const apiServiceBaseRoutes = [
     // @todo: remove the any cast once manifestation is patched
     middleware: [ (wsAuthorizeRequest as any) ],
     executor: async (ws, req) => {
-      (await services.fetch(req.params.service))?.attach(async (msg) => ws.send(msg))
-    }  
+      // @todo: check if service exists and user has permission
+      (ws.onmessage as any) = await (await services.fetch(req.params.service))?.attach(async (msg) => ws.send(msg))
+    }
   })
 ];

@@ -34,7 +34,7 @@ export default class ServiceManager {
   }
 
   async attach(onMessage: (message: Buffer) => {}) {
-    (await daemons.fetch(this.daemon))?.server.attachToService(this.id, onMessage);
+    return (await daemons.fetch(this.daemon))?.server.attachToService(this.id, onMessage);
   }
 
   toJson() {

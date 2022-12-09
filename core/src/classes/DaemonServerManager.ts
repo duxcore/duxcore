@@ -2,6 +2,7 @@ import axios from "axios";
 import { RawConfig } from "../types/Daemon";
 import DaemonManager from "./DaemonManager";
 import WebSocket from "ws";
+import { Blob } from 'buffer'
 
 export default class DaemonServerManager {
   private _daemon: DaemonManager;
@@ -39,20 +40,27 @@ export default class DaemonServerManager {
       }/v1/service/${id}/ctl`
     );
     const sendJson = (json) => ws.send(JSON.stringify(json));
+    const sendBlob = async (blob: Blob) => ws.send(await blob.arrayBuffer());
     const corekey = this._daemon.secret;
 
     ws.on("open", function open() {
       sendJson({
         corekey,
         type: "attach",
-        data: id,
+        data: {
+          service_id: id,
+          logs: true
+        },
       });
     });
 
     ws.onmessage = (e) => {
       onMessage(e.data as Buffer);
-      console.log(e.data)
-    };
+    }
+
+    return (input: string) => {
+      sendBlob(new Blob([input]));
+    }
   }
 
   public async deleteService(id: string) {
