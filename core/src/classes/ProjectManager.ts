@@ -1,4 +1,5 @@
 import type { Project } from "@prisma/client";
+import { services } from "../interfaces/services"
 
 export default class ProjectManager {
   private _rawData: Project;
@@ -13,6 +14,10 @@ export default class ProjectManager {
 
   get creator(): string {
     return this._rawData.creatorId;
+  }
+
+  async fetchServices() {
+    return await services.fetchAllByProject(this._rawData.id);
   }
 
   toJson() {

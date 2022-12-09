@@ -53,5 +53,21 @@ export const createProjectController = () => {
           });
       });
     },
+
+    delete(id: string): Promise<void> {
+      return new Promise(async (resolve, reject) => {
+        await axiosInstance
+          .delete(`${API_BASEURL}/projects/${id}`)
+          .then((res) => {
+            return resolve();
+          })
+          .catch((err: AxiosError) => {
+            let timestamp = err.response?.data.meta.timestamp;
+
+            if (!timestamp) return reject([invalidApiResponseStack]);
+            return reject(err.response);
+          });
+      });
+    },
   };
 };
