@@ -16,7 +16,7 @@ export const Preloader: React.FC<PreLoaderProps> = ({ children, active, hideCont
           return out;
         })()}
       </div>
-      {!hideContent ? children : ""}
+      {!hideContent ? children : null}
     </>
   );
 };

@@ -14,6 +14,7 @@ import { useWrapper } from "../../context/WrapperProvider";
 import createProjectSchema from "./CreateServiceSchema";
 import { Select } from "../../components/forms/Select";
 import { Project } from "wrapper";
+import { TextArea } from "../../components/forms/TextArea";
 
 interface CreateServicePageProps { }
 
@@ -94,6 +95,7 @@ export const CreateServicePage: PageComponent<CreateServicePageProps> = () => {
                             <div className="flex flex-col space-y-1.5">
                                 <Input
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="Service Name"
                                     error={errors.name}
                                     withIcon={<IoPencilOutline />}
@@ -104,18 +106,20 @@ export const CreateServicePage: PageComponent<CreateServicePageProps> = () => {
 
                                 <Select
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="Project"
                                     error={errors.projectId}
                                     withIcon={<IoAppsOutline />}
                                     name="projectId"
                                     type="text"
-                                    value={projects.length !== 0 ? projects[0].id : ""}
                                     touched={touched.projectId}>
+                                    <option disabled selected value={""}>Select a project</option>
                                     {projects && projects.map((proj) => <option key={proj.id} value={proj.id}>{proj.name}</option>)}
                                 </Select>
 
                                 <Input
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="Daemon ID"
                                     error={errors.daemonId}
                                     withIcon={<IoAppsOutline />}
@@ -124,8 +128,9 @@ export const CreateServicePage: PageComponent<CreateServicePageProps> = () => {
                                     touched={touched.daemonId}
                                 />
 
-                                <Input
+                                <TextArea
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="Params"
                                     error={errors.params}
                                     withIcon={<IoCodeOutline />}
@@ -136,6 +141,7 @@ export const CreateServicePage: PageComponent<CreateServicePageProps> = () => {
 
                                 <Input
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="CPU"
                                     error={errors.cpu}
                                     withIcon={<HiOutlineChip />}
@@ -146,6 +152,7 @@ export const CreateServicePage: PageComponent<CreateServicePageProps> = () => {
 
                                 <Input
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="Mem"
                                     error={errors.mem}
                                     withIcon={<FaMemory />}
@@ -156,6 +163,7 @@ export const CreateServicePage: PageComponent<CreateServicePageProps> = () => {
 
                                 <Input
                                     loading={loading}
+                                    disabled={loading}
                                     placeholder="Disk"
                                     error={errors.disk}
                                     withIcon={<MdOutlineStorage />}
