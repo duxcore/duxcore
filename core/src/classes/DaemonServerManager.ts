@@ -58,8 +58,8 @@ export default class DaemonServerManager {
       onMessage(e.data as Buffer);
     }
 
-    return (input: string) => {
-      sendBlob(new Blob([input]));
+    return (input: any) => {
+      sendBlob(new Blob([input.data + '\n']));
     }
   }
 
