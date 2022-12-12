@@ -7,6 +7,7 @@ import { Button } from "../../../components/forms/Button";
 import { Input } from "../../../components/forms/Input";
 import { useWrapper } from "../../../context/WrapperProvider";
 import { LoginSchema } from "./LoginSchema";
+import { useRouter } from "next/router";
 
 interface LoginFormProps {
   onLogin: (authorization: TokenPair) => void;
@@ -15,6 +16,7 @@ interface LoginFormProps {
 export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const wrapper = useWrapper();
   const [formError, setFormError] = useState("");
+  const { push } = useRouter();
 
   return (
     <ContentBox
@@ -32,7 +34,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           try {
             res = await wrapper.api.user.login(email, password);
           } catch (error: any) {
-            console.log(error)
+            console.log(error);
             if (error.data.data.errors.length > 0) {
               return setFormError(error.data.data.errors[0].message);
             }
@@ -78,6 +80,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           </Form>
         )}
       </Formik>
+      <div className="text-gray-500 mt-2">Don't have an account? <button className="text-accent underline" onClick={() => push('/register')}>Create one</button></div>
     </ContentBox>
   );
 };

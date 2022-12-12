@@ -12,6 +12,9 @@ const buttonColors = {
     "text-white py-1 font-semibold bg-black transition hover:bg-gray-800 disabled:bg-black disabled:cursor-not-allowed",
   invisibleClicking:
     "text-white py-1 font-semibold transition bg-gray-800 disabled:bg-black disabled:cursor-not-allowed",
+  outline:
+    "text-white py-1.5 font-bold border border-accent bg-transparent transition hover:bg-accent disabled:bg-accent-lighter disabled:cursor-not-allowed",
+
 };
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

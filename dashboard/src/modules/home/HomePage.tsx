@@ -1,7 +1,5 @@
 import React from "react";
-import { Header } from "../../components/layout/Header";
 import { Layout, useLayout } from "../../components/Layout";
-import { ProjectsArray } from "../../components/Projects/ProjectsArray";
 import { PageComponent } from "../../types/PageComponent";
 import { useAuth } from "../auth/useAuth";
 import Head from "next/head";
@@ -20,7 +18,7 @@ export const HomePage: PageComponent<HomePageProps> = () => {
 
   return (
     <>
-      <ProjectsArray />
+      Hi
     </>
   );
 };

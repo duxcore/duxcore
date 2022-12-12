@@ -8,9 +8,9 @@ export const createServiceController = () => {
   return {
     create(request: NewService): Promise<Service> {
       return new Promise(async (resolve, reject) => {
-        await axiosInstance.post(`${API_BASEURL}/services`, request)
+        await axiosInstance.post(`${API_BASEURL}/services`, { ...request, project: request.projectId, daemon: request.daemonId, memory: request.mem })
           .then(res => {
-            let data = res.data.data;
+            const data = res.data.data;
 
             return resolve({
               id: data.id,
@@ -26,7 +26,7 @@ export const createServiceController = () => {
               updatedAt: new Date(data.updatedAt),
             });
           }).catch((err: AxiosError) => {
-            let timestamp = err.response?.data.meta.timestamp;
+            const timestamp = err.response?.data.meta.timestamp;
 
             if (!timestamp) return reject([invalidApiResponseStack]);
             return reject(err.response?.data);
@@ -66,7 +66,7 @@ export const createServiceController = () => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/services`)
           .then(res => {
-            let data = res.data.data;
+            const data = res.data.data;
 
             return resolve(data.map((service: any) => ({
               id: service.id,
@@ -82,7 +82,7 @@ export const createServiceController = () => {
               updatedAt: new Date(service.updatedAt),
             })));
           }).catch((err: AxiosError) => {
-            let timestamp = err.response?.data.meta.timestamp;
+            const timestamp = err.response?.data.meta.timestamp;
 
             if (!timestamp) return reject([invalidApiResponseStack]);
             return reject(err.response?.data);
@@ -94,7 +94,7 @@ export const createServiceController = () => {
       return new Promise(async (resolve, reject) => {
         await axiosInstance.get(`${API_BASEURL}/projects/${projectId}/services`)
           .then(res => {
-            let data = res.data.data;
+            const data = res.data.data;
 
             return resolve(data.map((service: any) => ({
               id: service.id,
@@ -110,7 +110,7 @@ export const createServiceController = () => {
               updatedAt: new Date(service.updatedAt),
             })));
           }).catch((err: AxiosError) => {
-            let timestamp = err.response?.data.meta.timestamp;
+            const timestamp = err.response?.data.meta.timestamp;
 
             if (!timestamp) return reject([invalidApiResponseStack]);
             return reject(err.response?.data);
@@ -124,7 +124,7 @@ export const createServiceController = () => {
           .then(res => {
             return resolve();
           }).catch((err: AxiosError) => {
-            let timestamp = err.response?.data.meta.timestamp;
+            const timestamp = err.response?.data.meta.timestamp;
 
             if (!timestamp) return reject([invalidApiResponseStack]);
             return reject(err.response?.data);

@@ -6,6 +6,7 @@ import {
   IoCartOutline,
   IoCloudOutline,
   IoDocumentTextOutline,
+  IoAppsOutline
 } from "react-icons/io5";
 import { AccountDrop } from "./AccountDrop";
 import Link from "next/link";
@@ -19,6 +20,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   const navLinks = [
     { name: "Overview", icon: <IoCloudOutline />, path: "/" },
+    { name: "Projects", icon: <IoAppsOutline />, path: "/projects" },
     { name: "Marketplace", icon: <IoCartOutline />, path: "/marketplace" },
     {
       name: "Billing",
