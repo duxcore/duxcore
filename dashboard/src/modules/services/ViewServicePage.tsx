@@ -10,7 +10,8 @@ import { Service, ServiceOpCode } from "wrapper/lib/types/service";
 import { ServiceBox } from "../../components/Services/ServiceBox";
 import { Project } from "wrapper";
 import { ServiceStatus } from "../../components/Services/ServiceStatus";
-import moment from "moment";
+import day from "dayjs";
+import advancedForamt from "dayjs/plugin/advancedFormat";
 
 interface ViewServicePageProps { }
 
@@ -27,6 +28,10 @@ export const ViewServicePage: PageComponent<ViewServicePageProps> =
     const [projectData, setProjectData] = useState<Project>();
     const [isLoading, setLoading] = useState(true);
     const [command, setCommand] = useState<ServiceOpCode>("start");
+
+    useEffect(() => {
+      day.extend(advancedForamt);
+    });
 
     useEffect(() => {
       if (serviceId) {
@@ -84,8 +89,8 @@ export const ViewServicePage: PageComponent<ViewServicePageProps> =
             <div className="flex flex-col gap-4 p-4 w-full">
               <p>Name: {serviceData?.name}</p>
               <p>ID: {serviceData?.id}</p>
-              <p>Created: {moment(serviceData?.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
-              <p>Updated: {moment(serviceData?.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+              <p>Created: {day(serviceData?.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+              <p>Updated: {day(serviceData?.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
               <p className="inline-flex items-center"><p className="pr-0.25">Status: </p><ServiceStatus status={serviceData ? serviceData.status : "UNKNOWN"} /> {serviceData?.status}</p>
               <p>Project Details: {projectData?.name} ({projectData?.id})</p>
               <p>DaemonId: {serviceData?.daemonId}</p>
