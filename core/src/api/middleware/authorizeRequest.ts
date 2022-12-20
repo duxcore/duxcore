@@ -5,6 +5,11 @@ import { authorizationToken } from "../../interfaces/authorizationTokens";
 export const authorizeRequest: MiddlewareMethod = (req, res, next) => {
   let authToken = req.headers.authorization;
 
+  // check if websocket request
+  if (!authToken && req.headers["sec-websocket-protocol"]) {
+    authToken = req.headers["sec-websocket-protocol"];
+  }
+
   if (!authToken)
     return manifestation.sendApiResponse(
       res,

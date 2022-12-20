@@ -3,6 +3,7 @@ import axiosInstance from "../axiosInstance";
 import type { AxiosError } from "axios";
 import { invalidApiResponseStack } from "../../util/invalidApiResponseStack";
 import { NewService, Service, ServiceOpCode } from "../../types/service";
+import { useTokenStore } from '../useTokenStore'
 
 export const createServiceController = () => {
   return {
@@ -130,6 +131,12 @@ export const createServiceController = () => {
             return reject(err.response?.data);
           })
       });
+    },
+
+    console(id: string): WebSocket {
+      let { authToken } = useTokenStore();
+      // @ts-ignore WebSocket does not have a 3rd parameter officially, but it does work
+      return new WebSocket(`ws${API_BASEURL.startsWith('https') ? 's' : ''}://${API_BASEURL.replace(/(https?:\/\/)/, '')}/services/${id}/console`, authToken);
     }
   }
 }

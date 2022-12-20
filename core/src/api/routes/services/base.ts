@@ -8,7 +8,6 @@ import { authorizeAdministratorRequest } from "../../middleware/authorizeAdminis
 import { projects } from "../../../interfaces/projects";
 import { services } from "../../../interfaces/services";
 import ServiceManager from "../../../classes/ServiceManager";
-import { wsAuthorizeRequest } from "../../middleware/wsAuthorizeRequest";
 
 export const apiServiceBaseRoutes = [
   manifestation.newRoute({
@@ -221,7 +220,7 @@ export const apiServiceBaseRoutes = [
   manifestation.newWebsocketRoute({
     route: "/:service/console",
     // @todo: remove the any cast once manifestation is patched
-    middleware: [ (wsAuthorizeRequest as any) ],
+    // middleware: [ (wsAuthorizeRequest as any) ],
     executor: async (ws, req) => {
       // @todo: check if service exists and user has permission
       (ws.onmessage as any) = await (await services.fetch(req.params.service))?.attach(async (msg) => ws.send(msg))

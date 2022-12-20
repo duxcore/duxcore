@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { useWrapper } from "../../context/WrapperProvider";
 import { PageComponent } from "../../types/PageComponent";
@@ -7,7 +7,6 @@ import { Preloader } from "../../components/PreLoader";
 import Head from "next/head";
 import { Button } from "../../components/forms/Button";
 import { Service, ServiceOpCode } from "wrapper/lib/types/service";
-import { ServiceBox } from "../../components/Services/ServiceBox";
 import { Project } from "wrapper";
 import { ServiceStatus } from "../../components/Services/ServiceStatus";
 import day from "dayjs";
@@ -28,10 +27,26 @@ export const ViewServicePage: PageComponent<ViewServicePageProps> =
     const [projectData, setProjectData] = useState<Project>();
     const [isLoading, setLoading] = useState(true);
     const [command, setCommand] = useState<ServiceOpCode>("start");
+    const [logs, setLogs] = useState("");
+    const bottom = useRef<HTMLSpanElement>(null)
 
     useEffect(() => {
       day.extend(advancedForamt);
     });
+
+    function scroll() {
+      bottom.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
+    if (typeof window !== "undefined") {
+      let ws = wrapper.api.services.console(serviceId)
+
+      ws.onmessage = async (e) => {
+        let text = await e.data.text()
+        setLogs((prev) => prev + text)
+        scroll()
+      }
+    }
 
     useEffect(() => {
       if (serviceId) {
@@ -45,8 +60,8 @@ export const ViewServicePage: PageComponent<ViewServicePageProps> =
           .catch((_err) => {
             setLoading(false);
           });
-        if (!serviceId) push("/");
       }
+      if (!serviceId) push("/");
     }, [push, serviceId, wrapper.api.projects, wrapper.api.services]);
 
     if (!serviceData && !isLoading) return <h2>Failed to retrieve Service...</h2>;
@@ -101,6 +116,12 @@ export const ViewServicePage: PageComponent<ViewServicePageProps> =
             </div>
           </div>
 
+          <div className="flex flex-col gap-4 p-4 w-full">
+            <div className="max-h-[48rem] overflow-auto p-2 rounded-lg bg-gray-800 text-gray-500">
+              <pre><code>{logs}</code></pre>
+              <span className="float-left clear-both" ref={bottom}></span>
+            </div>
+          </div>
 
         </Preloader>
       </>
