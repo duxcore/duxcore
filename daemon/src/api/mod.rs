@@ -31,6 +31,7 @@ pub fn fairing() -> impl fairing::Fairing {
                     service::stats,
                     service::delete,
                     service::info,
+                    service::set_env,
                 ],
             )
             .mount(

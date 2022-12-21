@@ -31,7 +31,6 @@ type RawConfig = {
     shell?: string[];
     user?: string;
     working_dir?: string;
-    env?: string[]; // example: VAR1=value1. no equals sign unsets the variable
 
     // stdio
     open_stdin?: boolean; // default = true
@@ -226,6 +225,22 @@ Fetches container information.
 ### Response
 
 Same as [ContainerInspect](https://docs.docker.com/engine/api/v1.41/#operation/ContainerInspect)'s response.
+
+## `PATCH /service/<id>/env`
+
+Sets the service's environment variables. The changes will be applied after the next restart.
+
+### Request
+
+```ts
+type Body = {
+  [key: string]: string;
+};
+```
+
+### Response
+
+_None_
 
 ## `POST /docker/image`
 

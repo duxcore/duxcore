@@ -1,5 +1,3 @@
-use std::{env, path};
-
 use super::error::Error;
 use crate::corekey::CoreAuthorization;
 use crate::util;
@@ -11,10 +9,17 @@ use bollard::{
 use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
-use tokio::fs;
+use std::collections::HashMap;
+use std::fmt::Write;
+use std::{env, path};
+use tokio::{fs, io::AsyncWriteExt};
 
-fn bind_dir(id: &str) -> path::PathBuf {
+fn get_bind_dir(id: &str) -> path::PathBuf {
     env::current_dir().unwrap().join("binds").join(id)
+}
+
+fn get_managed_bind_dir(id: &str) -> path::PathBuf {
+    env::current_dir().unwrap().join("managed_binds").join(id)
 }
 
 #[derive(Deserialize)]
@@ -28,7 +33,6 @@ pub struct RawParams {
     shell: Option<Vec<String>>,
     user: Option<String>,
     working_dir: Option<String>,
-    env: Option<Vec<String>>,
 
     #[serde(default = "util::yes")]
     open_stdin: bool,
@@ -78,9 +82,14 @@ pub async fn create(
 
             rocket::info_!("Pulled image {}", raw.image);
 
-            let path = bind_dir(&raw.id);
+            let image_properties = docker.inspect_image(&raw.image).await?;
+            let image_config = image_properties.config.unwrap();
 
-            fs::create_dir(&path).await?;
+            let bind_path = get_bind_dir(&raw.id);
+            let managed_bind_path = get_managed_bind_dir(&raw.id);
+
+            fs::create_dir_all(&bind_path).await?;
+            fs::create_dir_all(&managed_bind_path).await?;
 
             if let Some(url) = raw.bind_contents {
                 rocket::info_!("Downloading {}", url);
@@ -105,16 +114,27 @@ pub async fn create(
                 let mut entries = archive.entries()?;
 
                 while let Some(mut file) = util::ortoro(entries.next().await)? {
-                    file.unpack_in(&path).await?;
+                    file.unpack_in(&bind_path).await?;
                 }
             }
+
+            fs::File::create(managed_bind_path.join("entrypoint.sh"))
+                .await?
+                .write_all(b"sh -c \"$1\"\n")
+                .await?;
 
             let container = docker
                 .create_container(
                     Some(container::CreateContainerOptions { name: &raw.id }),
                     container::Config {
                         image: Some(raw.image),
-                        cmd: raw.cmd,
+                        cmd: Some(vec![[
+                            image_config.entrypoint.unwrap_or_default(),
+                            raw.cmd.or(image_config.cmd).unwrap_or_default(),
+                        ]
+                        .concat()
+                        .join(" ")]),
+                        entrypoint: Some(vec!["sh".into(), "/.duxcore/entrypoint.sh".into()]),
                         shell: raw.shell,
                         user: raw.user,
                         working_dir: raw.working_dir,
@@ -122,15 +142,13 @@ pub async fn create(
                         tty: Some(raw.tty),
                         hostname: raw.hostname,
                         network_disabled: raw.network_disabled,
-                        env: raw.env,
                         host_config: Some(HostConfig {
                             memory: raw.max_ram.map(|x| x as i64),
                             cpu_quota: raw.max_cpu.map(|x| x as i64),
-                            binds: Some(vec![format!(
-                                "{}:/{}",
-                                path.to_str().unwrap(),
-                                raw.bind_dir
-                            )]),
+                            binds: Some(vec![
+                                format!("{}:/{}:rw", bind_path.to_str().unwrap(), raw.bind_dir),
+                                format!("{}:/.duxcore:ro", managed_bind_path.to_str().unwrap()),
+                            ]),
                             port_bindings: raw.port_map,
                             ..Default::default()
                         }),
@@ -200,7 +218,9 @@ pub async fn delete(
     docker: &rocket::State<bollard::Docker>,
 ) -> Result<(), Error> {
     docker.remove_container(id, None).await?;
-    fs::remove_dir_all(bind_dir(id)).await?; // delete the bind dir
+
+    fs::remove_dir_all(get_bind_dir(id)).await?;
+    fs::remove_dir_all(get_managed_bind_dir(id)).await?;
 
     Ok(())
 }
@@ -212,4 +232,29 @@ pub async fn info(
     docker: &rocket::State<bollard::Docker>,
 ) -> Result<Json<service::ContainerInspectResponse>, Error> {
     Ok(Json(docker.inspect_container(id, None).await?))
+}
+
+#[rocket::patch("/<id>/env", data = "<new_env>")]
+pub async fn set_env(
+    _auth: CoreAuthorization,
+    new_env: Json<HashMap<String, String>>,
+    id: &str,
+) -> Result<(), Error> {
+    let managed_bind_path = get_managed_bind_dir(id);
+
+    let mut file = fs::File::create(managed_bind_path.join("entrypoint.sh")).await?;
+    let mut result = String::new();
+
+    write!(result, "env").unwrap();
+
+    for (key, value) in new_env.0 {
+        result += " ";
+        result += &snailquote::escape(&format!("{}={}", key, value));
+    }
+
+    write!(result, " sh -c \"$1\"\n").unwrap();
+
+    file.write_all(result.as_bytes()).await?;
+
+    Ok(())
 }

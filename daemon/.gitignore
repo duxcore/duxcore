@@ -1,5 +1,4 @@
 /target
 /corekey.bin
 /binds/*
-.gitkeep
-duxcore-daemon
+/managed_binds/*

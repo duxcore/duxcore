@@ -15,6 +15,7 @@ serde_json = "1"
 log = "0"
 rand = "0"
 async-trait = "0"
+snailquote = "0"
 
 rocket = { version = "0.5.0-rc.1", features = ["json"] }
 hyper = "0"
