@@ -53,9 +53,15 @@ type HostMapEntry = {
 };
 ```
 
-### Response
+### Successful Response
 
-_None_
+```ts
+type Body = {
+  id: string;
+  type: "raw";
+  internal_id: string;
+};
+```
 
 ## `POST /service/<id>/ctl`
 
@@ -70,15 +76,21 @@ type Body = {
 };
 ```
 
-### Response
+### Successful Response
 
-_None_
+```ts
+type Body = {
+  id: string;
+  op: "start" | "stop" | "restart" | "kill";
+};
+```
 
 ## `GET /service/<id>/stats`
 
-Outputs the resource usage statistics of the service.
+Outputs the resource usage statistics of the service. The `id` field corresponds
+to the container's internal ID rather than the one specified by the core.
 
-### Response **EXAMPLE**
+### Successful Response **EXAMPLE**
 
 ```json
 {
@@ -214,9 +226,13 @@ Outputs the resource usage statistics of the service.
 
 Deletes a service and its bind directory.
 
-### Response
+### Successful Response
 
-_None_
+```ts
+type Body = {
+  id: string;
+};
+```
 
 ## `GET /service/<id>`
 
@@ -224,11 +240,14 @@ Fetches container information.
 
 ### Response
 
-Same as [ContainerInspect](https://docs.docker.com/engine/api/v1.41/#operation/ContainerInspect)'s response.
+Same as
+[ContainerInspect](https://docs.docker.com/engine/api/v1.41/#operation/ContainerInspect)'s
+response.
 
 ## `PATCH /service/<id>/env`
 
-Sets the service's environment variables. The changes will be applied after the next restart.
+Sets the service's environment variables. The changes will be applied after the
+next restart.
 
 ### Request
 
@@ -238,9 +257,16 @@ type Body = {
 };
 ```
 
-### Response
+### Successful Response
 
-_None_
+```ts
+type Body = {
+  id: string;
+  env: {
+    [key: string]: string;
+  };
+};
+```
 
 ## `POST /docker/image`
 
@@ -248,17 +274,9 @@ Imports a Docker image from a raw .tar archive containing the root filesystem.
 
 ### Request
 
-_None_
-
-### Response
-
-_None_
-
-### Request
-
 A binary .tar archive
 
-### Response
+### Successful Response
 
 ```ts
 type Body = {

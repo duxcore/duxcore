@@ -4,12 +4,12 @@ mod service;
 mod error;
 
 use rocket::fairing;
-use serde_json::{json, Value};
+use serde_json::json;
 
 const PREFIX: &str = "/v1";
 
 #[rocket::catch(401)]
-fn unauthorized() -> Value {
+fn unauthorized() -> serde_json::Value {
     json!({
         "error": {
             "code": 401,

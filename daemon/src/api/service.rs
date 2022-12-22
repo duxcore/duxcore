@@ -9,6 +9,7 @@ use bollard::{
 use futures::StreamExt;
 use rocket::serde::json::Json;
 use serde::*;
+use serde_json::json;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::{env, path};
@@ -59,7 +60,7 @@ pub async fn create(
     config: Json<CreateConfig>,
     docker: &rocket::State<bollard::Docker>,
     http: &rocket::State<crate::client::HttpClient>,
-) -> Result<(), Error> {
+) -> Result<serde_json::Value, Error> {
     match config.0 {
         CreateConfig::Raw(raw) => {
             rocket::info_!("Creating raw container with id {}", raw.id);
@@ -159,18 +160,27 @@ pub async fn create(
 
             rocket::info_!("Created container {:?}", container);
 
-            Ok(())
+            Ok(json!({
+                "id": raw.id,
+                "type": "raw",
+                "internal_id": container.id,
+            }))
         }
     }
 }
 
-#[derive(Deserialize)]
-#[serde(tag = "op", rename_all = "snake_case")]
-pub enum CtlCommand {
+#[derive(Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum CtlOperation {
     Start,
     Stop,
     Restart,
     Kill,
+}
+
+#[derive(Deserialize)]
+pub struct CtlCommand {
+    op: CtlOperation,
 }
 
 #[rocket::post("/<id>/ctl", data = "<command>")]
@@ -179,15 +189,18 @@ pub async fn ctl(
     command: Json<CtlCommand>,
     id: &str,
     docker: &rocket::State<bollard::Docker>,
-) -> Result<(), Error> {
-    match command.0 {
-        CtlCommand::Start => docker.start_container::<&str>(id, None).await?,
-        CtlCommand::Stop => docker.stop_container(id, None).await?,
-        CtlCommand::Restart => docker.restart_container(id, None).await?,
-        CtlCommand::Kill => docker.kill_container::<&str>(id, None).await?,
+) -> Result<serde_json::Value, Error> {
+    match command.op {
+        CtlOperation::Start => docker.start_container::<&str>(id, None).await?,
+        CtlOperation::Stop => docker.stop_container(id, None).await?,
+        CtlOperation::Restart => docker.restart_container(id, None).await?,
+        CtlOperation::Kill => docker.kill_container::<&str>(id, None).await?,
     };
 
-    Ok(())
+    Ok(json!({
+        "id": id,
+        "op": command.op,
+    }))
 }
 
 #[rocket::get("/<id>/stats")]
@@ -216,13 +229,15 @@ pub async fn delete(
     _auth: CoreAuthorization,
     id: &str,
     docker: &rocket::State<bollard::Docker>,
-) -> Result<(), Error> {
+) -> Result<serde_json::Value, Error> {
     docker.remove_container(id, None).await?;
 
     fs::remove_dir_all(get_bind_dir(id)).await?;
     fs::remove_dir_all(get_managed_bind_dir(id)).await?;
 
-    Ok(())
+    Ok(json!({
+        "id": id,
+    }))
 }
 
 #[rocket::get("/<id>")]
@@ -239,7 +254,7 @@ pub async fn set_env(
     _auth: CoreAuthorization,
     new_env: Json<HashMap<String, String>>,
     id: &str,
-) -> Result<(), Error> {
+) -> Result<serde_json::Value, Error> {
     let managed_bind_path = get_managed_bind_dir(id);
 
     let mut file = fs::File::create(managed_bind_path.join("entrypoint.sh")).await?;
@@ -247,7 +262,7 @@ pub async fn set_env(
 
     write!(result, "env").unwrap();
 
-    for (key, value) in new_env.0 {
+    for (key, value) in &new_env.0 {
         result += " ";
         result += &snailquote::escape(&format!("{}={}", key, value));
     }
@@ -256,5 +271,8 @@ pub async fn set_env(
 
     file.write_all(result.as_bytes()).await?;
 
-    Ok(())
+    Ok(json!({
+        "id": id,
+        "env": new_env.0,
+    }))
 }
